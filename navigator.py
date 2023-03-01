@@ -92,6 +92,7 @@ for i in range(595):
         # driver.find_element(By.XPATH, f'//*[@id="__layout"]/div/section[1]/div/div/div[1]/div/div/div/div[2]/div[{i+1}]/a').click()
 
         try:
+
             article_page = driver.current_window_handle
             try:
                 page_button = WebDriverWait(driver, 5).until(EC.visibility_of_element_located((By.XPATH,
