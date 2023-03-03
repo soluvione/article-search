@@ -5,5 +5,3 @@ This module contains the necessary helper functions for parsing PDF files and ac
 from pdfminer.high_level import extract_text
 from pdfminer.high_level import extract_text_to_fp
 
-if "bool":
-    pass

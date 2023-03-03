@@ -1,20 +1,17 @@
+"""
+This script has finished its job. Scraped all the articles and their links.
+"""
+
 # Python libraries
 import time
-import re
-import json
-from datetime import date
+import csv
 
 # Local imports
-from journal import Journal
 
 # 3rd Party libraries
-import requests
 from bs4 import BeautifulSoup
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
@@ -65,10 +62,6 @@ k = 0
 for element in page_soup.find_all(class_='journal'):
     journal_name_list.append(element.text[element.text.index('.')+1:])
 
-import csv
-import json
-import os
-import sys
 
 with open('dict6.csv', 'w', encoding='utf_8_sig') as output:
     writer = csv.writer(output, quoting=csv.QUOTE_ALL)
