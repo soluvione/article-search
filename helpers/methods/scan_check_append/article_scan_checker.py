@@ -37,4 +37,4 @@ def is_article_scanned_url(url: str, path_: str) -> bool:
         return is_scanned
 
     except FileNotFoundError:
-        raise Exception("Scanned articles doi file does not exist!!")
+        raise Exception("Scanned articles url file does not exist!!")

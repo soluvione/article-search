@@ -1,6 +1,4 @@
 """
-This is an abstract class for journal articles.
-This will serve as a scaffolding, abstract class for the prospective subclasses for each journal.
 Journal scrapers will create journal objects.
 """
 from datetime import date
@@ -15,8 +13,8 @@ class JournalArticle:
         This constructor records creation time and day of article object. Passes parameters to the object. If no data
         provided than instantiates the object with null values.
         """
-        self.date_acquired = date.today()
-        self.date_acquired_wtime = datetime.now()
+        self.date_acquired = date.today().strftime('%Y-%m-%d')
+        self.date_acquired_wtime = datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
         self.is_scraped = False
         self.name = name
         self.journal = journal
