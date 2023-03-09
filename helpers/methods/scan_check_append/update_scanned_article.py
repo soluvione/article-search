@@ -30,7 +30,7 @@ def update_scanned_articles(doi=None, url=None, is_doi=True, path_=""):
             json_file = open(scanned_articles_path, encoding='utf-8')
             scanned_articles_list = json.load(json_file)
             json_file.close()
-
+            # TODO CHECK THIS CODE
             scanned_articles_list.append(url)
 
             with open(scanned_articles_path, 'w') as json_file:

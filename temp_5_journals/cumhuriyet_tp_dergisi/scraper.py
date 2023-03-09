@@ -3,7 +3,7 @@ import time
 
 # Local imports
 from helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
-from helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles as im
+from helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
 from helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_doi
 from helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
 from helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
@@ -37,9 +37,9 @@ recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].st
 recent_issue = int(temp_txt.split()[-1])
 
 # START DOWNLOADS IF APPROPRIATE
-if True: # If issue and vol is not scanned
+if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__file__):
     driver.get(latest_publication_element.find_element(By.TAG_NAME, 'a').get_attribute('href'))
-    time.sleep(3)
+    time.sleep(1.5)
     article_elements = driver.find_elements(By.CSS_SELECTOR, '.card.j-card.article-project-actions.article-card')
     article_url_list = []
     for article in article_elements:
@@ -47,12 +47,19 @@ if True: # If issue and vol is not scanned
         article_url_list.append(article_url)
 
     for article_url in article_url_list:
-        if True:  # If article is not scanned and is confirmed by the JSON
-            driver.get(article_url)
-            driver.get(driver.find_element(By.CSS_SELECTOR, '.btn.btn-sm.float-left.kt-padding-l-0.article-tool')
-                       .get_attribute('href'))
 
+        if not is_article_scanned_url(url=article_url, path_=__file__):
+            driver.get(article_url)
+            driver.get(driver.find_element(By.CSS_SELECTOR,
+                                           'a.btn.btn-sm.float-left.article-tool.pdf.d-flex.align-items-center')
+                                            .get_attribute('href')),
+
+            # TODO WAIT UNTIL DOWNLOADED
+            update_scanned_articles(url=article_url, is_doi=False, path_=__file__)
             driver.execute_script("window.history.go(-1)")
             WebDriverWait(driver, timeout=1).until(EC.presence_of_element_located(
                 (By.CSS_SELECTOR, '.card.j-card.article-project-actions.article-card')))
-            
+
+    update_scanned_issues(vol_num=recent_volume, issue_num=recent_issue, path_=__file__)
+
+driver.close()
