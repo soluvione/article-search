@@ -57,6 +57,4 @@ if True:  # If issue and vol is not scanned
             download_button = WebDriverWait(driver, timeout=5).until(EC.presence_of_element_located((By.ID, 'pdf')))
             download_button.click()
 
-
-
 driver.close()
