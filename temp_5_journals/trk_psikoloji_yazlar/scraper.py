@@ -3,18 +3,14 @@ import json
 import time
 
 # Local imports
-from helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
-from helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
-from helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_doi
-from helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
-from helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
+from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
+from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
+from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
+from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 
 # 3rd Party libraries
-from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager

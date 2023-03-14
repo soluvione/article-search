@@ -1,6 +1,5 @@
 # Python libraries
 import time
-from os.path import basename
 
 # Local imports
 from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
@@ -24,10 +23,18 @@ options.add_experimental_option('prefs', {"plugins.always_open_pdf_externally": 
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
 
-scrape_type = "A_DRG"
+# Metadata about the journal
+journal_name = "lalalao tipsii"
+scrape_type = "A_UNQ"
 pdf_scrape_type = ""
-start_page_url = "http://cmj.cumhuriyet.edu.tr/tr/"
-driver.get(start_page_url)
+start_page_url = "https://www.google.com"
+
+# GET TO THE PAGE
+try:
+    driver.get(start_page_url)
+except WebDriverException:
+    send_sms(ScrapePathError(f"Could not reach the webpage of{journal_name}. Servers could be down."))
+    raise ScrapePathError(f"Could not reach the webpage of{journal_name}. Servers could be down.")
 
 # START SCRAPING
 latest_publication_element = driver.find_element(By.CSS_SELECTOR, '.kt-widget-18__item')
