@@ -1,6 +1,7 @@
 """
 A helper method for writing objects/iterables as .csv files.
 """
+
 import csv
 import json
 import os

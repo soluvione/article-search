@@ -1,5 +1,5 @@
 """
-This is the author class.
+This is the author class
 """
 
 

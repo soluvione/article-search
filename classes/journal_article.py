@@ -31,3 +31,7 @@ class JournalArticle:
 
     def data_to_json(self):
         pass
+
+
+if __name__ == "__main__":
+    pass

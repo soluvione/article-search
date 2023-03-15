@@ -1,3 +1,6 @@
+"""A temporary helper module to convert Turkish names to ASCII"""
+
+
 def journal_name_to_ascii(journal_name: str) -> str:
     journal_name = journal_name.strip()
     journal_name = journal_name.split()

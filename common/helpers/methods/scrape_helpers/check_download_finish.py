@@ -1,50 +1,22 @@
+"""This module function has a method to check whether there is an ongoing Chrome download at given folder"""
 import time
 import os
 
 
-def download_wait(path_to_downloads):
+def check_download_finish(downloads_path: str) -> bool:
+    """
+    Has a timeout value of 20 seconds. If the download takes longer than 20 seconds than the process will be terminated.
+    :param downloads_path: PATH to the download folder
+    :return: Returns True if there are no ongoing downloads at the given folder at the time of execution.
+    """
     seconds = 0
-    dl_wait = True
-    while dl_wait and seconds < 20:
+    while seconds < 20:
         time.sleep(1)
-        dl_wait = False
-        for fname in os.listdir(path_to_downloads):
-            if fname.endswith('.crdownload'):
-                dl_wait = True
+        ongoing_downloads = 0
+        for file_name in os.listdir(downloads_path):
+            if file_name.endswith('.crdownload'):
+                ongoing_downloads += 1
+        if ongoing_downloads == 0:
+            return True
         seconds += 1
-    return seconds
-
-"""
-ALTERNATIVE
-def download_wait(directory, timeout, nfiles=None):
-
-    Wait for downloads to finish with a specified timeout.
-
-    Args
-    ----
-    directory : str
-        The path to the folder where the files will be downloaded.
-    timeout : int
-        How many seconds to wait until timing out.
-    nfiles : int, defaults to None
-        If provided, also wait for the expected number of files.
-
-    seconds = 0
-    dl_wait = True
-    while dl_wait and seconds < timeout:
-        time.sleep(1)
-        dl_wait = False
-        files = os.listdir(directory)
-        if nfiles and len(files) != nfiles:
-            dl_wait = True
-
-        for fname in files:
-            if fname.endswith('.crdownload'):
-                dl_wait = True
-
-        seconds += 1
-    return seconds
-
-
-
-"""
+    return False

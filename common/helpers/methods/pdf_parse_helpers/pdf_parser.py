@@ -10,14 +10,25 @@ from pdfminer.layout import LTTextContainer, LTChar, LTTextBox
 
 
 def print_all_elements(path_=None, num_pages=0):
-    """For the num_pages values, index starts with 1, if 0 is passed then all pages will be displayed"""
+    """
+   For the num_pages values, index starts with 1, if 0 is passed then all pages will be displayed
+   :param path_: PATH to the file
+   :param num_pages: Starts indexing at 1, entering 0 will return all papers
+   :return: Nothing. Only prints pdf elements.
+   """
     for page_layout in extract_pages(path_, maxpages=num_pages):
         for element in page_layout:
             print(element)
 
 
 def print_text_boxes(path_=None, num_pages=0, get_only_text=False):
-    """For the num_pages values, index starts with 1, if 0 is passed then all pages will be displayed"""
+    """
+    For the num_pages values, index starts with 1, if 0 is passed then all pages will be displayed
+    :param path_: PATH to the filee
+    :param num_pages: Starts indexing at 1, entring 0 will return all papers
+    :param get_only_text: If False will print text box element with details, else will only print texts of text boxes
+    :return: Nothing. Only prints pdf elements or their text values.
+    """
     for page_layout in extract_pages(path_, maxpages=num_pages):
         for element in page_layout:
             if isinstance(element, LTTextContainer):
@@ -28,7 +39,15 @@ def print_text_boxes(path_=None, num_pages=0, get_only_text=False):
 
 
 def print_font_details(path_=None, num_pages=0, get_font=True, get_size=True, get_char=True):
-    """For the num_pages values, index starts with 1, if 0 is passed then all pages will be displayed"""
+    """
+    For the num_pages values, index starts with 1, if 0 is passed then all pages will be displayed
+    :param path_: PATH to the file
+    :param num_pages: Starts indexing at 1, entering 0 will return all papers
+    :param get_font: If True, will print font type of each character
+    :param get_size: If True, will print font size of each character
+    :param get_char: If True, will print the text value of character
+    :return: Nothing. Only prints characters' and their font types & sizes
+    """
     for page_layout in extract_pages(path_, maxpages=num_pages):
         for element in page_layout:
             if isinstance(element, LTTextBox):
@@ -47,7 +66,7 @@ def print_font_details(path_=None, num_pages=0, get_font=True, get_size=True, ge
 def get_text_with_specs(path_=None, num_pages=0, font_type=None, font_size=-1.00):
     """
     If you want all words with specific font then only enter font_type
-    If you want all words with specific font size then only enter None for third arg and enter your number for the fourth
+    If you want all words with specific font size then only enter None for third arg and enter your font size for the fourth
     :param path_: PATH to the file
     :param num_pages: Starts indexing at 1, entering 0 will return all papers
     :param font_type: desired font-type in PDF font format
@@ -69,7 +88,8 @@ def get_text_with_specs(path_=None, num_pages=0, font_type=None, font_size=-1.00
                             else:
                                 if font_type is None and round(character.size, 2) == font_size:
                                     return_string += character.get_text()
-                                elif font_type is not None and font_type == character.fontname and round(character.size, 2) == font_size:
+                                elif font_type is not None and font_type == character.fontname and round(character.size,
+                                                                                                         2) == font_size:
                                     return_string += character.get_text()
 
     return return_string
