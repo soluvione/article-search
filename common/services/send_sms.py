@@ -14,3 +14,12 @@ def send_notification(error: BaseException):
     # Do stuff depending on the error type here.
     print("sent message is: ", error.args)
     print("Sent the sms")
+
+
+def send_notification(message: str):
+    """
+
+    :param message: Message to be send to the supervisor.
+    :return: Does not return anything.
+    """
+    pass

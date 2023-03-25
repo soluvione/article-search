@@ -23,7 +23,11 @@ scrape_type = "A_UNQ"
 pdf_scrape_type = ""
 start_page_url = "https://www.ankemdernegi.org.tr/index.php/yayinlanmis-sayilar"
 driver.get(start_page_url)
+"""
+The first page can overflow to the second page !!
 
+
+"""
 # START SCRAPING
 recent_journals_box_element = driver.find_element(By.XPATH, '/html/body/section[3]/div/div[1]/div['
                                                             '2]/div/article/section/table/tbody/tr[1]')

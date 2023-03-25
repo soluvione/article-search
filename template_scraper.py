@@ -41,10 +41,10 @@ driver = webdriver.Chrome(service=service, options=options)
 
 # Metadata about the journal
 # Scrape types has 2 options, either unique (A_UNQ) or Dergipark (A_DRG). PDF scrape types can vary more than that.
-journal_name = ""
+journal_name = f""
 scrape_type = "A_UNQ"
 pdf_scrape_type = "A_UNQ"
-start_page_url = ""
+start_page_url = f""
 font_sizes_ntypes = {"Abstract": ["ftype", "size"],
                      "Article Type": ["ftype", "size"],
                      "Authors": ["ftype", "size"],
@@ -95,11 +95,11 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                                           f"{journal_name, recent_volume, recent_issue}. DOM could be changed."))
         raise ScrapePathError(f"Could not retrieve element of the webpage of "
                               f"{journal_name, recent_volume, recent_issue}. DOM could be changed.")
-    time.sleep(1.5)
+    time.sleep(1)
 
     # SCRAPE ARTICLE ELEMENTS AS SELENIUM ELEMENTS
     try:
-        article_elements = driver.find_elements(By.CSS_SELECTOR, '.card.j-card.article-project-actions.article-card')
+        article_elements = driver.find_elements(By.CSS_SELECTOR, '')
     except Exception:
         send_notification(ScrapePathError(f"Could not retrieve article urls of "
                                           f"{journal_name, recent_volume, recent_issue}. DOM could be changed."))
@@ -135,7 +135,7 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
             try:
                 # GET TO THE DOWNLOAD LINK OR CLICK THE DOWNLOAD BUTTON
                 driver.get(article_url)
-                # 1 LINK
+                # 1 PDF LINK THAT WHEN DRIVER GETS THERE THE DOWNLOAD STARTS
                 driver.get(driver.find_element(By.CSS_SELECTOR, '').get_attribute('href'))
                 # 2 BUTTON
                 download_button = WebDriverWait(driver, 10).until(EC.presence_of_element_located(By.CSS_SELECTOR, ''))
@@ -175,7 +175,14 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                 continue
 
             # HARVEST DATA FROM PARSED TEXT
-            article_data = {}
+            article_data = {"Article Title": "",
+                            "Article Type": "",
+                            "Article Headline": "",
+                            "Article Authors": [],
+                            "Article DOI": "",
+                            "Article Abstracts": {"TR": "", "ENG": ""},
+                            "Article Keywords": {"TR": [], "ENG": []},
+                            "Article References": []}
             author_num = 0
 
             # DELETE DOWNLOADED PDF
@@ -196,6 +203,7 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
 
 if ((num_successfully_scraped / len(article_url_list)) * 100) > 80:
     update_scanned_issues(vol_num=recent_volume, issue_num=recent_issue, path_=__file__)
+    send_notification(f"Scraping and harvesting data was successful, Journal: {journal_name, recent_volume, recent_issue}")
 else:
     send_notification(GeneralError(f"Majority of the journals were not scraped {journal_name}."))
 

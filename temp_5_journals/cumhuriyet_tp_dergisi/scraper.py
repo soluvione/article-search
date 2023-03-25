@@ -51,7 +51,7 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
             driver.get(article_url)
             driver.get(driver.find_element(By.CSS_SELECTOR,
                                            'a.btn.btn-sm.float-left.article-tool.pdf.d-flex.align-items-center')
-                                            .get_attribute('href')),
+                                            .get_attribute('href'))
 
             # TODO WAIT UNTIL DOWNLOADED
             update_scanned_articles(url=article_url, is_doi=False, path_=__file__)
