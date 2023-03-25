@@ -2,7 +2,7 @@ import re
 from classes.author import Author
 
 
-def drgprk_author_converter(author_html: str) -> Author:
+def author_converter(author_html: str) -> Author:
     """
 
     :param author_html: The innerHTML string passed to the function
@@ -33,3 +33,25 @@ def drgprk_author_converter(author_html: str) -> Author:
     else:
         auth_details_final = new_author.institution
     return new_author
+
+
+def identify_article_type(string: str) -> str:
+    """
+ARAŞTIRMA MAKALESI
+    :param string: The scraped type text from Dergipark issue page
+    :return: Returns a string that is selected from the dropdown menu of Atıf Dizini
+    """
+    if string.lower() == "research article":
+        return "ORİJİNAL ARAŞTIRMA"
+    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesi":
+        return "ORİJİNAL ARAŞTIRMA"
+    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesı":
+        return "ORİJİNAL ARAŞTIRMA"
+    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme":
+        return "DERLEME"
+    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "olgu sunumu":
+        return "OLGU SUNUMU"
+
+
+def reference_formatter(reference: str) -> str:
+    return str
