@@ -2,10 +2,12 @@
 This is the template scraper that will be used to multiply.
 """
 # Python libraries
+from datetime import datetime
 import time
 import os
 import glob
 import re
+import json
 from pathlib import Path
 # Local imports
 from classes.author import Author
@@ -17,7 +19,7 @@ from common.helpers.methods.scan_check_append.update_scanned_article import upda
 from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.scrape_helpers.drgprk_helper import author_converter, identify_article_type
-from common.helpers.methods.scrape_helpers.drgprk_helper import reference_formatter
+from common.helpers.methods.scrape_helpers.drgprk_helper import reference_formatter, format_file_name, abstract_formatter
 from common.services.post_json import post_json
 from common.services.send_sms import send_notification
 import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
@@ -37,8 +39,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 options = Options()
 options.page_load_strategy = 'eager'
 download_path = os.path.dirname(os.path.abspath(__file__)) + r'\downloads'
-options.add_experimental_option('prefs', {"plugins.always_open_pdf_externally": True})
-options.add_experimental_option('prefs', {"download.default_directory": download_path})
+prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
+options.add_experimental_option('prefs', prefs)
 options.add_argument("--disable-notifications")
 service = ChromeService(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=options)
@@ -46,14 +48,14 @@ driver = webdriver.Chrome(service=service, options=options)
 # Metadata about the journal
 # Scrape types has 2 options, either unique (A_UNQ) or Dergipark (A_DRG). PDF scrape types can vary more than that.
 journal_name = f""
-scrape_type = "A_DRG"
+scrape_type = f""
 pdf_scrape_type = "A_UNQ"
 start_page_url = f""
 font_sizes_ntypes = {"Abstract": ["ftype", "size"],
                      "Article Type": ["ftype", "size"],
                      "Authors": ["ftype", "size"],
                      "Author Info": ["ftype", "size"],
-                     "Header": ["ftype", "size"],
+                     "Code": ["ftype", "size"],  # Article headline code. Eg: Eur Oral Res 2023; 57(1): 1-9
                      "Keywords": ["ftype", "size"],
                      "References": ["ftype", "size"]}
 """
@@ -64,6 +66,7 @@ SPECIAL NOTES REGARDING THE JOURNAL (IF APPLICABLE)
 # GLOBAL VARS
 # For a given journal issue, represents how many journal articles have been scraped successfully.
 num_successfully_scraped = 0
+pdf_to_download_available = False
 # Either contains Article URLs or PDF links of each article element
 article_url_list = []
 article_download_element_list = []
@@ -101,6 +104,14 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                               f"{journal_name, recent_volume, recent_issue}. DOM could be changed.")
     time.sleep(1)
 
+    # SCRAPE YEAR INFORMATION OF THE ISSUE
+    try:
+        issue_year = driver.find_element(By.CSS_SELECTOR, 'span.kt-widget-12__desc').text.split()[-1]
+    except NoSuchElementException:
+        # If for any reason try suite fails, the default year is set to the current year
+        # This method will work fine for 99% of the times, will give correct year data
+        issue_year = datetime.now().year
+
     # SCRAPE ARTICLE ELEMENTS AS SELENIUM ELEMENTS
     try:
         article_elements = driver.find_elements(By.CSS_SELECTOR, '.card.j-card.article-project-actions.article-card')
@@ -110,7 +121,7 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
         raise ScrapePathError(f"Could not retrieve article urls of "
                               f"{journal_name, recent_volume, recent_issue}. DOM could be changed.")
 
-    # SCRAPE ARTICLE PAGE URL OR DOWNLOAD LINK OR DOWNLOAD ITEM LOCATORS FROM EACH ELEMENT
+    # SCRAPE ARTICLE PAGE URL FROM EACH ELEMENT
     article_num = 0
     for article in article_elements:
         try:
@@ -136,6 +147,7 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
             try:
                 # ARTICLE VARIABLES SCRAPED FROM DERGIPARK PAGE
                 is_scraped_online = True
+                url = article_url
                 article_type = None
                 article_title_tr = None
                 article_title_eng = None
@@ -146,15 +158,32 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                 abstract_tr = None
                 abstract_eng = None
                 doi = None
+                article_page_range = [0, 1]
                 article_lang_num = None
+                article_vol = recent_volume
+                article_issue = recent_issue
+                article_year = issue_year
+                article_code = 000000000000000000000  # Enter the code algorithms specific to the article
+
                 # GET TO ARTICLE PAGE AND GET ELEMENTS IF POSSIBLE FROM THE UNIQUE ARTICLE PAGE
                 driver.get(article_url)
+
+                article_type = identify_article_type(
+                    driver.find_element(By.CSS_SELECTOR, 'div.kt-portlet__head-title').text, len(driver.find_elements(
+                        By.CSS_SELECTOR, 'div.article-citations.data-section')))
+                if article_type == "Diğer" or article_type == "Editoryal":
+                    continue
+
+                article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
+                for element in article_subtitle_elements:
+                    if element.text:
+                        article_page_range = element.text.split(',')[-2].strip().split('-')
+                        article_page_range = [int(page_num) for page_num in article_page_range]
+
                 lang_navbar = driver.find_element(By.CSS_SELECTOR,
                                                   'ul.nav.nav-tabs.nav-tabs-line.nav-tabs-line-dergipark.nav-tabs-line-3x.nav-tabs-line-right.nav-tabs-bold')
                 language_tabs = lang_navbar.find_elements(By.CSS_SELECTOR, '.nav-item')
                 article_lang_num = len(language_tabs)
-                article_type = identify_article_type(
-                    driver.find_element(By.CSS_SELECTOR, 'div.kt-portlet__head-title').text)
 
                 if article_lang_num == 1:
                     if "Türkçe" in driver.find_element(By.CSS_SELECTOR, 'table.record_properties.table').find_element(
@@ -162,66 +191,117 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                         article_lang = "TR"
                     else:
                         article_lang = "ENG"
-                    article_title_element = driver.find_element(By.CSS_SELECTOR, 'h3.article-title')
-                    keywords_element = driver.find_element(By.CSS_SELECTOR, 'div.article-keywords.data-section')
-                    abstract_element = driver.find_element(By.CSS_SELECTOR, 'div.article-abstract.data-section')
-                    reference_list_elements = driver.find_element(
-                        By.CSS_SELECTOR, 'div.article-citations.data-section').find_elements(By.TAG_NAME, 'li')
-                    for reference_element in reference_list_elements:
-                        references.append(reference_element.text)
 
+                    article_title_elements = driver.find_elements(By.CSS_SELECTOR, 'h3.article-title')
+                    keywords_elements = driver.find_elements(By.CSS_SELECTOR, 'div.article-keywords.data-section')
+                    abstract_elements = driver.find_elements(By.CSS_SELECTOR, 'div.article-abstract.data-section')
+                    if scrape_type == "A_DRG & R":
+                        button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
+                        button.click()
+                        time.sleep(0.25)
+                        reference_list_elements = driver.find_elements(
+                            By.CSS_SELECTOR, 'div.article-citations.data-section')
+                        for reference_element in reference_list_elements:
+                            if reference_element.find_elements(By.TAG_NAME, 'li')[0].text:
+                                ref_count = 1
+                                for element in reference_element.find_elements(By.TAG_NAME, 'li'):
+                                    if ref_count == 1:
+                                        references.append(reference_formatter(element.get_attribute('innerText'), is_first=True, count=ref_count))
+                                    else:
+                                        references.append(reference_formatter(element.get_attribute('innerText'), is_first=False, count=ref_count))
+                                    ref_count += 1
                     if article_lang == "TR":
-                        article_title_tr = article_title_element.text
-                        abstract_tr = abstract_element.find_element(By.TAG_NAME, 'p').text
-                        for keyword in keywords_element.find_element(By.TAG_NAME, 'p').text.split(','):
-                            keywords_tr.append(keyword.strip())
+                        for element in article_title_elements:
+                            if element.text:
+                                article_title_tr = element.text
+                        for element in abstract_elements:
+                            if element.text:
+                                abstract_tr = abstract_formatter(element.find_element(By.TAG_NAME, 'p').text, "tr")
+                        for element in keywords_elements:
+                            if element.text:
+                                for keyword in element.find_element(By.TAG_NAME, 'p').text.split(','):
+                                    if keyword.strip() and keyword.strip() not in keywords_tr:
+                                        keywords_tr.append(keyword.strip())
                     else:
-                        article_title_eng = article_title_element.text
-                        abstract_eng = abstract_element.find_element(By.TAG_NAME, 'p').text
-                        for keyword in keywords_element.find_element(By.TAG_NAME, 'p').text.split(','):
-                            keywords_eng.append(keyword.strip())
+                        for element in article_title_elements:
+                            if element.text:
+                                article_title_eng = element.text
+                        for element in abstract_elements:
+                            if element.text:
+                                abstract_eng = abstract_formatter(element.find_element(By.TAG_NAME, 'p').text, "eng")
+                        for element in keywords_elements:
+                            if element.text:
+                                for keyword in element.find_element(By.TAG_NAME, 'p').text.split(','):
+                                    if keyword.strip() and keyword.strip() not in keywords_eng :
+                                        keywords_eng.append(keyword.strip())
+
                 elif article_lang_num == 2:
-                    # GO TO TURKISH TAB
+                    # GO TO THE TURKISH TAB
                     language_tabs[0].click()
                     time.sleep(0.7)
                     tr_article_element = driver.find_element(By.ID, 'article_tr')
-                    article_title_tr = tr_article_element.find_element(By.CSS_SELECTOR, 'h3.article-title').text
-                    abstract_tr = tr_article_element.find_element(By.CSS_SELECTOR,
+                    article_title_tr = tr_article_element.find_element(By.CSS_SELECTOR, '.article-title').get_attribute(
+                        'innerText').strip()
+                    abstract_tr = abstract_formatter(tr_article_element.find_element(By.CSS_SELECTOR,
                                                                   'div.article-abstract.data-section') \
-                        .find_element(By.TAG_NAME, 'p').text
-                    keywords_element = tr_article_element.find_element(By.CSS_SELECTOR,
-                                                                       'div.article-keywords.data-section')
+                        .find_element(By.TAG_NAME, 'p').get_attribute('innerText'), "tr")
 
-                    for keyword in keywords_element.find_element(By.TAG_NAME, 'p').text.split(','):
-                        keywords_tr.append(keyword.strip())
-                    keywords_tr[-1] = re.sub(r'\.', '', keywords_tr[-1])
+                    try:
+                        keywords_element = tr_article_element.find_element(By.CSS_SELECTOR,
+                                                                           'div.article-keywords.data-section')
 
-                    # GO TO ENGLISH TAB
+                        for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
+                                'innerText').strip().split(','):
+                            if keyword.strip() and keyword.strip() not in keywords_tr:
+                                keywords_tr.append(keyword.strip())
+                        keywords_tr[-1] = re.sub(r'\.', '', keywords_tr[-1])
+                    except:
+                        send_notification(ParseError(f"Could not scrape keywords of journal {journal_name} with article num {article_num}."))
+                        #raise ParseError(f"Could not scrape keywords of journal {journal_name} with article num {article_num}.")
+                        pass
+                    # GO TO THE ENGLISH TAB
                     language_tabs[1].click()
                     time.sleep(0.7)
                     eng_article_element = driver.find_element(By.ID, 'article_en')
-                    article_title_eng = eng_article_element.find_element(By.CSS_SELECTOR, 'h3.article-title').text
-                    abstract_eng = eng_article_element.find_element(By.CSS_SELECTOR,
+                    article_title_eng = eng_article_element.find_element(By.CSS_SELECTOR, 'h3.article-title').get_attribute('innerText').strip()
+                    abstract_eng_element = \
+                        eng_article_element.find_element(By.CSS_SELECTOR,
                                                                     'div.article-abstract.data-section') \
-                        .find_element(By.TAG_NAME, 'p').text
+                        .find_elements(By.TAG_NAME, 'p')
+                    for part in abstract_eng_element:
+                        if part.get_attribute('innerText'):
+                            abstract_eng = abstract_formatter(part.get_attribute('innerText'), "eng")
                     keywords_element = eng_article_element.find_element(By.CSS_SELECTOR,
                                                                         'div.article-keywords.data-section')
 
-                    for keyword in keywords_element.find_element(By.TAG_NAME, 'p').text.split(','):
-                        keywords_eng.append(keyword.strip())
-                    keywords_eng[-1] = re.sub(r'\.', '', keywords_eng[-1])
+                    for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute('innerText').strip().split(','):
+                        if keyword.strip():
+                            keywords_eng.append(keyword.strip())
 
-                    reference_list_elements = eng_article_element.find_element(
-                        By.CSS_SELECTOR, 'div.article-citations.data-section').find_elements(By.TAG_NAME, 'li')
-                    for reference_element in reference_list_elements:
-                        references.append(reference_formatter(reference_element.text))
+                    keywords_eng[-1] = re.sub(r'\.', '', keywords_eng[-1])
+                    if scrape_type == "A_DRG & R":
+                        button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
+                        button.click()
+                        time.sleep(0.25)
+                        reference_list_elements = eng_article_element.find_element(
+                            By.CSS_SELECTOR, 'div.article-citations.data-section').find_elements(By.TAG_NAME, 'li')
+                        ref_count = 1
+                        for reference_element in reference_list_elements:
+                            ref_text = reference_element.get_attribute('innerText')
+                            if ref_count == 1:
+                                references.append(reference_formatter(ref_text, is_first=True,
+                                                                          count=ref_count))
+                            else:
+                                references.append(reference_formatter(ref_text, is_first=False,
+                                                                            count=ref_count))
+                            ref_count += 1
 
                 author_elements = driver.find_elements(By.CSS_SELECTOR, "p[id*='author']")
                 for author_element in author_elements:
-                    authors.append(author_converter(author_element.get_attribute('innerHTML')))
-
+                    authors.append(author_converter(author_element.get_attribute('innerText'), author_element.get_attribute('innerHTML')))
                 try:
-                    doi = driver.find_element(By.CSS_SELECTOR, 'a.doi-link').text
+                    doi = driver.find_element(By.CSS_SELECTOR, 'a.doi-link').get_attribute('innerText')
+                    doi = doi[doi.index("org/")+4:]
                 except NoSuchElementException:
                     pass
 
@@ -237,83 +317,64 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                 driver.get(driver.find_element
                            (By.CSS_SELECTOR, 'a.btn.btn-sm.float-left.article-tool.pdf.d-flex.align-items-center')
                            .get_attribute('href'))
+                pdf_to_download_available = True
             except Exception:
-                send_notification(DownloadError(
-                    f"Downloading the article with num of {article_num} of the journal"
-                    f" {journal_name, recent_volume, recent_issue} was "
-                    f"not successful."))
+                pass
+
+            if pdf_to_download_available:
+                # CHECK IF THE DOWNLOAD HAS BEEN FINISHED
+                if not check_download_finish(download_path):
+                    send_notification(DownloadError(f"Download was not finished in time, "
+                                                    f"{journal_name, recent_volume, recent_issue},"
+                                                    f" article num {article_num}."))
+                    if clear_directory(download_path):
+                        continue
+                    else:
+                        send_notification(GeneralError(f"Downloaded file could not deleted, "
+                                                       f"{journal_name, recent_volume, recent_issue},"
+                                                       f" article num {article_num}."))
+                format_file_name(download_path, journal_name+' '+str(recent_volume)+str(recent_issue)+str(article_num))
+                # HARVEST DATA FROM PARSED TEXT
+                article_data = {"Journal Name": f"{journal_name}",
+                                "Article Type": "",
+                                "Article DOI": 0,
+                                "Article Code": "",
+                                "Article Year": issue_year,
+                                "Article Volume": recent_volume,
+                                "Article Issue": recent_issue,
+                                "Article Page Range": article_page_range,
+                                "Article Title": {"TR": "", "ENG": ""},
+                                "Article Abstracts": {"TR": "", "ENG": ""},
+                                "Article Keywords": {"TR": [], "ENG": []},
+                                "Article Authors": [],
+                                "Article References": []}
+                if article_type:
+                    article_data["Article Type"] = article_type
+                if doi:
+                    article_data["Article DOI"] = doi
+                if article_code:
+                    article_data["Article Code"] = article_code
+                if article_title_tr:
+                    article_data["Article Title"]["TR"] = article_title_tr
+                if article_title_eng:
+                    article_data["Article Title"]["ENG"] = article_title_eng
+                if abstract_tr or abstract_eng:
+                    if abstract_eng:
+                        article_data["Article Abstracts"]["ENG"] = abstract_eng
+                    if abstract_tr:
+                        article_data["Article Abstracts"]["TR"] = abstract_tr
+                if keywords_tr or keywords_eng:
+                    if keywords_tr:
+                        article_data["Article Keywords"]["TR"] = keywords_tr
+                    if keywords_eng:
+                        article_data["Article Keywords"]["ENG"] = keywords_eng
+                if authors:
+                    article_data["Article Authors"] = Author.author_to_json(authors)
+                if references:
+                    article_data["Article References"] = references
+
+                # DELETE DOWNLOADED PDF
                 clear_directory(download_path)
-                continue
-
-            # CHECK IF THE DOWNLOAD HAS BEEN FINISHED
-            if not check_download_finish(download_path):
-                send_notification(DownloadError(f"Download was not finished in time, "
-                                                f"{journal_name, recent_volume, recent_issue},"
-                                                f" article num {article_num}."))
-                if clear_directory(download_path):
-                    continue
-                else:
-                    send_notification(GeneralError(f"Downloaded file could not deleted, "
-                                                   f"{journal_name, recent_volume, recent_issue},"
-                                                   f" article num {article_num}."))
-                    continue
-
-            # PARSE THE SCANNED PDF
-            path_to_pdf = max(glob.iglob(os.path.dirname(os.path.abspath(__file__)) + r'\*'), key=os.path.getmtime)
-            parsed_text = ""
-            try:
-                parsed_text = parser.get_text_with_specs(path_=path_to_pdf, num_pages=1, font1_size=12.00)
-            except Exception:
-                # Does not end the iteration but only sends an SMS.
-                send_notification(
-                    ParseError(f"Article could not be parsed, journal: {journal_name, recent_volume, recent_issue}"
-                               f", article: {article_num}."))
-                clear_directory(download_path)
-                continue
-
-            # HARVEST DATA FROM PARSED TEXT
-            article_data = {"Article Type": "",
-                            "Article Title": {"TR": "", "ENG": ""},
-                            "Article Abstracts": {"TR": "", "ENG": ""},
-                            "Article Keywords": {"TR": [], "ENG": []},
-                            "Article DOI": "",
-                            "Article Headline": "",
-                            "Article Authors": [],
-                            "Article References": []}
-            if article_type:
-                article_data["Article Type"] = article_type
-
-            if article_title_tr:
-                article_data["Article Title"]["TR"] = article_title_tr
-            if article_title_eng:
-                article_data["Article Title"]["ENG"] = article_title_eng
-
-            if abstract_tr or abstract_eng:
-                if abstract_eng:
-                    article_data["Article Abstracts"]["ENG"] = abstract_eng
-                if abstract_tr:
-                    article_data["Article Abstracts"]["TR"] = abstract_tr
-
-            if keywords_tr or keywords_eng:
-                if keywords_tr:
-                    article_data["Article Keywords"]["TR"] = keywords_tr
-                if keywords_eng:
-                    article_data["Article Keywords"]["ENG"] = keywords_eng
-
-            if doi:
-                article_data["Article DOI"] = doi
-
-            # Get Headliner
-
-            if authors:
-                article_data["Article Authors"] = authors
-            # Get Author Mail and Comm Details
-
-            if references:
-                article_data["Article References"] = references
-
-            # DELETE DOWNLOADED PDF
-            clear_directory(download_path)
 
             # POST THE DATA TO THE BACKEND
             try:

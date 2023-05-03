@@ -1,8 +1,43 @@
 import re
+import os
 from classes.author import Author
 
 
-def author_converter(author_html: str) -> Author:
+def author_converter(author_text: str, author_html: str) -> Author:
+    """
+
+    :param author_html: The parsed HTML data of the author object
+    :param author_text: The innerText string passed to the function
+    :return: Returns an author object
+    """
+    try:
+        author = Author()
+        is_foreign_author = False
+        split_text = author_text.split('\n')
+        if len(split_text) == 4:
+            del split_text[-2]
+        if split_text[-1] != "Türkiye" and split_text[-1] != "Turkey" and split_text[-1] != "Kuzey Kıbrıs Türk Cumhuriyeti":
+            is_foreign_author = True
+        if "Sorumlu" in split_text[0]:
+            author.is_correspondace = True
+        if "star-of-life" in author_html:
+            author.is_correspondace = True
+
+        # Author last name is always written in capital letters. Same goes for the second last names as well
+        author.name = re.sub(r"  Bu kişi benim|&gt;|>", '', split_text[0])
+        author.name = re.sub(r" \(Sorumlu Yazar\)", '', author.name)
+
+        if is_foreign_author:
+            author.country = "YABANCI"
+            author.all_speciality = "YABANCI"
+        else:
+            author.all_speciality = split_text[1]
+        return author
+    except Exception as e:
+        print(e, e.args, e.__str__())
+
+
+def author_converter1(author_html: str) -> Author:
     """
 
     :param author_html: The innerHTML string passed to the function
@@ -35,23 +70,130 @@ def author_converter(author_html: str) -> Author:
     return new_author
 
 
-def identify_article_type(string: str) -> str:
+def identify_article_type(string, num_of_references) -> str:
     """
-ARAŞTIRMA MAKALESI
+    ARAŞTIRMA MAKALESI
     :param string: The scraped type text from Dergipark issue page
     :return: Returns a string that is selected from the dropdown menu of Atıf Dizini
     """
+    # Orijinal Araştırma
     if string.lower() == "research article":
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesi":
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesı":
         return "ORİJİNAL ARAŞTIRMA"
+    if string == "KLINIK ARAŞTIRMA" or string == "Klinik Araştırma" or string == "KLİNİK ARAŞTIRMA":
+        return "KLİNİK ARAŞTIRMA"
+
+    # Derlemeler
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme":
         return "DERLEME"
+    if string.lower() == "review":
+        return "DERLEME"
+
+    # Olgu Sunumu
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "olgu sunumu":
         return "OLGU SUNUMU"
 
+    # Orijinal Görüntü
+    if string == "sajnfdıkosjnadjasosa":
+        return "ORİJİNAL GÖRÜNTÜ"
 
-def reference_formatter(reference: str) -> str:
-    return str
+    # Diğer
+    if string == "DIĞER" and num_of_references == 0:
+        return "Diğer"
+    if string == "EDITORYAL":
+        return "Editoryal"
+    if string == "DÜZELTME" and num_of_references > 0:
+        return "ORİJİNAL ARAŞTIRMA"
+    else:
+        return "Diğer"
+
+
+def reference_formatter(reference: str, is_first: bool, count: int) -> str:
+    try:
+        if is_first:
+            reference = re.sub(r"kaynakça|kaynakca|references", "", reference, flags=re.IGNORECASE)
+        reference_head = reference[0:18]
+        reference_tail = reference[18:]
+        reference_head = re.sub(r"referans|reference", "", reference_head, flags=re.IGNORECASE)
+
+        reference_temp = reference_head + reference_tail
+        reference_head = reference_temp[:5]
+        reference_tail = reference_temp[5:]
+        reference_tail = re.sub(r"\s{2,}", "", reference_tail)
+        try:
+            reference_tail = reference_tail[:re.search(r"doi:|DOI:|https://doi", reference_tail).start()]
+        except:
+            pass
+        reference_head = re.sub(r"[\[\]-_:0-9\.]", "", reference_head)
+        reference_head = re.sub(r"\t{1,}", "", reference_head)
+        reference_head = re.sub(r"\s{2,}", "", reference_head)
+        if reference_head and reference_head[0] == " ":
+            reference_head = str(count) + "." + reference_head
+        elif not reference_head:
+            reference_head = str(count) + ". "
+        else:
+            reference_head = str(count) + ". " + reference_head
+
+
+        return reference_head + reference_tail
+    except Exception as e:
+        pass
+
+
+def format_file_name(downloads_path: str, journal_details_name: str) -> bool:
+    name_element_list = journal_details_name.replace('ı', 'i').replace('ğ', 'g').split()
+    formatted_element_list = []
+    for item in name_element_list:
+        formatted_element_list.append(item.lower().strip() \
+                                      .encode(encoding="ascii", errors="ignore").decode(encoding="UTF-8"))
+    formatted_name = downloads_path + '\\' + "_".join(formatted_element_list) + ".pdf"
+
+    files = [downloads_path + '\\' + file_name for file_name in os.listdir(downloads_path)]
+
+    os.rename(max(files, key=os.path.getctime), formatted_name)
+    return True
+
+
+def abstract_formatter(abstract, language) -> str:
+    if language == "tr":
+        abstract_head = abstract[:10]
+        abstract_tail = abstract[10:]
+        abstract_head = re.sub(r"\t|\n", "", abstract_head)
+        abstract_head = re.sub(r"Öz:|Öz", "", abstract_head, flags=re.IGNORECASE)
+        try:
+            abstract_tail = abstract_tail[: abstract_tail.index("Anahtar ke")].strip()
+        except:
+            pass
+        try:
+            abstract_tail = abstract_tail[: abstract_tail.index("Anahtar Ke")].strip()
+        except:
+            pass
+        try:
+            abstract_tail = abstract_tail[: abstract_tail.index("anahtar ke:")].strip()
+        except:
+            pass
+    else:
+        abstract_head = abstract[:10]
+        abstract_tail = abstract[10:]
+        abstract_head = re.sub(r"\t|\n", "", abstract_head)
+        abstract_head = re.sub(r"Summary:|ABSTRACT:", "", abstract_head, flags=re.IGNORECASE)
+        abstract_head = re.sub(r"Summary|ABSTRACT", "", abstract_head, flags=re.IGNORECASE)
+        try:
+            abstract_tail = abstract_tail[: abstract_tail.index("keywords:")].strip()
+        except:
+            pass
+        try:
+            abstract_tail = abstract_tail[: abstract_tail.index("Keywords:")].strip()
+        except:
+            pass
+        try:
+            abstract_tail = abstract_tail[: abstract_tail.index("\nKeywords:")].strip()
+        except:
+            pass
+    return (abstract_head+abstract_tail).strip()
+
+if __name__ == "__main__":
+    pass
