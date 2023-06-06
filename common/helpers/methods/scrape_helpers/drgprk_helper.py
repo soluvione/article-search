@@ -143,7 +143,7 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
         pass
 
 
-def format_file_name(downloads_path: str, journal_details_name: str) -> bool:
+def format_file_name(downloads_path: str, journal_details_name: str) -> str:
     name_element_list = journal_details_name.replace('ı', 'i').replace('ğ', 'g').split()
     formatted_element_list = []
     for item in name_element_list:
@@ -154,7 +154,7 @@ def format_file_name(downloads_path: str, journal_details_name: str) -> bool:
     files = [downloads_path + '\\' + file_name for file_name in os.listdir(downloads_path)]
 
     os.rename(max(files, key=os.path.getctime), formatted_name)
-    return True
+    return formatted_name
 
 
 def abstract_formatter(abstract, language) -> str:

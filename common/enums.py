@@ -9,3 +9,8 @@ class ArticleType(Enum):
     EDITORDEN = "EDİTÖRDEN"
     MEKTUP = "EDİTÖRE MEKTUP"
     NOTLAR = "NOTLAR"
+
+class AzureResponse(Enum):
+    FAILURE = 0
+    SUCCESSFUL = 1
+    RUNNING = 2

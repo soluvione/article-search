@@ -16,7 +16,7 @@ def send_notification(error: BaseException):
     print("Sent the sms")
 
 
-def send_notification(message: str):
+def send_notifications(message: str):
     """
 
     :param message: Message to be send to the supervisor.

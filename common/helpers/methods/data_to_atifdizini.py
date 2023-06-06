@@ -82,7 +82,8 @@ article_element_selectors = {"pdf_upload_button": "By.ID, 'labeluploadFile'",
 
 def get_to_artc_page():
     driver.get(atif_dizini_url)
-    time.sleep(0.5)
+    driver.maximize_window()
+    time.sleep(1)
     username_element = driver.find_elements(By.TAG_NAME, 'input')[0]
     password_element = driver.find_elements(By.TAG_NAME, 'input')[1]
 
@@ -91,13 +92,22 @@ def get_to_artc_page():
     button_element = driver.find_element(By.XPATH, '/html/body/div/div[2]/main/div/div/div/div[2]/form/button')
     button_element.click()
     time.sleep(0.5)
+    time.sleep(4)
     driver.get("http://178.62.217.122/add")
-    time.sleep(0.5)
+    time.sleep(2)
 
 
 def paste_data(data, pdf_path):
     with open(r"C:\Users\emine\OneDrive\Masaüstü\data.txt", 'r', encoding='utf-8') as f:
         data = json.loads(f.read())
+    # ABSTRACT TR
+    pyperclip.copy(data["Article Abstracts"]["TR"])
+    abstract_tr_element = driver.find_elements(By.CSS_SELECTOR,
+                                               'div.quillWrapper')[0].find_element(By.CSS_SELECTOR,
+                                                                                   '.ql-editor.ql-blank')
+    ActionChains(driver).click(abstract_tr_element).key_down(Keys.CONTROL).send_keys("v").key_up(
+        Keys.CONTROL).perform()
+    time.sleep(0.5)
     # REFERENCES
     references_data = data["Article References"]
     formatted_references_string = ""
@@ -108,12 +118,8 @@ def paste_data(data, pdf_path):
     ActionChains(driver).click(citations_element)\
         .send_keys(Keys.CLEAR).pause(1).key_down(Keys.CONTROL).send_keys("v").key_up(Keys.CONTROL).perform()
 
-    # ABSTRACT TR
-    pyperclip.copy(str(data["Article Abstracts"]["TR"]))
-    abstract_tr_element = driver.find_elements(By.CSS_SELECTOR,
-                                               'div.quillWrapper')[0].find_element(By.CSS_SELECTOR, '.ql-editor.ql-blank')
-    ActionChains(driver).click(abstract_tr_element).key_down(Keys.CONTROL).send_keys("v").key_up(Keys.CONTROL).perform()
 
+    time.sleep(0.5)
     # ABSTRACT ENG
     pyperclip.copy(data["Article Abstracts"]["ENG"])
     abstract_eng_element = driver.find_elements(By.CSS_SELECTOR,
@@ -124,7 +130,7 @@ def paste_data(data, pdf_path):
     # UPLOAD
     button = driver.find_element(By.XPATH, '//*[@id="uploadFile"]')
     driver.execute_script("arguments[0].style.display = 'block';", button)
-    button.send_keys(r"C:\Users\emine\Downloads\urolojiozel16-1-2.pdf")
+    button.send_keys(r"C:\Users\emine\Downloads\makale_metni.pdf")
 
     # ARTICLE CATEGORY
     category_menu = driver.find_element(By.CSS_SELECTOR, 'input[aria-label=\"Kategori\"]')
