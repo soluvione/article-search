@@ -56,3 +56,4 @@ reference_list_elements = driver.find_elements(
                         By.CSS_SELECTOR, 'div.article-citationssdsdds.data-section')
 
 print(len(reference_list_elements))
+# test
