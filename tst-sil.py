@@ -2,6 +2,7 @@
 This is the template scraper that will be used to multiply.
 """
 # Python libraries
+from common.helpers.tr_data import get_turkish_data
 from datetime import datetime
 import time
 import os
@@ -42,7 +43,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Eager option shortens the load time. Always download the pdfs and does not display them.
 options = Options()
 options.page_load_strategy = 'eager'
-download_path = os.path.dirname(os.path.abspath(__file__)) + r'\downloads'
+download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloads')
 prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
 options.add_experimental_option('prefs', prefs)
 options.add_argument("--disable-notifications")
@@ -265,16 +266,8 @@ if True:
                                     if keyword.strip() and keyword.strip() not in keywords_eng:
                                         keywords_eng.append(keyword.strip())
 
-                elif article_lang_num == 2:
-                    # GO TO THE TURKISH TAB
-                    language_tabs[0].click()
-                    time.sleep(0.7)
-                    tr_article_element = driver.find_element(By.ID, 'article_tr')
-                    article_title_tr = tr_article_element.find_element(By.CSS_SELECTOR, '.article-title').get_attribute(
-                        'innerText').strip()
-                    abstract_tr = abstract_formatter(tr_article_element.find_element(By.CSS_SELECTOR,
-                                                                                     'div.article-abstract.data-section') \
-                                                     .find_element(By.TAG_NAME, 'p').get_attribute('innerText'), "tr")
+                    if article_lang_num == 2:
+                        article_title_tr, tr_article_element = get_turkish_data(driver, language_tabs)
 
                     try:
                         keywords_element = tr_article_element.find_element(By.CSS_SELECTOR,

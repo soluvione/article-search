@@ -1,16 +1,10 @@
 """
-This module extracts the following data from Azure API response and leaves the rest:
-- Article Title
-- Article Abstracts
-- Article Keywords
-- Article DOI
-- Author Names
-- Author Emails
-- Author Data
+This module extracts the following data from Azure API response and CLEANS THE DATA:
+It does the cleaning part so that the Azure Data Formatter methods will be working on clean data
 """
 import json
 import re
-
+from common.services.send_sms import send_notifications
 
 def _extract_keywords_from_string(keyword_string):
     """
@@ -68,11 +62,21 @@ class ApiResponseExtractor:
             try:
                 self.api_response = json.loads(api_response_json_string)
             except json.JSONDecodeError:
+                send_notifications()
                 raise ValueError("Invalid JSON string provided to the Azure response extractor")
         elif isinstance(api_response_json_string, dict):
             self.api_response = api_response_json_string
         else:
+            send_notifications()
             raise ValueError("Invalid type for api_response_json_string. Expected str or dict.")
+        # Additional validation
+        if "analyzeResult" not in self.api_response or \
+                "documents" not in self.api_response["analyzeResult"] or \
+                not isinstance(self.api_response["analyzeResult"]["documents"], list) or \
+                len(self.api_response["analyzeResult"]["documents"]) == 0 or \
+                "fields" not in self.api_response["analyzeResult"]["documents"][0]:
+            send_notifications()
+            raise ValueError("Invalid structure for api_response_json_string. Expected specific structure.")
 
     def extract_titles(self):
         titles = {}
@@ -99,15 +103,13 @@ class ApiResponseExtractor:
         return keywords
 
     def extract_article_doi(self):
-
         doi = None
         if ("DOI" in self.api_response["analyzeResult"]["documents"][0]["fields"]
                 and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][
                     "DOI"]):
             doi = self.api_response["analyzeResult"]["documents"][0]["fields"]["DOI"]["valueString"]
-            # print("DOI IS:", doi)
             try:
-                doi = doi[doi.index("/10.") + 1:]
+                doi = doi[doi.index("10.") + 1:]
             except ValueError:
                 return "HATA"
         return doi
@@ -141,28 +143,36 @@ class ApiResponseExtractor:
         return journal_names
 
     def extract_article_code(self):
-        if "article_code" in self.api_response["analyzeResult"]["documents"][0]["fields"]:
+        if ("article_code" in self.api_response["analyzeResult"]["documents"][0]["fields"] and
+                "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["article_code"]):
             try:
                 return self.api_response["analyzeResult"]["documents"][0]["fields"]["article_code"]["valueString"]
-            except KeyError:
+            except KeyError as e:
+                print(e, e.args)
                 return "HATA"
         else:
             return None
 
     def extract_correspondance_data(self):
-        if "correspondance_data" in self.api_response["analyzeResult"]["documents"][0]["fields"]:
+        if ("correspondance_data" in self.api_response["analyzeResult"]["documents"][0]["fields"]
+                and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["correspondance_data"]):
             try:
-                return self.api_response["analyzeResult"]["documents"][0]["fields"]["correspondance_data"]["valueString"]
-            except KeyError:
+                return self.api_response["analyzeResult"]["documents"][0]["fields"]["correspondance_data"][
+                    "valueString"]
+            except KeyError as e:
+                print(e, e.args)
                 return "HATA"
         else:
             return None
 
     def extract_journal_abbreviation(self):
-        if "journal_abbreviation" in self.api_response["analyzeResult"]["documents"][0]["fields"]:
+        if ("journal_abbreviation" in self.api_response["analyzeResult"]["documents"][0]["fields"] and
+                "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"]):
             try:
-                return self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"]["valueString"]
-            except KeyError:
+                return self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"][
+                    "valueString"]
+            except KeyError as e:
+                print(e, e.args)
                 return "HATA"
         else:
             return None
@@ -174,7 +184,8 @@ class ApiResponseExtractor:
         """
         if "article_year" in self.api_response["analyzeResult"]["documents"][0]["fields"]:
             try:
-                return _clean_year(self.api_response["analyzeResult"]["documents"][0]["fields"]["article_year"]["valueString"])
+                return _clean_year(
+                    self.api_response["analyzeResult"]["documents"][0]["fields"]["article_year"]["valueString"])
             except Exception:
                 return "HATA"
         else:
@@ -185,7 +196,8 @@ class ApiResponseExtractor:
         This method consumes a string containing page range data and returns an array of integers that are page range objects
         :return: Page range array as [int, int] or an empty list []
         """
-        if "page_range" in self.api_response["analyzeResult"]["documents"][0]["fields"]:
+        if ("page_range" in self.api_response["analyzeResult"]["documents"][0]["fields"]) and (
+                "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["page_range"]):
             try:
                 page_range_string = self.api_response["analyzeResult"]["documents"][0]["fields"]["page_range"][
                     "valueString"]
@@ -193,7 +205,7 @@ class ApiResponseExtractor:
                 page_range_numbers = list(map(int, page_range_string))
                 page_range_numbers.sort()
                 return page_range_numbers[:2]
-            except Exception:
+            except KeyError as e:
                 return "HATA"
         else:
             return None
@@ -206,16 +218,17 @@ class ApiResponseExtractor:
         volume_issue = dict.fromkeys(["volume", "issue"])
         fields = self.api_response["analyzeResult"]["documents"][0]["fields"]
         regex_pattern = r'\b\d{1,2}'
-        if "volume" in fields:
+        if "volume" in fields and "valueString" in fields["volume"]:
             try:
                 volume_issue["volume"] = fields["volume"]["valueString"]
                 match = re.search(regex_pattern, volume_issue["volume"])
                 if match:
                     volume_issue["volume"] = match.group(0)
-            except KeyError:
+            except KeyError as e:
+                print(e, e.args)
                 volume_issue["volume"] = "HATA"
 
-        if "issue" in fields:
+        if "issue" in fields and "valueString" in fields["issue"]:
             try:
                 volume_issue["issue"] = fields["issue"]["valueString"]
                 match = re.search(regex_pattern, volume_issue["issue"])

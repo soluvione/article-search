@@ -144,17 +144,20 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
 
 
 def format_file_name(downloads_path: str, journal_details_name: str) -> str:
-    name_element_list = journal_details_name.replace('ı', 'i').replace('ğ', 'g').split()
-    formatted_element_list = []
-    for item in name_element_list:
-        formatted_element_list.append(item.lower().strip() \
-                                      .encode(encoding="ascii", errors="ignore").decode(encoding="UTF-8"))
-    formatted_name = downloads_path + '\\' + "_".join(formatted_element_list) + ".pdf"
+    try:
+        name_element_list = journal_details_name.replace('ı', 'i').replace('ğ', 'g').split()
+        formatted_element_list = []
+        for item in name_element_list:
+            formatted_element_list.append(item.lower().strip() \
+                                          .encode(encoding="ascii", errors="ignore").decode(encoding="UTF-8"))
+        formatted_name = os.path.join(downloads_path, ("_".join(formatted_element_list) + ".pdf"))
 
-    files = [downloads_path + '\\' + file_name for file_name in os.listdir(downloads_path)]
+        files = [os.path.join(downloads_path, file_name) for file_name in os.listdir(downloads_path)]
 
-    os.rename(max(files, key=os.path.getctime), formatted_name)
-    return formatted_name
+        os.rename(max(files, key=os.path.getctime), formatted_name)
+        return formatted_name
+    except Exception as e:
+        print(e, e.args)
 
 
 def abstract_formatter(abstract, language) -> str:

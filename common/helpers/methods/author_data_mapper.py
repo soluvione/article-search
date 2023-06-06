@@ -67,13 +67,15 @@ def associate_authors_data(author_names, author_emails, author_specialities):
                     break
 
         # Extract the email information
-        if suffix:
+        if single_email and len(author_names) == 1:
+            author_info["email"] = single_email
+        elif single_email:
+            author_info["email"] = single_email if similarity(author_info["name"].lower(), single_email.split('@')[0].lower()) > 0.4 else None
+        elif suffix:
             for email in author_emails:
                 if email.startswith(suffix):
                     author_info["email"] = email[len(suffix):].strip()
                     break
-        elif single_email:
-            author_info["email"] = single_email if similarity(author_info["name"].lower(), single_email.split('@')[0].lower()) > 0.6 else None
 
         author_data.append(author_info)
 

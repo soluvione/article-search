@@ -142,7 +142,7 @@ class AzureHelper:
 
 # TEST DUMMY RESPONSE
 def return_mock_response():
-    with open("C:\\Users\\emine\\PycharmProjects\\Article-Search\\file.txt", "r", encoding='utf-8') as file:
+    with open("/home/emin/PycharmProjects/Article-Search/tests/azure_call_data_7june.txt", "r", encoding='utf-8') as file:
         fake_response = json.loads(file.read())
         return fake_response
 
@@ -150,4 +150,4 @@ def return_mock_response():
 import pprint
 
 if __name__ == "__main__":
-    pprint.pprint(AzureHelper.format_azure_data(return_mock_response()["Data"]))
+    pprint.pprint(AzureHelper.format_azure_data(return_mock_response()))
