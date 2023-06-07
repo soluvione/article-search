@@ -7,27 +7,13 @@ Components are listed in the order they are used, so that they resemble a full w
 import requests
 from datetime import datetime
 import time
-from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
-from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
-from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
-from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
-from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
-from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
     abstract_formatter
-from common.helpers.methods.pdf_cropper import crop_pages
-import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
-from common.helpers.methods.data_to_atifdizini import get_to_artc_page, paste_data
-from common.services.post_json import post_json
 from common.services.send_sms import send_notification
-from common.services.azure.azure_helper import AzureHelper
 
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 
 
