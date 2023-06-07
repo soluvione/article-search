@@ -13,14 +13,14 @@ from pathlib import Path
 # Local imports
 from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
-from common.helpers.methods.scrape_helpers.check_download_finish import check_download_finish
-from common.helpers.methods.scrape_helpers.clear_directory import clear_directory
+from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
+from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
 from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
 from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.scrape_helpers.drgprk_helper import author_converter, identify_article_type
-from common.helpers.methods.scrape_helpers.drgprk_helper import reference_formatter
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
 from common.services.post_json import post_json
 from common.services.send_sms import send_notification
 import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser

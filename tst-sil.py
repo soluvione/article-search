@@ -1,8 +1,8 @@
 """
 This is the template scraper that will be used to multiply.
 """
+import pprint
 # Python libraries
-from common.helpers.tr_data import get_turkish_data
 from datetime import datetime
 import time
 import os
@@ -13,14 +13,14 @@ from pathlib import Path
 # Local imports
 from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
-from common.helpers.methods.scrape_helpers.check_download_finish import check_download_finish
-from common.helpers.methods.scrape_helpers.clear_directory import clear_directory
+from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
+from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
 from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
 from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.scrape_helpers.drgprk_helper import author_converter, identify_article_type
-from common.helpers.methods.scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
     abstract_formatter
 from common.helpers.methods.pdf_cropper import crop_pages
 import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
@@ -38,6 +38,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
+# Scraper body chunks
+from common.helpers.methods.scraper_body_components import dergipark_components
 
 # Webdriver options
 # Eager option shortens the load time. Always download the pdfs and does not display them.
@@ -76,22 +78,9 @@ pdf_to_download_available = False
 article_url_list = []
 article_download_element_list = []
 
-# GET TO THE PAGE
-if requests.head(start_page_url).status_code != 200:
-    send_notification(DownServerError(f"Servers of the journal {journal_name} are down."))
-    DownServerError(f"Servers of the journal {journal_name} are down.")
-try:
-    driver.get(start_page_url)
-except WebDriverException:
-    send_notification(ScrapePathError(f"Could not reach the webpage of {journal_name}."))
-    raise ScrapePathError(f"Could not reach the webpage of {journal_name}.")
+dergipark_components.get_to_the_page(driver, start_page_url, journal_name)
 
-# GET THE DATA ABOUT THE LATEST ISSUE/VOLUME
-try:
-    latest_publication_element = driver.find_element(By.CSS_SELECTOR, '.kt-widget-18__item')
-except NoSuchElementException:
-    send_notification(ScrapePathError(f"Could not reach the webpage of{journal_name}. Servers could be down."))
-    raise ScrapePathError(f"Could not reach the webpage of{journal_name}. Servers could be down.")
+latest_publication_element = dergipark_components.get_latest_data(driver, journal_name)
 
 temp_txt = latest_publication_element.text
 recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip())
@@ -99,45 +88,16 @@ recent_issue = int(temp_txt.split()[-1])
 
 # START DOWNLOADS IF ISSUE IS NOT SCANNED
 if True:
-    # GET TO THE ISSUE PAGE
-    try:
-        driver.get(latest_publication_element.find_element(By.TAG_NAME, 'a').get_attribute('href'))
-    except NoSuchElementException:
-        send_notification(ScrapePathError(f"Could not retrieve element of the webpage of "
-                                          f"{journal_name, recent_volume, recent_issue}. DOM could be changed."))
-        raise ScrapePathError(f"Could not retrieve element of the webpage of "
-                              f"{journal_name, recent_volume, recent_issue}. DOM could be changed.")
-    time.sleep(1)
+    dergipark_components.go_to_issue_page(driver, latest_publication_element, journal_name, recent_volume, recent_issue)
 
-    # SCRAPE YEAR INFORMATION OF THE ISSUE
-    try:
-        issue_year = driver.find_element(By.CSS_SELECTOR, 'span.kt-widget-12__desc').text.split()[-1]
-    except NoSuchElementException:
-        # If for any reason try suite fails, the default year is set to the current year
-        # This method will work fine for 99% of the times, will give correct year data
-        issue_year = datetime.now().year
+    issue_year = dergipark_components.scrape_year_information(driver)
 
-    # SCRAPE ARTICLE ELEMENTS AS SELENIUM ELEMENTS
-    try:
-        article_elements = driver.find_elements(By.CSS_SELECTOR, '.card.j-card.article-project-actions.article-card')
-    except Exception:
-        send_notification(ScrapePathError(f"Could not retrieve article urls of "
-                                          f"{journal_name, recent_volume, recent_issue}. DOM could be changed."))
-        raise ScrapePathError(f"Could not retrieve article urls of "
-                              f"{journal_name, recent_volume, recent_issue}. DOM could be changed.")
+    # Get all elements
+    article_elements = dergipark_components.scrape_article_elements(driver, journal_name, recent_volume, recent_issue)
 
-    # SCRAPE ARTICLE PAGE URL FROM EACH ELEMENT
-    article_num = 0
-    for article in article_elements:
-        try:
-            article_url = article.find_element(By.CSS_SELECTOR, '.card-title.article-title').get_attribute('href')
-            article_url_list.append(article_url)
-        except Exception:
-            # Does not end the iteration but only sends an SMS.
-            send_notification(
-                ScrapePathError(f"Article url does not exist for the {journal_name, recent_volume, recent_issue}"
-                                f", article {article_num}."))
-        article_num += 1
+    # Add URLs to article URLs list
+    dergipark_components.scrape_article_urls(driver, article_elements, article_url_list, journal_name, recent_volume,
+                                             recent_issue)
 
     # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
     article_num = 0
@@ -172,31 +132,15 @@ if True:
                 # GET TO ARTICLE PAGE AND GET ELEMENTS IF POSSIBLE FROM THE UNIQUE ARTICLE PAGE
                 driver.get(article_url)
 
-                # DOWNLOAD ARTICLE PDF
-                try:
-                    # PDF LINK THAT WHEN DRIVER GETS THERE THE DOWNLOAD STARTS
-                    driver.get(driver.find_element
-                               (By.CSS_SELECTOR, 'a.btn.btn-sm.float-left.article-tool.pdf.d-flex.align-items-center')
-                               .get_attribute('href'))
-                    pdf_to_download_available = True
-                except Exception:
-                    pass
+                pdf_to_download_available = dergipark_components.download_article_pdf(driver)
 
-                article_type = identify_article_type(
-                    driver.find_element(By.CSS_SELECTOR, 'div.kt-portlet__head-title').text, len(driver.find_elements(
-                        By.CSS_SELECTOR, 'div.article-citations.data-section')))
+                article_type = dergipark_components.define_article_type(driver)
                 if article_type == "Diğer" or article_type == "Editoryal":
                     continue
 
-                article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
-                for element in article_subtitle_elements:
-                    if element.text:
-                        article_page_range = element.text.split(',')[-2].strip().split('-')
-                        article_page_range = [int(page_num) for page_num in article_page_range]
+                article_page_range = dergipark_components.get_page_range(driver)
 
-                lang_navbar = driver.find_element(By.CSS_SELECTOR,
-                                                  'ul.nav.nav-tabs.nav-tabs-line.nav-tabs-line-dergipark.nav-tabs-line-3x.nav-tabs-line-right.nav-tabs-bold')
-                language_tabs = lang_navbar.find_elements(By.CSS_SELECTOR, '.nav-item')
+                language_tabs = dergipark_components.get_language_tabs(driver)
                 article_lang_num = len(language_tabs)
 
                 if check_download_finish(download_path):
@@ -207,27 +151,21 @@ if True:
                                                       + str(recent_volume)
                                                       + str(recent_issue)
                                                       + str(article_num))
-                    location_header = AzureHelper.analyse_pdf(formatted_name)  # Location header is the response
-                                                                                # address of Azure API
+                    # location_header = AzureHelper.analyse_pdf(formatted_name)  # Location header is the response
+                    # address of Azure API
 
                 # So far, the article has been downloaded if possible, and the name of the file is reformatted
                 # Afterwards the pdf is sent for analysis. In the later stages of the code the response will be fetched.
 
                 if article_lang_num == 1:
-                    if "Türkçe" in driver.find_element(By.CSS_SELECTOR, 'table.record_properties.table').find_element(
-                            By.TAG_NAME, 'tr').text:
-                        article_lang = "TR"
-                    else:
-                        article_lang = "ENG"
+                    article_lang = dergipark_components.define_article_language(driver)
 
-                    article_title_elements = driver.find_elements(By.CSS_SELECTOR, 'h3.article-title')
-                    keywords_elements = driver.find_elements(By.CSS_SELECTOR, 'div.article-keywords.data-section')
-                    abstract_elements = driver.find_elements(By.CSS_SELECTOR, 'div.article-abstract.data-section')
-                    button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
+                    article_title_elements, keywords_elements, abstract_elements, button = \
+                        dergipark_components.get_single_lang_article_elements(driver)
                     button.click()
                     time.sleep(0.4)
-                    reference_list_elements = driver.find_elements(
-                        By.CSS_SELECTOR, 'div.article-citations.data-section')
+                    reference_list_elements = dergipark_components.get_reference_elements(driver)
+
                     for reference_element in reference_list_elements:
                         if reference_element.find_elements(By.TAG_NAME, 'li')[0].text:
                             ref_count = 1
@@ -241,6 +179,7 @@ if True:
                                         reference_formatter(element.get_attribute('innerText'), is_first=False,
                                                             count=ref_count))
                                 ref_count += 1
+
                     if article_lang == "TR":
                         for element in article_title_elements:
                             if element.text:
@@ -266,51 +205,46 @@ if True:
                                     if keyword.strip() and keyword.strip() not in keywords_eng:
                                         keywords_eng.append(keyword.strip())
 
-                    if article_lang_num == 2:
-                        article_title_tr, tr_article_element = get_turkish_data(driver, language_tabs)
+                # MULTIPLE LANGUAGE ARTICLES
+                elif article_lang_num == 2:
+                    tr_article_element, article_title_tr, abstract_tr = dergipark_components.get_turkish_data(driver, language_tabs)
+
 
                     try:
-                        keywords_element = tr_article_element.find_element(By.CSS_SELECTOR,
-                                                                           'div.article-keywords.data-section')
+                        keywords_element = dergipark_components.get_multiple_lang_article_keywords(tr_article_element)
 
                         for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
                                 'innerText').strip().split(','):
                             if keyword.strip() and keyword.strip() not in keywords_tr:
                                 keywords_tr.append(keyword.strip())
                         keywords_tr[-1] = re.sub(r'\.', '', keywords_tr[-1])
-                    except:
+                    except Exception:
                         send_notification(ParseError(
                             f"Could not scrape keywords of journal {journal_name} with article num {article_num}."))
                         # raise ParseError(f"Could not scrape keywords of journal {journal_name} with article num {article_num}.")
                         pass
+
                     # GO TO THE ENGLISH TAB
                     language_tabs[1].click()
                     time.sleep(0.7)
-                    eng_article_element = driver.find_element(By.ID, 'article_en')
-                    article_title_eng = eng_article_element.find_element(By.CSS_SELECTOR,
-                                                                         'h3.article-title').get_attribute(
-                        'innerText').strip()
-                    abstract_eng_element = \
-                        eng_article_element.find_element(By.CSS_SELECTOR,
-                                                         'div.article-abstract.data-section') \
-                            .find_elements(By.TAG_NAME, 'p')
+
+                    eng_article_element, article_title_eng, abstract_eng_element = dergipark_components.get_english_data(driver)
+
                     for part in abstract_eng_element:
                         if part.get_attribute('innerText'):
                             abstract_eng = abstract_formatter(part.get_attribute('innerText'), "eng")
-                    keywords_element = eng_article_element.find_element(By.CSS_SELECTOR,
-                                                                        'div.article-keywords.data-section')
+                    keywords_element = dergipark_components.get_multiple_lang_article_keywords(eng_article_element)
 
                     for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
                             'innerText').strip().split(','):
                         if keyword.strip():
                             keywords_eng.append(keyword.strip())
-
                     keywords_eng[-1] = re.sub(r'\.', '', keywords_eng[-1])
+
                     button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
                     button.click()
                     time.sleep(0.4)
-                    reference_list_elements = eng_article_element.find_element(
-                        By.CSS_SELECTOR, 'div.article-citations.data-section').find_elements(By.TAG_NAME, 'li')
+                    reference_list_elements = dergipark_components.get_multiple_lang_article_refs(eng_article_element)
                     ref_count = 1
                     for reference_element in reference_list_elements:
                         try:
@@ -321,26 +255,24 @@ if True:
                             else:
                                 references.append(reference_formatter(ref_text, is_first=False,
                                                                       count=ref_count))
-                        except:
+                        except Exception:
                             pass
                         ref_count += 1
-                author_elements = driver.find_elements(By.CSS_SELECTOR, "p[id*='author']")
+                author_elements = dergipark_components.get_author_elements(driver)
                 for author_element in author_elements:
                     authors.append(author_converter(author_element.get_attribute('innerText'),
                                                     author_element.get_attribute('innerHTML')))
                 try:
-                    doi = driver.find_element(By.CSS_SELECTOR, 'a.doi-link').get_attribute('innerText')
+                    doi = dergipark_components.get_doi(driver)
                     doi = doi[doi.index("org/") + 4:]
                 except NoSuchElementException:
                     pass
-
             except Exception:
                 send_notification(GeneralError(
                     f"Scraping journal elements of Dergipark journal"
                     f" {journal_name, recent_volume, recent_issue}"
                     f" with article num {article_num} was not successful."))
                 is_scraped_online = False
-
             if pdf_to_download_available:
                 # CHECK IF THE DOWNLOAD HAS BEEN FINISHED
                 if not check_download_finish(download_path):
@@ -354,14 +286,13 @@ if True:
                                                        f"{journal_name, recent_volume, recent_issue},"
                                                        f" article num {article_num}."))
 
-                if location_header:
+                if True:
                     # GET RESPONSE BODY OF THE AZURE RESPONSE
-                    azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                    # azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
 
-                    if azure_response_dictionary["Result"] == 1:
+                    if True:
                         # Format Azure Response and get a dict
-                        article_data = AzureHelper.format_azure_data(azure_data=azure_response_dictionary["Data"])
-
+                        # article_data = AzureHelper.format_azure_data(azure_data=azure_response_dictionary["Data"])
 
                         # HARVEST DATA FROM AZURE RESPONSE
                         article_data = {"Journal Name": f"{journal_name}",
@@ -377,11 +308,11 @@ if True:
                                         "Article Keywords": {"TR": [], "ENG": []},
                                         "Article Authors": [],
                                         "Article References": []}
-                        azure_data = azure_response_dictionary["Data"]
-                        print(
-                            f"Akademik Gastroenteroloji Dergisi {issue_year};{recent_volume}({recent_issue}):{article_page_range[0]}-{article_page_range[1]}")
-                        print(
-                            f"Akademik Gastroenteroloji Dergisi {issue_year};{recent_volume}({recent_issue}):{article_page_range[0]}-{article_page_range[1]}")
+                        # azure_data = azure_response_dictionary["Data"]
+                        # print(
+                        #     f"Akademik Gastroenteroloji Dergisi {issue_year};{recent_volume}({recent_issue}):{article_page_range[0]}-{article_page_range[1]}")
+                        # print(
+                        #     f"Akademik Gastroenteroloji Dergisi {issue_year};{recent_volume}({recent_issue}):{article_page_range[0]}-{article_page_range[1]}")
                         if article_type:
                             article_data["Article Type"] = article_type
                         # if doi:
@@ -406,7 +337,7 @@ if True:
                             article_data["Article Authors"] = Author.author_to_json(authors)
                         if references:
                             article_data["Article References"] = references
-
+                print(pprint.pprint(article_data))
                 with open(r"C:\Users\emine\OneDrive\Masaüstü\data.txt", 'w', encoding='utf-8') as f:
                     f.write(json.dumps(article_data, indent=4, ensure_ascii=False))
 
