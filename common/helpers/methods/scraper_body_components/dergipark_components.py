@@ -99,8 +99,8 @@ def download_article_pdf(driver):
                    .get_attribute('href'))
         pdf_to_download_available = True
         return pdf_to_download_available
-    except Exception:
-        pass
+    except Exception as e:
+        send_notification(e)
 
 
 def define_article_type(driver):

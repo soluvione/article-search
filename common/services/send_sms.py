@@ -12,8 +12,7 @@ def send_notification(error: BaseException):
     :return: Does not return anything
     """
     # Do stuff depending on the error type here.
-    print("sent message is: ", error.args)
-    print("Sent the sms")
+    print("sent message is: ", error, error.args)
 
 
 def send_notifications(message: str):

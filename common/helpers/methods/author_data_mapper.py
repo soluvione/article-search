@@ -1,6 +1,6 @@
 import re
 from difflib import SequenceMatcher
-
+from fuzzywuzzy import fuzz
 
 def similarity(a, b):
     """
@@ -67,15 +67,24 @@ def associate_authors_data(author_names, author_emails, author_specialities):
                     break
 
         # Extract the email information
-        if single_email and len(author_names) == 1:
-            author_info["email"] = single_email
-        elif single_email:
-            author_info["email"] = single_email if similarity(author_info["name"].lower(), single_email.split('@')[0].lower()) > 0.4 else None
-        elif suffix:
-            for email in author_emails:
-                if email.startswith(suffix):
-                    author_info["email"] = email[len(suffix):].strip()
-                    break
+        best_match_score = 0
+        best_match_email = None
+        for email in author_emails:
+            # Split the email on the "@" symbol and get the first part
+            email_prefix = email.split('@')[0]
+
+            # Calculate the similarity score between the email prefix and the author name
+            similarity_score = fuzz.ratio(author_info["name"].lower(), email_prefix.lower())
+
+            # If this score is the highest we've seen so far, save the email
+            if similarity_score > best_match_score:
+                best_match_score = similarity_score
+                best_match_email = email
+
+        # Assign the best match email to the author info
+        if best_match_score > 40:  # Adjust this threshold as needed
+            author_info["email"] = best_match_email
+            author_emails.remove(best_match_email)
 
         author_data.append(author_info)
 

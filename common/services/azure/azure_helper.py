@@ -9,6 +9,7 @@ from common.enums import AzureResponse
 from common.services.azure.azure_response_extractor import ApiResponseExtractor
 from common.constants import azure_analyse_pdf_url, subscription_key
 from common.helpers.methods.author_data_mapper import associate_authors_data
+from common.services.send_sms import send_notification
 
 
 class AzureHelper:
@@ -111,33 +112,35 @@ class AzureHelper:
         :return: This method returns the article data dictionary.
         """
         data_extractor = ApiResponseExtractor(azure_data)
+        try:
+            # AUTHOR PART
+            # This part is responsible from pairing the extracted author names, emails and author data.
+            # After the execution of the called methods, we end up with a dictionary of author objects.
+            author_names = data_extractor.extract_author_names()
+            author_emails = data_extractor.extract_authors_emails()
+            author_data = data_extractor.extract_author_data()
+            # Author matcher does the pairing within the method
+            article_authors = associate_authors_data(author_names, author_emails, author_data)
 
-        # AUTHOR PART
-        # This part is responsible from pairing the extracted author names, emails and author data.
-        # After the execution of the called methods, we end up with a dictionary of author objects.
-        author_names = data_extractor.extract_author_names()
-        author_emails = data_extractor.extract_authors_emails()
-        author_data = data_extractor.extract_author_data()
-        # Author matcher does the pairing within the method
-        article_authors = associate_authors_data(author_names, author_emails, author_data)
+            azure_extraction_data = {
+                "journal_names": data_extractor.extract_journal_names(),
+                "journal_abbv": data_extractor.extract_journal_abbreviation(),
+                "doi": data_extractor.extract_article_doi(),
+                "article_code": data_extractor.extract_article_code(),
+                "article_year": data_extractor.extract_article_year(),
+                "article_vol": data_extractor.extract_volume_issue()["volume"],
+                "article_issue": data_extractor.extract_volume_issue()["issue"],
+                "article_page_range": data_extractor.extract_page_range(),
+                "article_titles": data_extractor.extract_titles(),
+                "article_abstracts": data_extractor.extract_abstracts(),
+                "article_keywords": data_extractor.extract_keywords(),
+                "article_authors": article_authors,
+                "correspondace_data": data_extractor.extract_correspondance_data()
+            }
 
-        azure_extraction_data = {
-            "journal_names": data_extractor.extract_journal_names(),
-            "journal_abbv": data_extractor.extract_journal_abbreviation(),
-            "doi": data_extractor.extract_article_doi(),
-            "article_code": data_extractor.extract_article_code(),
-            "article_year": data_extractor.extract_article_year(),
-            "article_vol": data_extractor.extract_volume_issue()["volume"],
-            "article_issue": data_extractor.extract_volume_issue()["issue"],
-            "article_page_range": data_extractor.extract_page_range(),
-            "article_titles": data_extractor.extract_titles(),
-            "article_abstracts": data_extractor.extract_abstracts(),
-            "article_keywords": data_extractor.extract_keywords(),
-            "article_authors": article_authors,
-            "correspondace_data": data_extractor.extract_correspondance_data()
-        }
-
-        return azure_extraction_data
+            return azure_extraction_data
+        except Exception as e:
+            send_notification(e)
 
 
 # TEST DUMMY RESPONSE

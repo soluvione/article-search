@@ -10,6 +10,8 @@ import glob
 import re
 import json
 from pathlib import Path
+
+import common.helpers.methods.others
 # Local imports
 from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
@@ -22,7 +24,7 @@ from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
     abstract_formatter
-from common.helpers.methods.pdf_cropper import crop_pages
+from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
 from common.helpers.methods.data_to_atifdizini import get_to_artc_page, paste_data
 from common.services.post_json import post_json
@@ -57,14 +59,9 @@ driver = webdriver.Chrome(service=service, options=options)
 journal_name = f"Genel Sağlık Bilimleri Dergisi"
 scrape_type = "A_DRG"
 pdf_scrape_type = "A_UNQ"
+pages_to_send = 1
 start_page_url = f"https://dergipark.org.tr/tr/pub/jgehes"
-font_sizes_ntypes = {"Abstract": ["ftype", "size"],
-                     "Article Type": ["ftype", "size"],
-                     "Authors": ["ftype", "size"],
-                     "Author Info": ["ftype", "size"],
-                     "Code": ["ftype", "size"],  # Article headline code. Eg: Eur Oral Res 2023; 57(1): 1-9
-                     "Keywords": ["ftype", "size"],
-                     "References": ["ftype", "size"]}
+adobe_references = None
 """
 SPECIAL NOTES REGARDING THE JOURNAL (IF APPLICABLE)
 
@@ -85,7 +82,8 @@ latest_publication_element = dergipark_components.get_latest_data(driver, journa
 temp_txt = latest_publication_element.text
 recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip())
 recent_issue = int(temp_txt.split()[-1])
-
+with_azure = True
+with_adobe = False
 # START DOWNLOADS IF ISSUE IS NOT SCANNED
 if True:
     dergipark_components.go_to_issue_page(driver, latest_publication_element, journal_name, recent_volume, recent_issue)
@@ -101,7 +99,8 @@ if True:
 
     # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
     article_num = 0
-    for article_url in article_url_list:
+    for i in range(3):  # article_url in article_url_list
+        article_url = article_url_list[i]
         article_num += 1
         if article_num > 1:
             driver.execute_script("window.history.go(-1)")
@@ -116,7 +115,7 @@ if True:
                 article_title_tr = None
                 article_title_eng = None
                 authors = []
-                references = []
+                dergipark_references = []
                 keywords_tr = []
                 keywords_eng = []
                 abstract_tr = None
@@ -127,7 +126,7 @@ if True:
                 article_vol = recent_volume
                 article_issue = recent_issue
                 article_year = issue_year
-                article_code = "Genel Sağlık Bilimleri Dergisi 2023;6(1):1-6"  # Enter the code algorithms specific to the article
+                article_code = ""  # Enter the code algorithms specific to the article
 
                 # GET TO ARTICLE PAGE AND GET ELEMENTS IF POSSIBLE FROM THE UNIQUE ARTICLE PAGE
                 driver.get(article_url)
@@ -151,8 +150,12 @@ if True:
                                                       + str(recent_volume)
                                                       + str(recent_issue)
                                                       + str(article_num))
-                    # location_header = AzureHelper.analyse_pdf(formatted_name)  # Location header is the response
+                    if with_azure:
+                        first_pages_cropped_pdf = crop_pages(formatted_name, pages_to_send)
+                        location_header = AzureHelper.analyse_pdf(first_pages_cropped_pdf)  # Location header is the response
                     # address of Azure API
+                    if with_adobe and pdf_scrape_type != "A_DRG & R":
+                        adobe_pdf = split_in_half(formatted_name)
 
                 # So far, the article has been downloaded if possible, and the name of the file is reformatted
                 # Afterwards the pdf is sent for analysis. In the later stages of the code the response will be fetched.
@@ -171,11 +174,11 @@ if True:
                             ref_count = 1
                             for element in reference_element.find_elements(By.TAG_NAME, 'li'):
                                 if ref_count == 1:
-                                    references.append(
+                                    dergipark_references.append(
                                         reference_formatter(element.get_attribute('innerText'), is_first=True,
                                                             count=ref_count))
                                 else:
-                                    references.append(
+                                    dergipark_references.append(
                                         reference_formatter(element.get_attribute('innerText'), is_first=False,
                                                             count=ref_count))
                                 ref_count += 1
@@ -208,7 +211,6 @@ if True:
                 # MULTIPLE LANGUAGE ARTICLES
                 elif article_lang_num == 2:
                     tr_article_element, article_title_tr, abstract_tr = dergipark_components.get_turkish_data(driver, language_tabs)
-
 
                     try:
                         keywords_element = dergipark_components.get_multiple_lang_article_keywords(tr_article_element)
@@ -250,10 +252,10 @@ if True:
                         try:
                             ref_text = reference_element.get_attribute('innerText')
                             if ref_count == 1:
-                                references.append(reference_formatter(ref_text, is_first=True,
+                                dergipark_references.append(reference_formatter(ref_text, is_first=True,
                                                                       count=ref_count))
                             else:
-                                references.append(reference_formatter(ref_text, is_first=False,
+                                dergipark_references.append(reference_formatter(ref_text, is_first=False,
                                                                       count=ref_count))
                         except Exception:
                             pass
@@ -265,13 +267,13 @@ if True:
                 try:
                     doi = dergipark_components.get_doi(driver)
                     doi = doi[doi.index("org/") + 4:]
-                except NoSuchElementException:
-                    pass
-            except Exception:
+                except Exception as e:
+                    send_notification(e)
+            except Exception as e:
                 send_notification(GeneralError(
                     f"Scraping journal elements of Dergipark journal"
                     f" {journal_name, recent_volume, recent_issue}"
-                    f" with article num {article_num} was not successful."))
+                    f" with article num {article_num} was not successful. The problem encountered was: {e}"))
                 is_scraped_online = False
             if pdf_to_download_available:
                 # CHECK IF THE DOWNLOAD HAS BEEN FINISHED
@@ -288,60 +290,81 @@ if True:
 
                 if True:
                     # GET RESPONSE BODY OF THE AZURE RESPONSE
-                    # azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-
+                    if with_azure:
+                        azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                        azure_data = azure_response_dictionary["Data"]
                     if True:
                         # Format Azure Response and get a dict
-                        # article_data = AzureHelper.format_azure_data(azure_data=azure_response_dictionary["Data"])
-
-                        # HARVEST DATA FROM AZURE RESPONSE
-                        article_data = {"Journal Name": f"{journal_name}",
-                                        "Article Type": "",
-                                        "Article DOI": "10.54996/anatolianjem.1053506",  # TODO DOI HALLET
-                                        "Article Code": "",
-                                        "Article Year": issue_year,
-                                        "Article Volume": recent_volume,
-                                        "Article Issue": recent_issue,
-                                        "Article Page Range": article_page_range,
-                                        "Article Title": {"TR": "", "ENG": ""},
-                                        "Article Abstracts": {"TR": "", "ENG": ""},
-                                        "Article Keywords": {"TR": [], "ENG": []},
-                                        "Article Authors": [],
-                                        "Article References": []}
-                        # azure_data = azure_response_dictionary["Data"]
-                        # print(
-                        #     f"Akademik Gastroenteroloji Dergisi {issue_year};{recent_volume}({recent_issue}):{article_page_range[0]}-{article_page_range[1]}")
-                        # print(
-                        #     f"Akademik Gastroenteroloji Dergisi {issue_year};{recent_volume}({recent_issue}):{article_page_range[0]}-{article_page_range[1]}")
+                        azure_article_data = None
+                        if with_azure:
+                            azure_article_data = AzureHelper.format_azure_data(azure_data=azure_data)
+                        article_code = f"{journal_name} {article_year};{article_vol}({article_issue})" \
+                                       f":{article_page_range[0]}-{article_page_range[1]}"
+                        # So far both the Azure data and the data scraped from Dergipark are constructed
+                        # Additionally, if needed, the references data is fetched from Adobe
+                        # At this point the data that will be sent to the API will be finalized
+                        # Both data will be compared and the available ones will be selected from both data
+                        # Additionally the references will be added if fetched from Adobe
+                        # Construct Final Data Dict
+                        final_article_data = {
+                                        "journalName": f"{journal_name}",
+                                        "articleType": "",
+                                        "articleDOI": "",
+                                        "articleCode": article_code,
+                                        "articleYear": article_year,
+                                        "articleVolume": recent_volume,
+                                        "articleIssue": recent_issue,
+                                        "articlePage Range": article_page_range,
+                                        "articleTitle": {"TR": "", "ENG": ""},
+                                        "articleAbstracts": {"TR": "", "ENG": ""},
+                                        "articleKeywords": {"TR": [], "ENG": []},
+                                        "articleAuthors": [],
+                                        "articleReferences": []}
                         if article_type:
-                            article_data["Article Type"] = article_type
-                        # if doi:
-                        #     article_data["Article DOI"] = doi
-                        if article_code:
-                            article_data["Article Code"] = article_code
+                            final_article_data["articleType"] = article_type
+
+                        if doi:
+                            final_article_data["articleDOI"] = doi
+                        elif azure_article_data:
+                            if azure_article_data.get("doi", None):
+                                final_article_data["articleDOI"] = doi
+
                         if article_title_tr:
-                            article_data["Article Title"]["TR"] = article_title_tr
+                            final_article_data["articleTitle"]["TR"] = article_title_tr
                         if article_title_eng:
-                            article_data["Article Title"]["ENG"] = article_title_eng
+                            final_article_data["articleTitle"]["ENG"] = article_title_eng
+
                         if abstract_tr or abstract_eng:
                             if abstract_eng:
-                                article_data["Article Abstracts"]["ENG"] = abstract_eng
+                                final_article_data["articleAbstracts"]["ENG"] = abstract_eng
                             if abstract_tr:
-                                article_data["Article Abstracts"]["TR"] = abstract_tr
-                        if keywords_tr or keywords_eng:
-                            if keywords_tr:
-                                article_data["Article Keywords"]["TR"] = keywords_tr
-                            if keywords_eng:
-                                article_data["Article Keywords"]["ENG"] = keywords_eng
-                        if authors:
-                            article_data["Article Authors"] = Author.author_to_json(authors)
-                        if references:
-                            article_data["Article References"] = references
-                print(pprint.pprint(article_data))
-                with open(r"C:\Users\emine\OneDrive\Masaüstü\data.txt", 'w', encoding='utf-8') as f:
-                    f.write(json.dumps(article_data, indent=4, ensure_ascii=False))
+                                final_article_data["articleAbstracts"]["TR"] = abstract_tr
 
-                get_to_artc_page()
-                paste_data(1, 2)
-                print(json.dumps(article_data, indent=4, ensure_ascii=False))
+                        if azure_article_data:
+                            if azure_article_data.get("article_keywords", None):
+                                if azure_article_data["article_keywords"].get("tr", None):
+                                    final_article_data["articleKeywords"]["TR"] = azure_article_data["article_keywords"]["tr"]
+                                if azure_article_data["article_keywords"].get("eng", None):
+                                    final_article_data["articleKeywords"]["ENG"] = azure_article_data["article_keywords"]["eng"]
+                        elif keywords_tr or keywords_eng:
+                            if keywords_tr:
+                                final_article_data["articleKeywords"]["TR"] = keywords_tr
+                            if keywords_eng:
+                                final_article_data["articleKeywords"]["ENG"] = keywords_eng
+
+                        if authors:
+                            final_article_data["articleAuthors"] = Author.author_to_json(authors)
+
+                        if dergipark_references:
+                            final_article_data["articleReferences"] = dergipark_references
+                        elif with_adobe and adobe_references:
+                            final_article_data["articleReferences"] = adobe_references
+                # print(pprint.pprint(final_article_data))
+                if with_azure:
+                    with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\', "azure_" + common.helpers.methods.others.generate_random_string(7)), "w", encoding='utf-8') as f:
+                        f.write(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
+                with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\', common.helpers.methods.others.generate_random_string(7)), "w", encoding='utf-8') as f:
+                    f.write(json.dumps(final_article_data, indent=4, ensure_ascii=False))
+
+                print(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
                 clear_directory(download_path)

@@ -39,8 +39,8 @@ def _extract_keywords_from_string(keyword_string):
 
 
 def _clean_year(year_string):
-    # Consumes a string and returns a four digit number as year
-    match = re.search(r'\b\d{4}\b', year_string)
+    # Consumes a string and returns a 4-digit number as year
+    match = re.search(r'\b\d{4}\b', str(year_string))
     if match:
         return int(match.group())
     else:
@@ -109,7 +109,7 @@ class ApiResponseExtractor:
                     "DOI"]):
             doi = self.api_response["analyzeResult"]["documents"][0]["fields"]["DOI"]["valueString"]
             try:
-                doi = doi[doi.index("10.") + 1:]
+                doi = doi[doi.index("10."):]
             except ValueError:
                 return "HATA"
         return doi
@@ -125,7 +125,9 @@ class ApiResponseExtractor:
         author_names = []
         for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
             if key.startswith("author_name") and "valueString" in value:
-                author_names.append(value["valueString"])
+                author_name = re.sub(r"^(İD|ID)|(İD|ID)$", "", value["valueString"])
+                author_name = author_name.strip()
+                author_names.append(author_name)
         return author_names
 
     def extract_author_data(self):
@@ -170,7 +172,7 @@ class ApiResponseExtractor:
                 "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"]):
             try:
                 return self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"][
-                    "valueString"]
+                    "valueString"].replace("(").replace(")")
             except KeyError as e:
                 print(e, e.args)
                 return "HATA"
@@ -182,12 +184,15 @@ class ApiResponseExtractor:
         Returns year value as an integer if possible
         :return: Article year as integer or None
         """
-        if "article_year" in self.api_response["analyzeResult"]["documents"][0]["fields"]:
-            try:
-                return _clean_year(
-                    self.api_response["analyzeResult"]["documents"][0]["fields"]["article_year"]["valueString"])
-            except Exception:
-                return "HATA"
+        try:
+            fields = self.api_response.get("analyzeResult", {}).get("documents", [{}])[0].get("fields", {})
+            if "article_year" in fields:
+                try:
+                    return _clean_year(fields["article_year"].get("valueString", ""))
+                except Exception:
+                    return "HATA"
+        except (TypeError, AttributeError, IndexError):
+            return None
         else:
             return None
 

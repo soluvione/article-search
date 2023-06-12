@@ -3,40 +3,62 @@ This module includes the functions related to splitting PDFs
 """
 from pypdf import PdfWriter, PdfReader
 from pathlib import Path
+import os
+from common.services.send_sms import send_notification
 
 
 def crop_pages(pdf_path: str, num_pages=1) -> str:
-    parent_path = Path(pdf_path).parent.absolute()
+    """
 
-    reader = PdfReader(pdf_path)
-    writer = PdfWriter()
-    if num_pages == 1:
-        writer.add_page(reader.pages[0])
-    else:
-        for i in range(0, num_pages):
-            writer.add_page(reader.pages[i])
+    :param pdf_path: Absolute path of the cropped PDF
+    :param num_pages: Number of pages, starting from first page, to be cropped and acquired
+    :return: Returns absolute path of the cropped PDF, with a name like xx_page.pdf
+    """
+    try:
+        parent_path = Path(pdf_path).parent.absolute()
 
-    # Write split pdf to one_page.pdf
-    with open(str(parent_path) + rf"\{num_pages}_page.pdf", "wb") as pdf:
-        writer.write(pdf)
+        reader = PdfReader(pdf_path)
+        writer = PdfWriter()
+        if num_pages == 1:
+            writer.add_page(reader.pages[0])
+        else:
+            for i in range(0, num_pages):
+                writer.add_page(reader.pages[i])
 
-    one_page_pdf_path = str(parent_path) + rf"\{num_pages}_page.pdf"
+        cropped_pdf_path = os.path.join(str(parent_path), f"{num_pages}_page.pdf")
 
-    return one_page_pdf_path
+        # Write split pdf to one_page.pdf
+        with open(cropped_pdf_path, "wb") as pdf:
+            writer.write(pdf)
+
+        return cropped_pdf_path
+
+    except Exception as e:
+        send_notification(e)
 
 
 def split_in_half(pdf_path: str) -> str:
-    parent_path = Path(pdf_path).parent.absolute()
+    """
+    Consumes the absolute path of the target PDF and returns the version of PDF split in half.
+    :param pdf_path: Absolute path of target PDF
+    :return: Returns absolute path of split PDF
+    """
+    try:
+        parent_path = Path(pdf_path).parent.absolute()
 
-    reader = PdfReader(pdf_path)
-    writer = PdfWriter()
-    starting_page = len(reader.pages) // 2
-    for i in range(starting_page, len(reader.pages)):
-        writer.add_page(reader.pages[i])
-    # Write split pdf to split.pdf
-    with open(str(parent_path) + r"\split.pdf", "wb") as pdf:
-        writer.write(pdf)
+        reader = PdfReader(pdf_path)
+        writer = PdfWriter()
+        starting_page = len(reader.pages) // 2
+        for i in range(starting_page, len(reader.pages)):
+            writer.add_page(reader.pages[i])
 
-    split_pdf_path = str(parent_path) + r"\split.pdf"
+        split_pdf_path = os.path.join(str(parent_path), "split.pdf")
 
-    return split_pdf_path
+        # Write split pdf to split.pdf
+        with open(split_pdf_path, "wb") as pdf:
+            writer.write(pdf)
+
+        return split_pdf_path
+
+    except Exception as e:
+        send_notification(e)
