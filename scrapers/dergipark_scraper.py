@@ -1,7 +1,17 @@
 """
 This is the template scraper that will be used to multiply.
 """
-def main(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference):
+def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference):
+    """
+
+    :param journal_name: The name of the journal as listed in Atıf Dizini
+    :param start_page_url: Dergipark startpage
+    :param pages_to_send: Number of pages to crop and send, either 1 or 2
+    :param pdf_scrape_type: "A_DRG & R" or "A_DRG"
+    :param parent_type: Parent folder's name
+    :param file_reference: The trimmed and encoded file name for saving the downloads and JSONs
+    :return:
+    """
     import pprint
     # Python libraries
     from datetime import datetime
@@ -49,7 +59,8 @@ def main(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_ty
     # Eager option shortens the load time. Always download the pdfs and does not display them.
     options = Options()
     options.page_load_strategy = 'eager'
-    download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloads') #  This part will be updated according to the journal name path
+    download_path = r"C:\Users\emine\PycharmProjects\Article-Search\downloads"
+    # download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../downloads') #  This part will be updated according to the journal name path
     prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
@@ -81,7 +92,7 @@ def main(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_ty
     temp_txt = latest_publication_element.text
     recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip())
     recent_issue = int(temp_txt.split()[-1])
-    with_azure = True
+    with_azure = False
     with_adobe = False
     # START DOWNLOADS IF ISSUE IS NOT SCANNED
     if True:
