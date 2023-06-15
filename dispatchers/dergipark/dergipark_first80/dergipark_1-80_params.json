@@ -1,634 +1,642 @@
 [
     [
+        "Abant Sağlık Bilimleri ve Teknolojileri Dergisi",
+        "https://dergipark.org.tr/tr/pub/sabited",
+        "A_DRG & R",
+        1,
+        "monday_first80_drg",
+        "1_abantsalkbilimleriveteknolojileridergisi"
+    ],
+    [
         "Abant Tıp Dergisi",
         "https://dergipark.org.tr/tr/pub/abantmedj",
         "A_DRG & R",
         1,
-        "string",
-        "1_abanttpdergisi"
+        "monday_first80_drg",
+        "2_abanttpdergisi"
     ],
     [
         "Acıbadem Üniversitesi Sağlık Bilimleri Dergisi",
         "http://journal.acibadem.edu.tr/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "2_acbademniversitesisalkbilimleridergisi"
+        "monday_first80_drg",
+        "3_acbademniversitesisalkbilimleridergisi"
     ],
     [
         "Acta Aquatica Turcica",
         "https://dergipark.org.tr/tr/pub/actaquatr",
         "A_DRG & R",
         1,
-        "string",
-        "3_actaaquaticaturcica"
+        "monday_first80_drg",
+        "4_actaaquaticaturcica"
     ],
     [
         "Acta Medica Alanya",
         "https://dergipark.org.tr/tr/pub/medalanya",
         "A_DRG & R",
         1,
-        "string",
-        "4_actamedicaalanya"
+        "monday_first80_drg",
+        "5_actamedicaalanya"
     ],
     [
         "Acta Odontologica Turcica",
         "https://dergipark.org.tr/tr/pub/gaziaot",
         "A_DRG & R",
         1,
-        "string",
-        "5_actaodontologicaturcica"
+        "monday_first80_drg",
+        "6_actaodontologicaturcica"
     ],
     [
         "Adıyaman Üniversitesi Fen Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/adyujsci",
         "A_DRG & R",
         1,
-        "string",
-        "6_adyamanniversitesifenbilimleridergisi"
+        "monday_first80_drg",
+        "7_adyamanniversitesifenbilimleridergisi"
     ],
     [
         "Adıyaman Üniversitesi Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/adiyamansaglik",
         "A_DRG & R",
         1,
-        "string",
-        "7_adyamanniversitesisalkbilimleridergisi"
+        "monday_first80_drg",
+        "8_adyamanniversitesisalkbilimleridergisi"
     ],
     [
         "Adli Tıp Dergisi",
         "http://www.adlitipdergisi.com/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "8_adlitpdergisi"
+        "monday_first80_drg",
+        "9_adlitpdergisi"
     ],
     [
         "Ahi Evran Tıp Dergisi",
         "https://dergipark.org.tr/tr/pub/aemj",
         "A_DRG & R",
         1,
-        "string",
-        "9_ahievrantpdergisi"
+        "monday_first80_drg",
+        "10_ahievrantpdergisi"
     ],
     [
         "Aile Hekimliği ve Palyatif Bakım",
         "http://www.fppc.com.tr/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "10_ailehekimliivepalyatifbakm"
+        "monday_first80_drg",
+        "11_ailehekimliivepalyatifbakm"
     ],
     [
         "Akademik Et ve Süt Kurumu Dergisi",
         "https://dergipark.org.tr/tr/pub/aeskd",
         "A_DRG & R",
         1,
-        "string",
-        "11_akademiketvestkurumudergisi"
+        "monday_first80_drg",
+        "12_akademiketvestkurumudergisi"
     ],
     [
         "Akademik Gastroenteroloji Dergisi",
         "https://dergipark.org.tr/tr/pub/agd",
         "A_DRG & R",
         1,
-        "string",
-        "12_akademikgastroenterolojidergisi"
+        "monday_first80_drg",
+        "13_akademikgastroenterolojidergisi"
     ],
     [
         "Akdeniz Tıp Dergisi",
         "https://dergipark.org.tr/tr/pub/akd",
         "A_DRG & R",
         1,
-        "string",
-        "13_akdeniztpdergisi"
+        "monday_first80_drg",
+        "14_akdeniztpdergisi"
     ],
     [
         "ANKEM Dergisi",
         "https://dergipark.org.tr/tr/pub/ankemderg",
         "A_DRG & R",
         1,
-        "string",
-        "14_ankemdergisi"
+        "monday_first80_drg",
+        "15_ankemdergisi"
     ],
     [
         "Anadolu Acil Tıp Dergisi",
         "https://dergipark.org.tr/tr/pub/anatolianjem",
         "A_DRG & R",
         1,
-        "string",
-        "15_anadoluaciltpdergisi"
+        "monday_first80_drg",
+        "16_anadoluaciltpdergisi"
     ],
     [
         "Anadolu Çevre ve Hayvan Bilimleri Dergisi (AÇEH)",
         "https://dergipark.org.tr/tr/pub/jaes",
         "A_DRG & R",
         1,
-        "string",
-        "16_anadoluevrevehayvanbilimleridergisi(aeh)"
+        "monday_first80_drg",
+        "17_anadoluevrevehayvanbilimleridergisi(aeh)"
     ],
     [
         "Anadolu Kliniği Tıp Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/anadoluklin",
         "A_DRG & R",
         1,
-        "string",
-        "17_anadolukliniitpbilimleridergisi"
+        "monday_first80_drg",
+        "18_anadolukliniitpbilimleridergisi"
     ],
     [
         "Anatolian Bryology",
         "https://dergipark.org.tr/tr/pub/anatolianbryology",
         "A_DRG & R",
         1,
-        "string",
-        "18_anatolianbryology"
+        "monday_first80_drg",
+        "19_anatolianbryology"
     ],
     [
         "Anatolian Current Medical Journal",
         "https://dergipark.org.tr/tr/pub/acmj",
         "A_DRG & R",
         1,
-        "string",
-        "19_anatoliancurrentmedicaljournal"
+        "monday_first80_drg",
+        "20_anatoliancurrentmedicaljournal"
     ],
     [
         "Anatolian Journal of Botany",
         "https://dergipark.org.tr/tr/pub/ajb",
         "A_DRG & R",
         1,
-        "string",
-        "20_anatolianjournalofbotany"
+        "monday_first80_drg",
+        "21_anatolianjournalofbotany"
     ],
     [
         "Animal Health, Production and Hygiene",
         "https://dergipark.org.tr/tr/pub/aduveterinary",
         "A_DRG & R",
         1,
-        "string",
-        "21_animalhealth,productionandhygiene"
+        "monday_first80_drg",
+        "22_animalhealth,productionandhygiene"
     ],
     [
         "Anka Tıp Dergisi",
         "http://www.acilx.com/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "22_ankatpdergisi"
+        "monday_first80_drg",
+        "23_ankatpdergisi"
     ],
     [
         "Ankara Dişhekimleri Odası (ADO) Klinik Bilimler Dergisi",
         "https://dergipark.org.tr/tr/pub/adoklinikbilimler",
         "A_DRG & R",
         1,
-        "string",
-        "23_ankaradihekimleriodas(ado)klinikbilimlerdergisi"
+        "monday_first80_drg",
+        "24_ankaradihekimleriodas(ado)klinikbilimlerdergisi"
     ],
     [
         "Ankara Eğitim ve Araştırma Hastanesi Tıp Dergisi",
         "https://dergipark.org.tr/tr/pub/aeahtd",
         "A_DRG & R",
         1,
-        "string",
-        "24_ankaraeitimvearatrmahastanesitpdergisi"
+        "monday_first80_drg",
+        "25_ankaraeitimvearatrmahastanesitpdergisi"
     ],
     [
         "Ankara Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/ausbid",
         "A_DRG & R",
         1,
-        "string",
-        "25_ankarasalkbilimleridergisi"
+        "monday_first80_drg",
+        "26_ankarasalkbilimleridergisi"
     ],
     [
         "Ankara Üniversitesi Veteriner Fakültesi Dergisi",
         "http://vetjournal.ankara.edu.tr/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "26_ankaraniversitesiveterinerfakltesidergisi"
+        "monday_first80_drg",
+        "27_ankaraniversitesiveterinerfakltesidergisi"
     ],
     [
         "Archives of Clinical and Experimental Medicine",
         "https://dergipark.org.tr/tr/pub/acem",
         "A_DRG & R",
         1,
-        "string",
-        "27_archivesofclinicalandexperimentalmedicine"
+        "monday_first80_drg",
+        "28_archivesofclinicalandexperimentalmedicine"
     ],
     [
         "Archives of Current Medical Research",
         "https://dergipark.org.tr/tr/pub/acmr",
         "A_DRG & R",
         1,
-        "string",
-        "28_archivesofcurrentmedicalresearch"
+        "monday_first80_drg",
+        "29_archivesofcurrentmedicalresearch"
     ],
     [
         "Arşiv Kaynak Tarama Dergisi",
         "https://dergipark.org.tr/tr/pub/aktd",
         "A_DRG & R",
         1,
-        "string",
-        "29_arivkaynaktaramadergisi"
+        "monday_first80_drg",
+        "30_arivkaynaktaramadergisi"
     ],
     [
         "Artuklu International Journal of Health Sciences",
         "https://dergipark.org.tr/tr/pub/artukluder",
         "A_DRG & R",
         1,
-        "string",
-        "30_artukluinternationaljournalofhealthsciences"
+        "monday_first80_drg",
+        "31_artukluinternationaljournalofhealthsciences"
     ],
     [
         "Avrasya Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/avrasyasbd",
         "A_DRG & R",
         1,
-        "string",
-        "31_avrasyasalkbilimleridergisi"
+        "monday_first80_drg",
+        "32_avrasyasalkbilimleridergisi"
     ],
     [
         "Avrasya Spor Bilimleri ve Eğitim Dergisi",
         "https://dergipark.org.tr/tr/pub/ejsse",
         "A_DRG & R",
         1,
-        "string",
-        "32_avrasyasporbilimleriveeitimdergisi"
+        "monday_first80_drg",
+        "33_avrasyasporbilimleriveeitimdergisi"
     ],
     [
         "Bağımlılık Dergisi",
         "https://dergipark.org.tr/tr/pub/bagimli",
         "A_DRG & R",
         1,
-        "string",
-        "33_bamllkdergisi"
+        "monday_first80_drg",
+        "34_bamllkdergisi"
     ],
     [
         "Bahri Dağdaş Hayvancılık Araştırma Dergisi",
         "https://dergipark.org.tr/tr/pub/bdhad",
         "A_DRG & R",
         1,
-        "string",
-        "34_bahridadahayvanclkaratrmadergisi"
+        "monday_first80_drg",
+        "35_bahridadahayvanclkaratrmadergisi"
     ],
     [
         "Balıkesir Medical Journal",
         "https://dergipark.org.tr/tr/pub/bmedj",
         "A_DRG & R",
         1,
-        "string",
-        "35_balkesirmedicaljournal"
+        "monday_first80_drg",
+        "36_balkesirmedicaljournal"
     ],
     [
         "Balıkesir Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/balikesirsbd",
         "A_DRG & R",
         1,
-        "string",
-        "36_balkesirsalkbilimleridergisi"
+        "monday_first80_drg",
+        "37_balkesirsalkbilimleridergisi"
     ],
     [
         "Bandırma Onyedi Eylül Üniversitesi Sağlık Bilimleri ve Araştırmaları Dergisi",
         "https://dergipark.org.tr/tr/pub/boneyusbad",
         "A_DRG & R",
         1,
-        "string",
-        "37_bandrmaonyedieyllniversitesisalkbilimlerivearatrmalardergisi"
+        "monday_first80_drg",
+        "38_bandrmaonyedieyllniversitesisalkbilimlerivearatrmalardergisi"
     ],
     [
         "Batı Karadeniz Tıp Dergisi",
         "https://dergipark.org.tr/tr/pub/mjwbs",
         "A_DRG & R",
         1,
-        "string",
-        "38_batkaradeniztpdergisi"
+        "monday_first80_drg",
+        "39_batkaradeniztpdergisi"
     ],
     [
         "Biyoteknolojik ve Stratejik Sağlık Araştırmaları Dergisi",
         "https://dergipark.org.tr/tr/pub/bshr",
         "A_DRG & R",
         1,
-        "string",
-        "39_biyoteknolojikvestratejiksalkarastrmalardergisi"
+        "monday_first80_drg",
+        "40_biyoteknolojikvestratejiksalkarastrmalardergisi"
     ],
     [
         "Bozok İlahiyat Fakültesi Dergisi",
         "https://dergipark.org.tr/tr/pub/bozifder",
         "A_DRG & R",
         1,
-        "string",
-        "40_bozokilahiyatfakltesidergisi"
+        "monday_first80_drg",
+        "41_bozokilahiyatfakltesidergisi"
     ],
     [
         "Celal Bayar Üniversitesi Beden Eğitimi ve Spor Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/cbubesbd",
         "A_DRG & R",
         1,
-        "string",
-        "41_celalbayarniversitesibedeneitimivesporbilimleridergisi"
+        "monday_first80_drg",
+        "42_celalbayarniversitesibedeneitimivesporbilimleridergisi"
     ],
     [
         "Cerrahi Sanatlar Dergisi",
         "https://dergipark.org.tr/tr/pub/jsa",
         "A_DRG & R",
         1,
-        "string",
-        "42_cerrahisanatlardergisi"
+        "monday_first80_drg",
+        "43_cerrahisanatlardergisi"
     ],
     [
         "Clinical and Experimental Health Sciences",
         "https://dergipark.org.tr/tr/pub/clinexphealthsci",
         "A_DRG & R",
         1,
-        "string",
-        "43_clinicalandexperimentalhealthsciences"
+        "monday_first80_drg",
+        "44_clinicalandexperimentalhealthsciences"
     ],
     [
         "Cumhuriyet Tıp Dergisi",
         "http://cmj.cumhuriyet.edu.tr/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "44_cumhuriyettpdergisi"
+        "monday_first80_drg",
+        "45_cumhuriyettpdergisi"
     ],
     [
         "Current Research in Dental Sciences",
         "https://dergipark.org.tr/tr/pub/currresdentsci",
         "A_DRG & R",
         1,
-        "string",
-        "45_currentresearchindentalsciences"
+        "monday_first80_drg",
+        "46_currentresearchindentalsciences"
     ],
     [
         "Çocuk Dergisi",
         "https://dergipark.org.tr/tr/pub/jchild",
         "A_DRG & R",
         1,
-        "string",
-        "46_ocukdergisi"
+        "monday_first80_drg",
+        "47_ocukdergisi"
     ],
     [
         "Çukurova Anestezi ve Cerrahi Bilimler Dergisi",
         "https://dergipark.org.tr/tr/pub/jocass",
         "A_DRG & R",
         1,
-        "string",
-        "47_ukurovaanestezivecerrahibilimlerdergisi"
+        "monday_first80_drg",
+        "48_ukurovaanestezivecerrahibilimlerdergisi"
     ],
     [
         "Dental and Medical Journal-Review",
         "https://dergipark.org.tr/tr/pub/dmj",
         "A_DRG & R",
         1,
-        "string",
-        "48_dentalandmedicaljournal-review"
+        "monday_first80_drg",
+        "49_dentalandmedicaljournal-review"
     ],
     [
         "Dicle Üniversitesi Veteriner Fakültesi Dergisi",
         "https://dergipark.org.tr/tr/pub/duvetfd",
         "A_DRG & R",
         1,
-        "string",
-        "49_dicleniversitesiveterinerfakltesidergisi"
+        "monday_first80_drg",
+        "50_dicleniversitesiveterinerfakltesidergisi"
     ],
     [
         "Dil, Konuşma ve Yutma Araştırmaları Dergisi",
         "https://dergipark.org.tr/tr/pub/dkyad",
         "A_DRG & R",
         1,
-        "string",
-        "50_dil,konumaveyutmaaratrmalardergisi"
+        "monday_first80_drg",
+        "51_dil,konumaveyutmaaratrmalardergisi"
     ],
     [
         "Dokuz Eylül Üniversitesi Hemşirelik Fakültesi Elektronik Dergisi",
         "https://dergipark.org.tr/tr/pub/deuhfed",
         "A_DRG & R",
         1,
-        "string",
-        "51_dokuzeyllniversitesihemirelikfakltesielektronikdergisi"
+        "monday_first80_drg",
+        "52_dokuzeyllniversitesihemirelikfakltesielektronikdergisi"
     ],
     [
         "Düzce Tıp Fakültesi Dergisi",
         "https://dergipark.org.tr/tr/pub/dtfd",
         "A_DRG & R",
         1,
-        "string",
-        "52_dzcetpfakltesidergisi"
+        "monday_first80_drg",
+        "53_dzcetpfakltesidergisi"
     ],
     [
         "Düzce Üniversitesi Spor Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/dujoss",
         "A_DRG & R",
         1,
-        "string",
-        "53_dzceniversitesisporbilimleridergisi"
+        "monday_first80_drg",
+        "54_dzceniversitesisporbilimleridergisi"
     ],
     [
         "Ebelik ve Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/esbder",
         "A_DRG & R",
         1,
-        "string",
-        "54_ebelikvesalkbilimleridergisi"
+        "monday_first80_drg",
+        "55_ebelikvesalkbilimleridergisi"
     ],
     [
         "Ege Tıp Dergisi",
         "http://egetipdergisi.com.tr/tr/",
         "A_DRG & R",
         1,
-        "string",
-        "55_egetpdergisi"
+        "monday_first80_drg",
+        "56_egetpdergisi"
     ],
     [
         "Endoüroloji Bülteni",
         "https://dergipark.org.tr/tr/pub/endouroloji",
         "A_DRG & R",
         1,
-        "string",
-        "56_endorolojiblteni"
+        "monday_first80_drg",
+        "57_endorolojiblteni"
     ],
     [
         "Erciyes Üniversitesi Veteriner Fakültesi Dergisi",
         "https://dergipark.org.tr/tr/pub/ercivet",
         "A_DRG & R",
         1,
-        "string",
-        "57_erciyesniversitesiveterinerfakltesidergisi"
+        "monday_first80_drg",
+        "58_erciyesniversitesiveterinerfakltesidergisi"
     ],
     [
         "Ergoterapi ve Rehabilitasyon Dergisi",
         "https://dergipark.org.tr/tr/pub/ered",
         "A_DRG & R",
         1,
-        "string",
-        "58_ergoterapiverehabilitasyondergisi"
+        "monday_first80_drg",
+        "59_ergoterapiverehabilitasyondergisi"
     ],
     [
         "ESTÜDAM Halk Sağlığı Dergisi",
         "https://dergipark.org.tr/tr/pub/estudamhsd",
         "A_DRG & R",
         1,
-        "string",
-        "59_estdamhalksaldergisi"
+        "monday_first80_drg",
+        "60_estdamhalksaldergisi"
     ],
     [
         "Etlik Veteriner Mikrobiyoloji Dergisi",
         "https://dergipark.org.tr/tr/pub/evmd",
         "A_DRG & R",
         1,
-        "string",
-        "60_etlikveterinermikrobiyolojidergisi"
+        "monday_first80_drg",
+        "61_etlikveterinermikrobiyolojidergisi"
     ],
     [
         "Eurasian Journal of Anthropology",
         "https://dergipark.org.tr/tr/pub/eja",
         "A_DRG & R",
         1,
-        "string",
-        "61_eurasianjournalofanthropology"
+        "monday_first80_drg",
+        "62_eurasianjournalofanthropology"
     ],
     [
         "Eurasian Journal of Critical Care",
         "https://dergipark.org.tr/tr/pub/ejcc",
         "A_DRG & R",
         1,
-        "string",
-        "62_eurasianjournalofcriticalcare"
+        "monday_first80_drg",
+        "63_eurasianjournalofcriticalcare"
     ],
     [
         "Eurasian Journal of Health Technology Assessment (EHTA)",
         "https://dergipark.org.tr/tr/pub/ehta",
         "A_DRG & R",
         1,
-        "string",
-        "63_eurasianjournalofhealthtechnologyassessment(ehta)"
+        "monday_first80_drg",
+        "64_eurasianjournalofhealthtechnologyassessment(ehta)"
     ],
     [
         "Eurasian Journal of Toxicology",
         "https://dergipark.org.tr/tr/pub/ejtox",
         "A_DRG & R",
         1,
-        "string",
-        "64_eurasianjournaloftoxicology"
+        "monday_first80_drg",
+        "65_eurasianjournaloftoxicology"
     ],
     [
         "Eurasian Research in Sport Science",
         "https://dergipark.org.tr/tr/pub/eriss",
         "A_DRG & R",
         1,
-        "string",
-        "65_eurasianresearchinsportscience"
+        "monday_first80_drg",
+        "66_eurasianresearchinsportscience"
     ],
     [
         "European Annals of Dental Sciences",
         "https://dergipark.org.tr/tr/pub/eads",
         "A_DRG & R",
         1,
-        "string",
-        "66_europeanannalsofdentalsciences"
+        "monday_first80_drg",
+        "67_europeanannalsofdentalsciences"
     ],
     [
         "European Journal of Research in Dentistry",
         "https://dergipark.org.tr/tr/pub/erd",
         "A_DRG & R",
         1,
-        "string",
-        "67_europeanjournalofresearchindentistry"
+        "monday_first80_drg",
+        "68_europeanjournalofresearchindentistry"
     ],
     [
         "European Oral Research",
         "https://dergipark.org.tr/tr/pub/eor",
         "A_DRG & R",
         1,
-        "string",
-        "68_europeanoralresearch"
+        "monday_first80_drg",
+        "69_europeanoralresearch"
     ],
     [
         "Gazi Beden Eğitimi ve Spor Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/gbesbd",
         "A_DRG & R",
         1,
-        "string",
-        "69_gazibedeneitimivesporbilimleridergisi"
+        "monday_first80_drg",
+        "70_gazibedeneitimivesporbilimleridergisi"
     ],
     [
         "Gazi Üniversitesi Sağlık Bilimleri Enstitüsü Dergisi",
         "https://dergipark.org.tr/tr/pub/guhes",
         "A_DRG & R",
         1,
-        "string",
-        "70_gaziniversitesisalkbilimlerienstitsdergisi"
+        "monday_first80_drg",
+        "71_gaziniversitesisalkbilimlerienstitsdergisi"
     ],
     [
         "Gaziantep Üniversitesi Spor Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/gaunjss",
         "A_DRG & R",
         1,
-        "string",
-        "71_gaziantepniversitesisporbilimleridergisi"
+        "monday_first80_drg",
+        "72_gaziantepniversitesisporbilimleridergisi"
     ],
     [
         "Genel Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/jgehes",
         "A_DRG & R",
         1,
-        "string",
-        "72_genelsalkbilimleridergisi"
+        "monday_first80_drg",
+        "73_genelsalkbilimleridergisi"
     ],
     [
         "Geriatrik Bilimler Dergisi",
         "https://dergipark.org.tr/tr/pub/geriatrik",
         "A_DRG & R",
         1,
-        "string",
-        "73_geriatrikbilimlerdergisi"
+        "monday_first80_drg",
+        "74_geriatrikbilimlerdergisi"
     ],
     [
         "Gümüşhane Üniversitesi Sağlık Bilimleri Dergisi",
         "https://dergipark.org.tr/tr/pub/gumussagbil",
         "A_DRG & R",
         1,
-        "string",
-        "74_gmhaneniversitesisalkbilimleridergisi"
+        "monday_first80_drg",
+        "75_gmhaneniversitesisalkbilimleridergisi"
     ],
     [
         "Hacettepe Journal of Biology and Chemistry",
         "https://dergipark.org.tr/tr/pub/hjbc",
         "A_DRG & R",
         1,
-        "string",
-        "75_hacettepejournalofbiologyandchemistry"
+        "monday_first80_drg",
+        "76_hacettepejournalofbiologyandchemistry"
     ],
     [
         "Hacettepe Sağlık İdaresi Dergisi",
         "https://dergipark.org.tr/tr/pub/hacettepesid",
         "A_DRG & R",
         1,
-        "string",
-        "76_hacettepesalkidaresidergisi"
+        "monday_first80_drg",
+        "77_hacettepesalkidaresidergisi"
     ],
     [
         "Hacettepe University Journal of the Faculty of Pharmacy",
         "https://dergipark.org.tr/tr/pub/hujpharm",
         "A_DRG & R",
         1,
-        "string",
-        "77_hacettepeuniversityjournalofthefacultyofpharmacy"
+        "monday_first80_drg",
+        "78_hacettepeuniversityjournalofthefacultyofpharmacy"
     ],
     [
         "Halk Sağlığı Hemşireliği Dergisi",
         "https://dergipark.org.tr/tr/pub/jphn",
         "A_DRG & R",
         1,
-        "string",
-        "78_halksalhemireliidergisi"
+        "monday_first80_drg",
+        "79_halksalhemireliidergisi"
     ],
     [
         "Harran Üniversitesi Tıp Fakültesi Dergisi",
         "https://dergipark.org.tr/tr/pub/hutfd",
         "A_DRG & R",
         1,
-        "string",
-        "79_harranniversitesitpfakltesidergisi"
+        "monday_first80_drg",
+        "80_harranniversitesitpfakltesidergisi"
     ]
 ]

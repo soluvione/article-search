@@ -1,11 +1,11 @@
-"""A temporary helper module to convert Turkish names to ASCII"""
+"""A helper module for integrating Excel data into the project"""
 import pandas as pd
 import json
 
 
 def excel_to_params_json():
-    # Load Excel data
-    df = pd.read_excel(r'C:\Users\emine\OneDrive\Masaüstü\first80.xlsx')
+    # Read Excel data
+    df = pd.read_excel(r'C:\Users\emine\OneDrive\Masaüstü\81-172.xlsx', header=None)
 
     # Initialize empty list to store the data
     data_list = []
@@ -24,13 +24,13 @@ def excel_to_params_json():
             objects_list.append(element.lower().encode(encoding="ascii", errors="ignore").decode(encoding="UTF-8"))
 
         # Create a formatted string using objects_list and index
-        last_element = str(index + 1) + str_f + "".join(objects_list)
+        last_element = str(index + 81) + str_f + "".join(objects_list)
 
         # Append to the main list
-        data_list.append([data1.strip(), data2, data3, 1, "string", last_element])
+        data_list.append([data1.strip(), data2, data3, 1, "tuesday_81-172_drg", last_element])
 
     # Convert list to JSON and write it to a file
-    with open('output.json', 'w', encoding='utf-8') as f:
+    with open('no_rssef.json', 'w', encoding='utf-8') as f:
         json.dump(data_list, f, indent=4, ensure_ascii=False)
 
 
@@ -54,9 +54,9 @@ def journal_name_to_ascii(journal_name: str) -> str:
 
 if __name__ == "__main__":
     excel_to_params_json()
-    file_path = r'C:\Users\emine\PycharmProjects\Article-Search\common\helpers\methods\output.json'  # replace with your file path
-    data_list = read_data_from_json(file_path)
-
-    # print the data to see if it's correctly loaded
-    for item in data_list:
-        print(item)
+    # file_path = r'C:\Users\emine\PycharmProjects\Article-Search\common\helpers\methods\dergipark_81-160_params.json'  # replace with your file path
+    # data_list = read_data_from_json(file_path)
+    #
+    # # print the data to see if it's correctly loaded
+    # for item in data_list:
+    #     print(item)
