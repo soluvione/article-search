@@ -90,7 +90,7 @@ def scrape_article_elements(driver, journal_name, recent_volume, recent_issue):
                               f"{journal_name, recent_volume, recent_issue}. DOM could be changed.")
 
 
-def download_article_pdf(driver):
+def download_article_pdf(driver, pdf_scrape_type):
     # DOWNLOAD ARTICLE PDF
     try:
         # PDF LINK THAT WHEN DRIVER GETS THERE THE DOWNLOAD STARTS
@@ -100,6 +100,8 @@ def download_article_pdf(driver):
         pdf_to_download_available = True
         return pdf_to_download_available
     except Exception as e:
+        if pdf_scrape_type != "A_DRG":
+
         send_notification(e)
 
 

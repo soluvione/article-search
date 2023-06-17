@@ -1,6 +1,35 @@
 """
 This is the template scraper that will be used to multiply.
 """
+import os
+
+
+def get_downloads_path(parent_type: str, file_reference: str) -> str:
+    current_file_path = os.path.realpath(__file__)
+    parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
+    downloads_path = os.path.join(parent_directory_path, "downloads_n_logs",
+                                  "dergipark_manual", parent_type,
+                                  file_reference, "downloads")
+    return downloads_path
+
+
+def get_logs_path(parent_type: str, file_reference: str) -> str:
+    current_file_path = os.path.realpath(__file__)
+    parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
+    logs_path = os.path.join(parent_directory_path, "downloads_n_logs",
+                             "dergipark_manual", parent_type,
+                             file_reference, "logs")
+    return logs_path
+
+
+def create_logs(was_successful: bool, parent_type: str, file_reference: str) -> None:
+    current_file_path = os.path.realpath(__file__)
+    parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
+    logs_n_downloads_path = os.path.join(parent_directory_path, "downloads_n_logs", "dergipark_manual")
+    logs_path = os.path.join(logs_n_downloads_path, parent_type, file_reference, "logs")
+    print(logs_path)
+
+
 def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference):
     """
 
@@ -59,7 +88,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
     # Eager option shortens the load time. Always download the pdfs and does not display them.
     options = Options()
     options.page_load_strategy = 'eager'
-    download_path = r"C:\Users\emine\PycharmProjects\Article-Search\downloads"
+    download_path = get_downloads_path(parent_type, file_reference)
     # download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../downloads') #  This part will be updated according to the journal name path
     prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
     options.add_experimental_option('prefs', prefs)
@@ -96,15 +125,18 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
     with_adobe = False
     # START DOWNLOADS IF ISSUE IS NOT SCANNED
     if True:
-        dergipark_components.go_to_issue_page(driver, latest_publication_element, journal_name, recent_volume, recent_issue)
+        dergipark_components.go_to_issue_page(driver, latest_publication_element, journal_name, recent_volume,
+                                              recent_issue)
 
         issue_year = dergipark_components.scrape_year_information(driver)
 
         # Get all elements
-        article_elements = dergipark_components.scrape_article_elements(driver, journal_name, recent_volume, recent_issue)
+        article_elements = dergipark_components.scrape_article_elements(driver, journal_name, recent_volume,
+                                                                        recent_issue)
 
         # Add URLs to article URLs list
-        dergipark_components.scrape_article_urls(driver, article_elements, article_url_list, journal_name, recent_volume,
+        dergipark_components.scrape_article_urls(driver, article_elements, article_url_list, journal_name,
+                                                 recent_volume,
                                                  recent_issue)
 
         # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
@@ -141,7 +173,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                     # GET TO ARTICLE PAGE AND GET ELEMENTS IF POSSIBLE FROM THE UNIQUE ARTICLE PAGE
                     driver.get(article_url)
 
-                    pdf_to_download_available = dergipark_components.download_article_pdf(driver)
+                    pdf_to_download_available = dergipark_components.download_article_pdf(driver, pdf_scrape_type)
 
                     article_type = dergipark_components.define_article_type(driver)
                     if article_type == "Diğer" or article_type == "Editoryal":
@@ -162,7 +194,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                                           + str(article_num))
                         if with_azure:
                             first_pages_cropped_pdf = crop_pages(formatted_name, pages_to_send)
-                            location_header = AzureHelper.analyse_pdf(first_pages_cropped_pdf)  # Location header is the response
+                            location_header = AzureHelper.analyse_pdf(
+                                first_pages_cropped_pdf)  # Location header is the response
                         # address of Azure API
                         if with_adobe and pdf_scrape_type != "A_DRG & R":
                             adobe_pdf = split_in_half(formatted_name)
@@ -211,7 +244,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                     article_title_eng = element.text
                             for element in abstract_elements:
                                 if element.text:
-                                    abstract_eng = abstract_formatter(element.find_element(By.TAG_NAME, 'p').text, "eng")
+                                    abstract_eng = abstract_formatter(element.find_element(By.TAG_NAME, 'p').text,
+                                                                      "eng")
                             for element in keywords_elements:
                                 if element.text:
                                     for keyword in element.find_element(By.TAG_NAME, 'p').text.split(','):
@@ -220,10 +254,12 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
 
                     # MULTIPLE LANGUAGE ARTICLES
                     elif article_lang_num == 2:
-                        tr_article_element, article_title_tr, abstract_tr = dergipark_components.get_turkish_data(driver, language_tabs)
+                        tr_article_element, article_title_tr, abstract_tr = dergipark_components.get_turkish_data(
+                            driver, language_tabs)
 
                         try:
-                            keywords_element = dergipark_components.get_multiple_lang_article_keywords(tr_article_element)
+                            keywords_element = dergipark_components.get_multiple_lang_article_keywords(
+                                tr_article_element)
 
                             for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
                                     'innerText').strip().split(','):
@@ -240,7 +276,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         language_tabs[1].click()
                         time.sleep(0.7)
 
-                        eng_article_element, article_title_eng, abstract_eng_element = dergipark_components.get_english_data(driver)
+                        eng_article_element, article_title_eng, abstract_eng_element = dergipark_components.get_english_data(
+                            driver)
 
                         for part in abstract_eng_element:
                             if part.get_attribute('innerText'):
@@ -256,17 +293,18 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
                         button.click()
                         time.sleep(0.4)
-                        reference_list_elements = dergipark_components.get_multiple_lang_article_refs(eng_article_element)
+                        reference_list_elements = dergipark_components.get_multiple_lang_article_refs(
+                            eng_article_element)
                         ref_count = 1
                         for reference_element in reference_list_elements:
                             try:
                                 ref_text = reference_element.get_attribute('innerText')
                                 if ref_count == 1:
                                     dergipark_references.append(reference_formatter(ref_text, is_first=True,
-                                                                          count=ref_count))
+                                                                                    count=ref_count))
                                 else:
                                     dergipark_references.append(reference_formatter(ref_text, is_first=False,
-                                                                          count=ref_count))
+                                                                                    count=ref_count))
                             except Exception:
                                 pass
                             ref_count += 1
@@ -317,19 +355,19 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                             # Additionally the references will be added if fetched from Adobe
                             # Construct Final Data Dict
                             final_article_data = {
-                                            "journalName": f"{journal_name}",
-                                            "articleType": "",
-                                            "articleDOI": "",
-                                            "articleCode": article_code,
-                                            "articleYear": article_year,
-                                            "articleVolume": recent_volume,
-                                            "articleIssue": recent_issue,
-                                            "articlePage Range": article_page_range,
-                                            "articleTitle": {"TR": "", "ENG": ""},
-                                            "articleAbstracts": {"TR": "", "ENG": ""},
-                                            "articleKeywords": {"TR": [], "ENG": []},
-                                            "articleAuthors": [],
-                                            "articleReferences": []}
+                                "journalName": f"{journal_name}",
+                                "articleType": "",
+                                "articleDOI": "",
+                                "articleCode": article_code,
+                                "articleYear": article_year,
+                                "articleVolume": recent_volume,
+                                "articleIssue": recent_issue,
+                                "articlePage Range": article_page_range,
+                                "articleTitle": {"TR": "", "ENG": ""},
+                                "articleAbstracts": {"TR": "", "ENG": ""},
+                                "articleKeywords": {"TR": [], "ENG": []},
+                                "articleAuthors": [],
+                                "articleReferences": []}
                             if article_type:
                                 final_article_data["articleType"] = article_type
 
@@ -353,9 +391,11 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                             if azure_article_data:
                                 if azure_article_data.get("article_keywords", None):
                                     if azure_article_data["article_keywords"].get("tr", None):
-                                        final_article_data["articleKeywords"]["TR"] = azure_article_data["article_keywords"]["tr"]
+                                        final_article_data["articleKeywords"]["TR"] = \
+                                            azure_article_data["article_keywords"]["tr"]
                                     if azure_article_data["article_keywords"].get("eng", None):
-                                        final_article_data["articleKeywords"]["ENG"] = azure_article_data["article_keywords"]["eng"]
+                                        final_article_data["articleKeywords"]["ENG"] = \
+                                            azure_article_data["article_keywords"]["eng"]
                             elif keywords_tr or keywords_eng:
                                 if keywords_tr:
                                     final_article_data["articleKeywords"]["TR"] = keywords_tr
@@ -371,11 +411,20 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                 final_article_data["articleReferences"] = adobe_references
                     # print(pprint.pprint(final_article_data))
                     if with_azure:
-                        with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\', "azure_" + common.helpers.methods.others.generate_random_string(7)), "w", encoding='utf-8') as f:
+                        with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\',
+                                               "azure_" + common.helpers.methods.others.generate_random_string(7)), "w",
+                                  encoding='utf-8') as f:
                             f.write(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
-                    with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\', common.helpers.methods.others.generate_random_string(7)), "w", encoding='utf-8') as f:
+                    with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\',
+                                           common.helpers.methods.others.generate_random_string(7)), "w",
+                              encoding='utf-8') as f:
                         f.write(json.dumps(final_article_data, indent=4, ensure_ascii=False))
 
                     print(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
                     clear_directory(download_path)
     return timeit.default_timer() - start_time
+
+
+if __name__ == "__main__":
+    print(get_logs_path("bol", "mol"))
+    create_logs(True, "foo", "bar")

@@ -1,9 +1,9 @@
 """
 This module updates the local scanned articles json file and appends the newly scanned article to the existing json file
 """
-
 import json
 from pathlib import Path
+import os
 
 
 def update_scanned_articles(doi=None, url=None, is_doi=True, path_="") -> bool:
@@ -16,7 +16,7 @@ def update_scanned_articles(doi=None, url=None, is_doi=True, path_="") -> bool:
     :return: Returns True if updating was successful
     """
     if is_doi:
-        scanned_articles_path = Path(path_).parent / "scanned_article_dois.json"
+        scanned_articles_path = os.path.join(path_, "scanned_article_dois.json")
         try:
             json_file = open(scanned_articles_path, encoding='utf-8')
             scanned_articles_list = json.load(json_file)
@@ -37,7 +37,7 @@ def update_scanned_articles(doi=None, url=None, is_doi=True, path_="") -> bool:
 
     else:
         try:
-            scanned_articles_path = Path(path_).parent / "scanned_article_urls.json"
+            scanned_articles_path = os.path.join(path_, "scanned_article_urls.json")
             json_file = open(scanned_articles_path, encoding='utf-8')
             scanned_articles_list = json.load(json_file)
             json_file.close()
