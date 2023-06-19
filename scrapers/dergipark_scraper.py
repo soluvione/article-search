@@ -2,8 +2,11 @@
 This is the template scraper that will be used to multiply.
 """
 import os
-
-
+from datetime import datetime
+import json
+from common.services.send_sms import send_notification, send_example_log
+from common.erorrs import GeneralError
+import random
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -21,13 +24,108 @@ def get_logs_path(parent_type: str, file_reference: str) -> str:
                              file_reference, "logs")
     return logs_path
 
+def log_already_scanned(path_: str):
+    """
 
-def create_logs(was_successful: bool, parent_type: str, file_reference: str) -> None:
-    current_file_path = os.path.realpath(__file__)
-    parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
-    logs_n_downloads_path = os.path.join(parent_directory_path, "downloads_n_logs", "dergipark_manual")
-    logs_path = os.path.join(logs_n_downloads_path, parent_type, file_reference, "logs")
-    print(logs_path)
+    :param path_: PATH of logs file
+    :return: Nothing
+    """
+    try:
+        logs_path = os.path.join(path_, "logs.json")
+        with open(logs_path, 'r') as logs_file:
+            old_data = json.loads(logs_file.read())
+        new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
+                         'attemptStatus': 'Already Scanned - No Action Needed'})
+        with open(logs_path, 'w') as logs_file:
+            logs_file.write(json.dumps(new_data, indent=4))
+    except Exception as e:
+        send_notification(GeneralError(f"Already scanned issue log creation error. Error: {e}"))
+
+def update_scanned_articles(doi=None, url=None, is_doi=True, path_="") -> bool:
+    """
+
+    :param doi: Unique DOI of the article
+    :param url: URL of the article
+    :param is_doi: If True, then the function will update the DOI records, and conversely, URL logs if passed False.
+    :param path_: PATH value of logs file
+    :return: Returns True if updating was successful
+    """
+    if is_doi:
+        scanned_articles_path = os.path.join(path_, "scanned_article_dois.json")
+        try:
+            json_file = open(scanned_articles_path, encoding='utf-8')
+            scanned_articles_list = json.load(json_file)
+            json_file.close()
+
+            if doi in scanned_articles_list:
+                return False
+            else:
+                scanned_articles_list.append(doi)
+                with open(scanned_articles_path, 'w') as json_file:
+                    json_file.write(json.dumps(scanned_articles_list, indent=4))
+
+                return True
+
+        except FileNotFoundError:
+            send_notification(GeneralError("Could not update the scanned article doi records!"))
+            return False
+
+    else:
+        try:
+            scanned_articles_path = os.path.join(path_, "scanned_article_urls.json")
+            json_file = open(scanned_articles_path, encoding='utf-8')
+            scanned_articles_list = json.load(json_file)
+            json_file.close()
+
+            if url in scanned_articles_list:
+                return False
+            else:
+                scanned_articles_list.append(url)
+                with open(scanned_articles_path, 'w') as json_file:
+                    json_file.write(json.dumps(scanned_articles_list, indent=4))
+                return True
+
+        except FileNotFoundError:
+            send_notification(GeneralError("Could not update the scanned article doi records!"))
+            return False
+
+def update_scanned_issues(vol_num: int, issue_num: int, path_: str) -> bool:
+    """
+    Logs path will be passed to the method
+    :param vol_num: Volume number passed to the function
+    :param issue_num: Issue number passed to the function
+    :param path_: absolute path of the logs file in logs_n_downloads directory
+    :return: Returns True if updating was successful
+    """
+    scanned_issues_path = os.path.join(path_, "latest_scanned_issue.json")
+    last_scanned_items = {"lastScannedVolume": vol_num,
+                          "lastScannedIssue": issue_num,
+                          "lastEdited": datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+                          }
+
+    try:
+        with open(scanned_issues_path, 'w') as json_file:
+            json_file.write(json.dumps(last_scanned_items, indent=4))
+
+        return True
+    except FileNotFoundError:
+        send_notification(GeneralError("Could not update the issue records!"))
+        return False
+
+
+def create_logs(was_successful: bool, path_: str) -> None:
+    try:
+        logs_file_path = os.path.join(path_, 'logs.json')
+        if was_successful:
+            with open(logs_file_path, 'r') as logs_file:
+                old_data = json.loads(logs_file.read())
+        new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
+                         'attemptStatus': was_successful})
+        with open(logs_file_path, 'w') as logs_file:
+            logs_file.write(json.dumps(new_data, indent=4))
+
+    except Exception as e:
+        send_notification(GeneralError('Could not update logs of the trial!'))
 
 
 def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference):
@@ -316,7 +414,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         doi = dergipark_components.get_doi(driver)
                         doi = doi[doi.index("org/") + 4:]
                     except Exception as e:
-                        send_notification(e)
+                        send_notification(GeneralError(f" {journal_name, recent_volume, recent_issue}"
+                        f" with article num {article_num} was not successful. DOI error was encountered. The problem encountered was: {e}"))
                 except Exception as e:
                     send_notification(GeneralError(
                         f"Scraping journal elements of Dergipark journal"
@@ -422,6 +521,10 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
 
                     print(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
                     clear_directory(download_path)
+    else:
+        log_already_scanned(get_logs_path(parent_type, file_reference))
+    if random.random() < 0.2: # In the long run sends 20% of the outputs as WP message
+        send_example_log(final_article_data)
     return timeit.default_timer() - start_time
 
 

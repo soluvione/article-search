@@ -101,8 +101,9 @@ def download_article_pdf(driver, pdf_scrape_type):
         return pdf_to_download_available
     except Exception as e:
         if pdf_scrape_type != "A_DRG":
-
-        send_notification(e)
+            pass
+        else:
+            send_notification(e)
 
 
 def define_article_type(driver):
