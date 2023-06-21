@@ -4,9 +4,11 @@ This is the template scraper that will be used to multiply.
 import os
 from datetime import datetime
 import json
+import random
+from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification, send_example_log
 from common.erorrs import GeneralError
-import random
+
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -162,7 +164,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
     from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
     from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
     from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
-        abstract_formatter
+        abstract_formatter, get_correspondance_name
     from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
     import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
     from common.helpers.methods.data_to_atifdizini import get_to_artc_page, paste_data
@@ -293,11 +295,11 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         if with_azure:
                             first_pages_cropped_pdf = crop_pages(formatted_name, pages_to_send)
                             location_header = AzureHelper.analyse_pdf(
-                                first_pages_cropped_pdf)  # Location header is the response
-                        # address of Azure API
+                                first_pages_cropped_pdf)  # Location header is the response address of Azure API
                         if with_adobe and pdf_scrape_type != "A_DRG & R":
-                            adobe_pdf = split_in_half(formatted_name)
-
+                            adobe_pdf_path = split_in_half(formatted_name)
+                            adobe_zip_path = AdobeHelper.analyse_pdf(adobe_pdf_path, download_path)
+                            adobe_references = AdobeHelper.get_analysis_results(adobe_zip_path)
                     # So far, the article has been downloaded if possible, and the name of the file is reformatted
                     # Afterwards the pdf is sent for analysis. In the later stages of the code the response will be fetched.
 
@@ -410,6 +412,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                     for author_element in author_elements:
                         authors.append(author_converter(author_element.get_attribute('innerText'),
                                                         author_element.get_attribute('innerHTML')))
+                    correspondance_name = get_correspondance_name(authors)
                     try:
                         doi = dergipark_components.get_doi(driver)
                         doi = doi[doi.index("org/") + 4:]
@@ -444,7 +447,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                             # Format Azure Response and get a dict
                             azure_article_data = None
                             if with_azure:
-                                azure_article_data = AzureHelper.format_azure_data(azure_data=azure_data)
+                                azure_article_data = AzureHelper.format_azure_data(azure_data, correspondance_name)
                             article_code = f"{journal_name} {article_year};{article_vol}({article_issue})" \
                                            f":{article_page_range[0]}-{article_page_range[1]}"
                             # So far both the Azure data and the data scraped from Dergipark are constructed
@@ -495,20 +498,22 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                     if azure_article_data["article_keywords"].get("eng", None):
                                         final_article_data["articleKeywords"]["ENG"] = \
                                             azure_article_data["article_keywords"]["eng"]
+
+                                    if azure_article_data.get("article_authors", None):
+                                        final_article_data["articleAuthors"] = azure_article_data["article_authors"]
+                                    elif authors:
+                                        final_article_data["articleAuthors"] = Author.author_to_json(authors)
+
                             elif keywords_tr or keywords_eng:
                                 if keywords_tr:
                                     final_article_data["articleKeywords"]["TR"] = keywords_tr
                                 if keywords_eng:
                                     final_article_data["articleKeywords"]["ENG"] = keywords_eng
 
-                            if authors:
-                                final_article_data["articleAuthors"] = Author.author_to_json(authors)
-
                             if dergipark_references:
                                 final_article_data["articleReferences"] = dergipark_references
                             elif with_adobe and adobe_references:
                                 final_article_data["articleReferences"] = adobe_references
-                    # print(pprint.pprint(final_article_data))
                     if with_azure:
                         with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\',
                                                "azure_" + common.helpers.methods.others.generate_random_string(7)), "w",

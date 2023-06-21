@@ -90,7 +90,7 @@ class AzureHelper:
             return response_dictionary
 
     @classmethod
-    def format_azure_data(cls, azure_data):
+    def format_azure_data(cls, azure_data, correspondence_name):
         """
         Whether we use the following data, the extractor will extract these and return if present in the pdf.
         Sample article_data return:
@@ -108,6 +108,7 @@ class AzureHelper:
         "article_keywords": {"TR": [str, str], "ENG": [str, str]},
         "article_authors": [author, author],
         }
+        :param correspondence_name: None or name of the correspondence author acquired from Dergipark
         :param azure_data: Azure data is the response body, which is the value of the "data" key of response body
         :return: This method returns the article data dictionary.
         """
@@ -120,7 +121,7 @@ class AzureHelper:
             author_emails = data_extractor.extract_authors_emails()
             author_data = data_extractor.extract_author_data()
             # Author matcher does the pairing within the method
-            article_authors = associate_authors_data(author_names, author_emails, author_data)
+            article_authors = associate_authors_data(author_names, author_emails, author_data, correspondence_name)
 
             azure_extraction_data = {
                 "journal_names": data_extractor.extract_journal_names(),

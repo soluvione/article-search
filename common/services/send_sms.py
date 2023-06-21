@@ -3,9 +3,10 @@ This module will be used to send a message or a notification to the user in any 
 There is a need to implement a wait time to ensure the notification is indeed sent to the user.
 May halt the code execution for a limited time, eg: 10 seconds.
 """
+import json
 from common.erorrs import GeneralError
 from common.constants import account_sid, auth_token
-import json
+from twilio.rest import Client
 def send_notification(error, real=False):
     """
 
@@ -21,6 +22,7 @@ def send_notification(error, real=False):
             body=error.message,
             to='whatsapp:+905074997463'
         )
+    # TODO What will happen if we encounter error with Twilio?
     print("sent message is: ", error.message)
 
 
@@ -44,7 +46,7 @@ def send_notifications(message: str):
     :return: Does not return anything.
     """
     pass
-from twilio.rest import Client
+
 
 
 

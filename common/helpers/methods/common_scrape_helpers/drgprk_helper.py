@@ -1,6 +1,8 @@
 import re
 import os
 from classes.author import Author
+from common.erorrs import GeneralError
+from common.services.send_sms import send_notification
 
 
 def author_converter(author_text: str, author_html: str) -> Author:
@@ -16,7 +18,8 @@ def author_converter(author_text: str, author_html: str) -> Author:
         split_text = author_text.split('\n')
         if len(split_text) == 4:
             del split_text[-2]
-        if split_text[-1] != "Türkiye" and split_text[-1] != "Turkey" and split_text[-1] != "Kuzey Kıbrıs Türk Cumhuriyeti":
+        if split_text[-1] != "Türkiye" and split_text[-1] != "Turkey" and split_text[
+            -1] != "Kuzey Kıbrıs Türk Cumhuriyeti":
             is_foreign_author = True
         if "Sorumlu" in split_text[0]:
             author.is_correspondace = True
@@ -34,7 +37,14 @@ def author_converter(author_text: str, author_html: str) -> Author:
             author.all_speciality = split_text[1]
         return author
     except Exception as e:
-        print(e, e.args, e.__str__())
+        print(e)
+
+
+def get_correspondance_name(authors_list):
+    for author in authors_list:
+        if author.is_correspondace:
+            return author.name
+    return None
 
 
 def author_converter1(author_html: str) -> Author:
@@ -136,11 +146,13 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
             reference_head = str(count) + ". "
         else:
             reference_head = str(count) + ". " + reference_head
+        reference_combined = reference_head + reference_tail
+        reference_combined = (reference_combined.split('(<', 1)[0]).replace('[CrossRef]', '').strip()
 
-
-        return reference_head + reference_tail
+        return reference_combined
     except Exception as e:
-        pass
+        send_notification(
+            GeneralError(f'Error whilst formatting references via dergipark_helper reference_formatter. Error: {e}'))
 
 
 def format_file_name(downloads_path: str, journal_details_name: str) -> str:
@@ -157,46 +169,52 @@ def format_file_name(downloads_path: str, journal_details_name: str) -> str:
         os.rename(max(files, key=os.path.getctime), formatted_name)
         return formatted_name
     except Exception as e:
-        print(e, e.args)
+        send_notification(
+            GeneralError(f'Error whilst formatting file name with dergipark_helper format_file_name. Error: {e}'))
 
 
 def abstract_formatter(abstract, language) -> str:
-    if language == "tr":
-        abstract_head = abstract[:10]
-        abstract_tail = abstract[10:]
-        abstract_head = re.sub(r"\t|\n", "", abstract_head)
-        abstract_head = re.sub(r"Öz:|Öz", "", abstract_head, flags=re.IGNORECASE)
-        try:
-            abstract_tail = abstract_tail[: abstract_tail.index("Anahtar ke")].strip()
-        except:
-            pass
-        try:
-            abstract_tail = abstract_tail[: abstract_tail.index("Anahtar Ke")].strip()
-        except:
-            pass
-        try:
-            abstract_tail = abstract_tail[: abstract_tail.index("anahtar ke:")].strip()
-        except:
-            pass
-    else:
-        abstract_head = abstract[:10]
-        abstract_tail = abstract[10:]
-        abstract_head = re.sub(r"\t|\n", "", abstract_head)
-        abstract_head = re.sub(r"Summary:|ABSTRACT:", "", abstract_head, flags=re.IGNORECASE)
-        abstract_head = re.sub(r"Summary|ABSTRACT", "", abstract_head, flags=re.IGNORECASE)
-        try:
-            abstract_tail = abstract_tail[: abstract_tail.index("keywords:")].strip()
-        except:
-            pass
-        try:
-            abstract_tail = abstract_tail[: abstract_tail.index("Keywords:")].strip()
-        except:
-            pass
-        try:
-            abstract_tail = abstract_tail[: abstract_tail.index("\nKeywords:")].strip()
-        except:
-            pass
-    return (abstract_head+abstract_tail).strip()
+    try:
+        if language == "tr":
+            abstract_head = abstract[:10]
+            abstract_tail = abstract[10:]
+            abstract_head = re.sub(r"\t|\n", "", abstract_head)
+            abstract_head = re.sub(r"Öz:|Öz", "", abstract_head, flags=re.IGNORECASE)
+            try:
+                abstract_tail = abstract_tail[: abstract_tail.index("Anahtar ke")].strip()
+            except:
+                pass
+            try:
+                abstract_tail = abstract_tail[: abstract_tail.index("Anahtar Ke")].strip()
+            except:
+                pass
+            try:
+                abstract_tail = abstract_tail[: abstract_tail.index("anahtar ke:")].strip()
+            except:
+                pass
+        else:
+            abstract_head = abstract[:10]
+            abstract_tail = abstract[10:]
+            abstract_head = re.sub(r"\t|\n", "", abstract_head)
+            abstract_head = re.sub(r"Summary:|ABSTRACT:", "", abstract_head, flags=re.IGNORECASE)
+            abstract_head = re.sub(r"Summary|ABSTRACT", "", abstract_head, flags=re.IGNORECASE)
+            try:
+                abstract_tail = abstract_tail[: abstract_tail.index("keywords:")].strip()
+            except:
+                pass
+            try:
+                abstract_tail = abstract_tail[: abstract_tail.index("Keywords:")].strip()
+            except:
+                pass
+            try:
+                abstract_tail = abstract_tail[: abstract_tail.index("\nKeywords:")].strip()
+            except:
+                pass
+        return (abstract_head + abstract_tail).strip()
+    except Exception as e:
+        send_notification(
+            GeneralError(f'Error whilst formatting the abstract with dergipark_helper abstract_formatter. Error: {e}'))
+
 
 if __name__ == "__main__":
     pass
