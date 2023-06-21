@@ -31,3 +31,4 @@ print(extractor.extract_volume_issue())
 # print("Author names:", extractor.extract_author_names())
 # print("Author emails:", extractor.extract_authors_emails())
 # print("Author specialities:", extractor.extract_author_data())
+

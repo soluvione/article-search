@@ -43,32 +43,45 @@ def format_results(data):
                 "Works Cited", "Literature", "Citations", "Literature Cited", "Source References", "Resource List",
                 "List of References", "Resource References", "Source List", "Bibliographical References",
                 "Bibliographic References", "Cited Literature", "Reference List", "Bibliographical Notes",
-                "Kaynaklar", "Kaynakça", "Bibliyografya", "Referanslar", "Alıntılar", "Alıntılanan Eserler",
+                "KAYNAKLAR ", "Kaynakça", "Bibliyografya", "Referanslar", "Alıntılar", "Alıntılanan Eserler",
                 "Kullanılan Kaynaklar", "Edebiyat", "Alıntılanan Literatür", "Kaynak Listesi", "Alıntılanan Kaynaklar",
                 "Kaynak Notları", "Bibliyografik Kaynaklar", "Alıntılanan Edebiyat", "Kaynakça Listesi",
                 "Bibliyografik Notlar"]
 
-    keywords = [keyword.lower() for keyword in keywords]
+    keywords = [keyword.lower().strip() for keyword in keywords]
     try:
         # Reverse the list to start search from the end
         reversed_elements = list(reversed(data["elements"]))
-
+        found = False
         for idx, element in enumerate(reversed_elements):
-            if element["Text"].lower() in keywords:
+            # Checking if "Text" key is in element dictionary
+            if "Text" in element:
+                 to_check = element["Text"].lower().strip()
+            if to_check in keywords:
+                found = True
                 break
     except KeyError as e:
         print(f"Error finding key in JSON: {e}")
 
     # Creating new list that has the elements from the keyword element to the end (remembering to reverse back)
-    new_elements = list(reversed(reversed_elements[:idx + 1]))
+    new_elements = list(reversed(reversed_elements[:idx]))
+    lbody_count = 0
+    p_count = 0
+    # Count 'LBody' and 'P' cases in the first 15 elements after the references title
+    for sub_element in new_elements[: 20]:
+        if "Path" in sub_element:
+            if sub_element["Path"].endswith('LBody'):
+                lbody_count += 1
+            elif sub_element["Path"].endswith(']') and "/P[" in sub_element["Path"]:
+                p_count += 1
 
-    # Overwriting the old "elements" field with the new list
-    data["elements"] = new_elements
-
+    if lbody_count < p_count:
+        result = [element['Text'].strip() for element in new_elements if element["Path"].endswith(']') and "/P[" in element["Path"]]
+    else:
+        result = [element['Text'].strip() for element in new_elements if element['Path'].endswith('LBody')]
     # Converting back to JSON
-    new_json = json.dumps(data, indent=4)
-
-    print(new_json)
+    new_json = json.dumps(result, indent=4, ensure_ascii=False)
+    return new_json
 
 class AdobeHelper:
     def __init__(self):
@@ -128,7 +141,7 @@ class AdobeHelper:
             json_path = unzip_results(zip_path)
             with open(json_path, 'r', encoding='utf-8') as json_file:
                 raw_data = json.loads(json_file.read())
-            format_results(raw_data)
-            # pprint.pprint(formatted_data)
+            formatted_data = format_results(raw_data)
+            print(formatted_data)
         except Exception as e:
             send_notification(GeneralError(f"Adobe API Second phase error. Error encountered: {e}"))
