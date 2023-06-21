@@ -28,7 +28,6 @@ multipart==0.2.4
 oauthlib==3.2.2
 outcome==1.2.0
 packaging==21.3
-pdfminer.six==20221105
 pdfservices-sdk==2.2.0
 pep517==0.13.0
 polling==0.3.2
