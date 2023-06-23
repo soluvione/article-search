@@ -41,6 +41,12 @@ def format_results(json_data):
     :param json_data: JSON data of the Adobe API call
     :return: Returns formatted references list. All elements have a leading number attached such as '1.'
     """
+    """
+    *********************************************************************8888
+    **********************************************************************888
+    Youll come back. you are looking for ParagraphSpan + P
+    
+    """
     try:
 
         keywords = ["References", "Bibliography", "Sources", "Bibliography and references", "Cited Works",
@@ -142,8 +148,7 @@ class AdobeHelper:
     def get_analysis_results(cls, zip_path):
         """
         Timeout should be multiples of 10.
-        :param operation_location: The "Operation-Location" value acquired from the response of sending PDF for analysis
-        :param timeout: The timeout limit of the operation. How many seconds does the method wait for the analysis to finish.
+        :param zip_path:
         :return: Returns response dictionary, Result key for result status and Data key for response body
         """
         try:

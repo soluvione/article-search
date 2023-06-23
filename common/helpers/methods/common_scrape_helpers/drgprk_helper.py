@@ -5,6 +5,18 @@ from common.erorrs import GeneralError
 from common.services.send_sms import send_notification
 
 
+def capitalize_first_occurrence(s):
+    # iterate over each character
+    for i in range(len(s)):
+        # if the character is an alphabet
+        if s[i].isalpha():
+            # if it is not already uppercase
+            if not s[i].isupper():
+                # make it uppercase
+                s = s[:i] + s[i].upper() + s[i+1:]
+            break  # stop after encountering the first alphabet
+    return s
+
 def author_converter(author_text: str, author_html: str) -> Author:
     """
 
@@ -147,7 +159,11 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
         else:
             reference_head = str(count) + ". " + reference_head
         reference_combined = reference_head + reference_tail
+
         reference_combined = (reference_combined.split('(<', 1)[0]).replace('[CrossRef]', '').strip()
+        reference_combined = capitalize_first_occurrence(reference_combined)
+        if reference_combined.endswith("["):
+            return reference_combined[:-2]
 
         return reference_combined
     except Exception as e:

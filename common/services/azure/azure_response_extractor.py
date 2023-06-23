@@ -6,6 +6,7 @@ import json
 import re
 from common.services.send_sms import send_notifications
 
+
 def _extract_keywords_from_string(keyword_string):
     """
 
@@ -102,33 +103,56 @@ class ApiResponseExtractor:
                 keywords[language] = _extract_keywords_from_string(value["valueString"])
         return keywords
 
-    def extract_article_doi(self):
+    def extract_article_doi(self, is_tk=False):
         doi = None
-        if ("DOI" in self.api_response["analyzeResult"]["documents"][0]["fields"]
-                and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][
-                    "DOI"]):
-            doi = self.api_response["analyzeResult"]["documents"][0]["fields"]["DOI"]["valueString"]
-            try:
-                doi = doi[doi.index("10."):]
-            except ValueError:
-                return "HATA"
+        if not is_tk:
+            if ("DOI" in self.api_response["analyzeResult"]["documents"][0]["fields"]
+                    and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][
+                        "DOI"]):
+                doi = self.api_response["analyzeResult"]["documents"][0]["fields"]["DOI"]["valueString"]
+                try:
+                    doi = doi[doi.index("10."):]
+                except ValueError:
+                    return "HATA"
+        else:
+            if ("doi" in self.api_response["analyzeResult"]["documents"][0]["fields"]
+                    and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][
+                        "doi"]):
+                doi = self.api_response["analyzeResult"]["documents"][0]["fields"]["doi"]["valueString"]
+
         return doi
 
-    def extract_authors_emails(self):
+    def extract_authors_emails(self, is_tk=False):
         emails = []
-        for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
-            if key.startswith("auth_mail") and "valueString" in value:
-                emails.append(value["valueString"])
+        if is_tk:
+            for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
+                if key.startswith("email") and "valueString" in value:
+                    emails.append(value["valueString"])
+                    return emails[0]
+        else:
+            for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
+                if key.startswith("auth_mail") and "valueString" in value:
+                    emails.append(value["valueString"])
         return emails
 
-    def extract_author_names(self):
-        author_names = []
-        for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
-            if key.startswith("author_name") and "valueString" in value:
-                author_name = re.sub(r"^(İD|ID)|(İD|ID)$", "", value["valueString"])
-                author_name = author_name.strip()
-                author_names.append(author_name)
-        return author_names
+    def extract_author_names(self, is_tk=False):
+        if not is_tk:
+            author_names = []
+            for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
+                if key.startswith("author_name") and "valueString" in value:
+                    author_name = re.sub(r"^(İD|ID)|(İD|ID)$", "", value["valueString"])
+                    author_name = author_name.strip()
+                    author_names.append(author_name)
+            return author_names
+        else:
+            for key, value in self.api_response["analyzeResult"]["documents"][0]["fields"].items():
+                if key.startswith("correspondance_name") and "valueString" in value:
+                    author_name = value["valueString"].strip()
+                    try:
+                        author_name = author_name[author_name.index(":") + 1:].strip()
+                    except Exception:
+                        pass
+                    return author_name
 
     def extract_author_data(self):
         author_data = []
@@ -157,7 +181,8 @@ class ApiResponseExtractor:
 
     def extract_correspondance_data(self):
         if ("correspondance_data" in self.api_response["analyzeResult"]["documents"][0]["fields"]
-                and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["correspondance_data"]):
+                and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][
+                    "correspondance_data"]):
             try:
                 return self.api_response["analyzeResult"]["documents"][0]["fields"]["correspondance_data"][
                     "valueString"]
@@ -167,17 +192,29 @@ class ApiResponseExtractor:
         else:
             return None
 
-    def extract_journal_abbreviation(self):
-        if ("journal_abbreviation" in self.api_response["analyzeResult"]["documents"][0]["fields"] and
-                "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"]):
-            try:
-                return self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"][
-                    "valueString"].replace("(").replace(")")
-            except KeyError as e:
-                print(e, e.args)
-                return "HATA"
+    def extract_journal_abbreviation(self, is_tk=False):
+        if not is_tk:
+            if ("journal_abbreviation" in self.api_response["analyzeResult"]["documents"][0]["fields"] and
+                    "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][
+                        "journal_abbreviation"]):
+                try:
+                    return self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"][
+                        "valueString"].replace("(", "").replace(")", "")
+                except KeyError as e:
+                    print(e, e.args)
+                    return "HATA"
+            else:
+                return None
         else:
-            return None
+            if ("abbreviation" in self.api_response["analyzeResult"]["documents"][0]["fields"] and
+                    "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"]["abbreviation"]):
+                try:
+                    return self.api_response["analyzeResult"]["documents"][0]["fields"]["abbreviation"][
+                        "valueString"].replace("(", "").replace(")", "").replace(".", "")
+                except KeyError as e:
+                    return "HATA"
+            else:
+                return None
 
     def extract_article_year(self):
         """
