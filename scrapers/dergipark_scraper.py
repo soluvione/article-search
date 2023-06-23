@@ -447,7 +447,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                             # Format Azure Response and get a dict
                             azure_article_data = None
                             if with_azure:
-                                azure_article_data = AzureHelper.format_azure_data(azure_data, correspondance_name)
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data, correspondance_name)
                             article_code = f"{journal_name} {article_year};{article_vol}({article_issue})" \
                                            f":{article_page_range[0]}-{article_page_range[1]}"
                             # So far both the Azure data and the data scraped from Dergipark are constructed

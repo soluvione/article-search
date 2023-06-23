@@ -156,6 +156,7 @@ def associate_authors_data(author_names, author_emails, author_specialities):
 
             author_data.append(author_info)
 
+
     return author_data
 """
 
@@ -164,6 +165,7 @@ def associate_authors_data(author_names, author_emails, author_specialities):
 import re
 from difflib import SequenceMatcher
 from fuzzywuzzy import fuzz
+
 
 def similarity(a, b):
     ""
@@ -198,58 +200,58 @@ def associate_authors_data(author_names, author_emails, author_specialities):
     # Remove duplicate author names and emails
     author_names = remove_duplicates(author_names)
     author_emails = remove_duplicates(author_emails)
-
+    with_email_suffixes = False
     author_data = []
 
     single_email = None
     if len(author_emails) == 1 and not re.match(r"^[a-z]\s", author_emails[0]):
         single_email = author_emails[0]
+    if single_email:
+        for name in author_names:
+            author_info = {"name": re.sub(r"[\*\d,]+[a-z]*", "", name).strip(),
+                           "speciality": None,
+                           "email": None}
 
-    for name in author_names:
-        author_info = {"name": re.sub(r"[\*\d,]+[a-z]*", "", name).strip(),
-                       "speciality": None,
-                       "email": None}
+            # Extract the suffix information
+            suffix = re.search(r"[\d\*]+[a-z]*$", name)
+            if suffix:
+                suffix = suffix.group(0)
 
-        # Extract the suffix information
-        suffix = re.search(r"[\d\*]+[a-z]*$", name)
-        if suffix:
-            suffix = suffix.group(0)
+            # Extract the speciality/university information
+            if suffix:
+                for speciality in author_specialities:
+                    if speciality.startswith(suffix):
+                        author_info["speciality"] = speciality[len(suffix):].strip()
+                        break
 
-        # Extract the speciality/university information
-        if suffix:
-            for speciality in author_specialities:
-                if speciality.startswith(suffix):
-                    author_info["speciality"] = speciality[len(suffix):].strip()
-                    break
+            # Assign speciality for authors without suffix
+            if author_info["speciality"] is None:
+                for speciality in author_specialities:
+                    if re.match(r"^(\d+|[a-z]+|\*)\s", speciality) is None:
+                        author_info["speciality"] = speciality.strip()
+                        break
 
-        # Assign speciality for authors without suffix
-        if author_info["speciality"] is None:
-            for speciality in author_specialities:
-                if re.match(r"^(\d+|[a-z]+|\*)\s", speciality) is None:
-                    author_info["speciality"] = speciality.strip()
-                    break
+            # Extract the email information
+            best_match_score = 0
+            best_match_email = None
+            for email in author_emails:
+                # Split the email on the "@" symbol and get the first part
+                email_prefix = email.split('@')[0]
 
-        # Extract the email information
-        best_match_score = 0
-        best_match_email = None
-        for email in author_emails:
-            # Split the email on the "@" symbol and get the first part
-            email_prefix = email.split('@')[0]
+                # Calculate the similarity score between the email prefix and the author name
+                similarity_score = fuzz.ratio(author_info["name"].lower(), email_prefix.lower())
 
-            # Calculate the similarity score between the email prefix and the author name
-            similarity_score = fuzz.ratio(author_info["name"].lower(), email_prefix.lower())
+                # If this score is the highest we've seen so far, save the email
+                if similarity_score > best_match_score:
+                    best_match_score = similarity_score
+                    best_match_email = email
 
-            # If this score is the highest we've seen so far, save the email
-            if similarity_score > best_match_score:
-                best_match_score = similarity_score
-                best_match_email = email
+            # Assign the best match email to the author info
+            if best_match_score > 40:  # Adjust this threshold as needed
+                author_info["email"] = best_match_email
+                author_emails.remove(best_match_email)
 
-        # Assign the best match email to the author info
-        if best_match_score > 40:  # Adjust this threshold as needed
-            author_info["email"] = best_match_email
-            author_emails.remove(best_match_email)
-
-        author_data.append(author_info)
+            author_data.append(author_info)
 
     return author_data
 """

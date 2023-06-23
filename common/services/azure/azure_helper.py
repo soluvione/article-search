@@ -6,8 +6,9 @@ import requests
 import base64
 import json
 from common.enums import AzureResponse
+from common.erorrs import GeneralError
 from common.services.azure.azure_response_extractor import ApiResponseExtractor
-from common.constants import azure_analyse_pdf_url, subscription_key
+from common.constants import azure_analyse_pdf_url, azure_tk_analyse_pdf_url, subscription_key
 from common.helpers.methods.author_data_mapper import associate_authors_data
 from common.services.send_sms import send_notification
 
@@ -17,11 +18,12 @@ class AzureHelper:
         pass
 
     @classmethod
-    def analyse_pdf(cls, pdf_path: str) -> str:
+    def analyse_pdf(cls, pdf_path: str, is_tk=False) -> str:
         """
 
+        :param is_tk: Whether if the analyse function will send a TK journal, if so will use different model
         :param pdf_path: Important! This must be an absolute path otherwise will cause errors!
-        :return: Returns the operation-header that will be used for fetching the results later.
+        :return: Returns the operation-header that will be used for fetching the results later
         """
         try:
             with open(pdf_path, "rb") as pdf_file:
@@ -38,7 +40,9 @@ class AzureHelper:
                 'api-version': '2022-08-31',
             }
             send_pdf_response = requests.post(
-                azure_analyse_pdf_url,
+                azure_analyse_pdf_url
+                if not is_tk
+                else azure_tk_analyse_pdf_url,
                 params=params,
                 headers=headers,
                 data=json_payload,
@@ -46,11 +50,14 @@ class AzureHelper:
 
             try:
                 return send_pdf_response.headers['Operation-Location']
-            except Exception:
-                print("send sms: did not receive the operation location from azure send sms response")
+            except Exception as e:
+                send_notification(GeneralError(f"Did not receive operation header in the first azure query ("
+                                               f"analyse_pdf, azure_helper.py). Error encountered: {e}"))
                 return ""
         except Exception as e:
-            print("send sms: general error in first azure query, ", {e})
+            send_notification(GeneralError(f"General error in the first Azure API query ("
+                                           f"analyse_pdf, azure_helper.py). Error encountered: {e}"))
+            return ""
 
     @classmethod
     def get_analysis_results(cls, operation_location: str, timeout: int):
@@ -85,12 +92,14 @@ class AzureHelper:
                 response_dictionary["Result"] = AzureResponse.FAILURE.value
 
             return response_dictionary
-        except Exception:
+        except Exception as e:
+            send_notification(GeneralError(f"General error in the second Azure API query ("
+                                           f"get_analysis_results, azure_helper.py). Error encountered: {e}"))
             response_dictionary["Result"] = AzureResponse.FAILURE.value
             return response_dictionary
 
     @classmethod
-    def format_azure_data(cls, azure_data, correspondence_name):
+    def format_general_azure_data(cls, azure_data, correspondence_name):
         """
         Whether we use the following data, the extractor will extract these and return if present in the pdf.
         Sample article_data return:
@@ -141,17 +150,55 @@ class AzureHelper:
 
             return azure_extraction_data
         except Exception as e:
-            send_notification(e)
+            send_notification(GeneralError(f"General error while formatting the Azure response data ("
+                                           f"format_general_azure_data, azure_helper.py). Error encountered: {e}"))
+
+    @classmethod
+    def format_tk_data(cls, tk_data):
+        """
+        Will consume raw API data and the data will be formatted via TkResponseExtractor,
+        Sample article_data return:
+        {
+            "journal_abbv": str | None,
+            "doi": str | None,
+            "correspondance_name": str | None,
+            "correspondance_email": str | None
+        }
+        :param tk_data: Raw API data
+        :return: Will return formatted article data dictionary
+        """
+        try:
+            tk_extraction_data = {
+                "journal_abbv": "",
+                "doi": "",
+                "correspondance_name": "",
+                "correspondance_email": ""
+            }
+        except Exception as e:
+            send_notification(GeneralError(f"General error while formatting the Azure TK response data ("
+                                           f"format_tk_data, azure_helper.py). Error encountered: {e}"))
 
 
 # TEST DUMMY RESPONSE
 def return_mock_response():
-    with open("/home/emin/PycharmProjects/Article-Search/tests/azure_call_data_7june.txt", "r", encoding='utf-8') as file:
+    with open("/home/emin/PycharmProjects/Article-Search/tests/azure_call_data_7june.txt", "r",
+              encoding='utf-8') as file:
         fake_response = json.loads(file.read())
         return fake_response
 
 
-import pprint
+def return_mock_tk_response():
+    with open(r"C:\Users\emine\Downloads\tkapitest.txt", "r",
+              encoding='utf-8') as file:
+        fake_response = json.loads(file.read())
+        return fake_response
+
 
 if __name__ == "__main__":
-    pprint.pprint(AzureHelper.format_azure_data(return_mock_response()))
+    # import pprint
+    # pprint.pprint(AzureHelper.format_general_azure_data(return_mock_response()))
+    tk_header = AzureHelper.analyse_pdf(r"C:\Users\emine\Downloads\api_test.pdf", True)
+    response_data = AzureHelper.get_analysis_results(tk_header, 50)
+    with open(r"C:\Users\emine\Downloads\tkapitest.txt", "w",
+              encoding='utf-8') as file:
+        json.dump(response_data, file, ensure_ascii=False)
