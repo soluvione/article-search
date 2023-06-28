@@ -34,9 +34,9 @@ def author_converter(author_text: str, author_html: str) -> Author:
             -1] != "Kuzey Kıbrıs Türk Cumhuriyeti":
             is_foreign_author = True
         if "Sorumlu" in split_text[0]:
-            author.is_correspondace = True
+            author.is_correspondence = True
         if "star-of-life" in author_html:
-            author.is_correspondace = True
+            author.is_correspondence = True
 
         # Author last name is always written in capital letters. Same goes for the second last names as well
         author.name = re.sub(r"  Bu kişi benim|&gt;|>", '', split_text[0])
@@ -54,7 +54,7 @@ def author_converter(author_text: str, author_html: str) -> Author:
 
 def get_correspondance_name(authors_list):
     for author in authors_list:
-        if author.is_correspondace:
+        if author.is_correspondence:
             return author.name
     return None
 
@@ -179,7 +179,9 @@ def format_file_name(downloads_path: str, journal_details_name: str) -> str:
             formatted_element_list.append(item.lower().strip() \
                                           .encode(encoding="ascii", errors="ignore").decode(encoding="UTF-8"))
         formatted_name = os.path.join(downloads_path, ("_".join(formatted_element_list) + ".pdf"))
-
+        # remove linux reserved characters from formatted_name and cut it to 250 characters
+        formatted_name = re.sub(r"[\/\\\:\*\?\"\<\>\|]", "", formatted_name)
+        formatted_name = formatted_name[:250]
         files = [os.path.join(downloads_path, file_name) for file_name in os.listdir(downloads_path)]
 
         os.rename(max(files, key=os.path.getctime), formatted_name)

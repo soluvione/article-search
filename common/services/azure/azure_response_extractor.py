@@ -201,7 +201,6 @@ class ApiResponseExtractor:
                     return self.api_response["analyzeResult"]["documents"][0]["fields"]["journal_abbreviation"][
                         "valueString"].replace("(", "").replace(")", "")
                 except KeyError as e:
-                    print(e, e.args)
                     return "HATA"
             else:
                 return None

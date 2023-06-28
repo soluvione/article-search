@@ -12,7 +12,7 @@ def clear_directory(path_: str) -> bool:
     :return: Returns True if all files are deleted inn less than 3 trials
     """
     trials = 0
-    while len(glob.glob(path_ + r"\*")) != 0 and trials < 3:
+    while len(glob.glob(os.path.join(path_, "*"))) != 0 and trials < 3:
         [f.unlink() for f in Path(path_).glob("*") if f.is_file()]
         trials += 1
         time.sleep(1)
@@ -20,3 +20,6 @@ def clear_directory(path_: str) -> bool:
         return False
     else:
         return True
+
+if __name__ == "__main__":
+    print(clear_directory("/home/emin/Desktop/tk_downloads"))
