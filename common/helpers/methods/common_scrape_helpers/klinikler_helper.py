@@ -73,21 +73,35 @@ def get_article_titles(article_element):
                                        f"format_bulk_data, klinikler_helper). Error encountered was: {e}"))
     return turkish_title, english_title
 
-def get_page_range(full_reference_text):
+def get_page_range(full_reference_text, pdf_scrape_type):
     """
     Function for getting the page range of the article
     :param full_reference_text: The full reference text of the article
     :return: List of page range numbers
     """
     page_range = None
+    article_code = None
+    article_volume = None
+    article_issue = None
     try:
-        full_reference_text = full_reference_text[: -1]
-        cropped_text = full_reference_text[full_reference_text.rindex('.') + 1:].strip().split('-')
-        page_range = [int(page) for page in cropped_text]
-        # if the second int in the page_range list is smaller than the first int, then add the 10 times first int's digit to the second int
-        if page_range[1] < page_range[0]:
-            page_range[1] += page_range[0] // 10 * 10
+        if pdf_scrape_type == "A_KLNK":
+            full_reference_text = full_reference_text[: -1]
+            cropped_text = full_reference_text[full_reference_text.rindex('.') + 1:].strip().split('-')
+            page_range = [int(page) for page in cropped_text]
+            # if the second int in the page_range list is smaller than the first int, then add the 10 times first int's digit to the second int
+            if page_range[1] < page_range[0]:
+                page_range[1] += page_range[0] // 10 * 10
+        else:
+            article_code = full_reference_text[full_reference_text.rindex('.') + 1:].strip()
+            page_range = full_reference_text[full_reference_text.rindex(':') + 1:].strip()
+            page_range = [int(page) for page in page_range.split('-')]  # convert the page range to a list of ints
+
+            article_volume = full_reference_text[full_reference_text.index(';') + 1: full_reference_text.index('(')]
+            article_issue = full_reference_text[full_reference_text.index('(') + 1: full_reference_text.index(')')]
+
+            article_volume = int(article_volume)
+            article_issue = int(article_issue)
     except Exception as e:
         send_notification(GeneralError(f"Error encountered while getting TK article page range ("
                                        f"get_page_range, klinikler_helper). Error encountered was: {e}"))
-    return page_range
+    return page_range, article_code, article_volume, article_issue

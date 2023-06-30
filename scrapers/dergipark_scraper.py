@@ -464,7 +464,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                 "articleYear": article_year,
                                 "articleVolume": recent_volume,
                                 "articleIssue": recent_issue,
-                                "articlePage Range": article_page_range,
+                                "articlePageRange": article_page_range,
                                 "articleTitle": {"TR": "", "ENG": ""},
                                 "articleAbstracts": {"TR": "", "ENG": ""},
                                 "articleKeywords": {"TR": [], "ENG": []},

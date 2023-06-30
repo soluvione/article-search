@@ -43,9 +43,9 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 # Scraper body chunks
-with_adobe = True
-with_azure = True
-login = True
+with_adobe = False
+with_azure = False
+login = False
 
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -81,10 +81,10 @@ def update_authors_with_correspondence(paired_authors, correspondence_name, corr
     return paired_authors
 
 
-def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_reference):
+def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_reference, pdf_scrape_type="A_KLNK_R"):
     i = 1
     while i < 3:
-        start_page_url = "https://www.turkiyeklinikleri.com/journal/endokrinoloji-ozel-konular/89/issue/2023/16/1-0/konjenital-adrenal-hiperplaziler/tr-index.html"
+        start_page_url = "https://www.turkiyeklinikleri.com/journal/anesteziyoloji-reanimasyon-dergisi/14/issue/2023/21/1-0//tr-index.html"
         # Webdriver options
         # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
         options = Options()
@@ -134,6 +134,17 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                     article_element = driver.find_element(By.ID, 'article')
                     turkish_title, english_title = get_article_titles(article_element)
 
+                    # Article Language
+                    article_language = article_element.find_elements(By.CLASS_NAME, 'altBilgi')[1].text.split(':')[1].strip().lower()
+
+                    # Article Type
+                    try:
+                        article_type = article_element.find_element(By.CLASS_NAME, 'header').text.strip()
+                        article_type = ''.join([char for char in article_type if char.isalpha() or char.isspace()])
+                    except Exception:
+                        article_type = None
+                    print(article_type)
+
                     # Author Names and Specialities
                     authors_element = article_element.find_element(By.CLASS_NAME, 'author')
                     author_names_list = [author.strip() for author in
@@ -141,18 +152,36 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                     author_specialities = [speciality for speciality in authors_element.text.split('\n')[1:]]
                     paired_authors = pair_authors(author_names_list, author_specialities)
 
-                    # Abstract and Keywords
-                    abstract_keywords_tr = article_element.find_element(By.CLASS_NAME, 'summaryMain').text.strip()
-                    abstract_tr, keywords_tr = format_bulk_data(abstract_keywords_tr, language="tr")
-                    try:
-                        abstract_keywords_eng = article_element.find_element(By.CLASS_NAME, 'summarySub').text.strip()
+                    # Abstract and Keywords (The order of the languages is not fixed)
+                    if article_language == "tr":
+                        abstract_keywords_tr = article_element.find_element(By.CLASS_NAME, 'summaryMain').text.strip()
+                        abstract_tr, keywords_tr = format_bulk_data(abstract_keywords_tr, language="tr")
+                        try:
+                            abstract_keywords_eng = article_element.find_element(By.CLASS_NAME, 'summarySub').text.strip()
+                            abstract_eng, keywords_eng = format_bulk_data(abstract_keywords_eng, language="eng")
+                        except Exception:
+                            pass
+                    else:
+                        abstract_keywords_eng = article_element.find_element(By.CLASS_NAME, 'summaryMain').text.strip()
                         abstract_eng, keywords_eng = format_bulk_data(abstract_keywords_eng, language="eng")
-                    except Exception as e:
-                        pass
+                        try:
+                            abstract_keywords_tr = article_element.find_element(By.CLASS_NAME, 'summarySub').text.strip()
+                            abstract_tr, keywords_tr = format_bulk_data(abstract_keywords_tr, language="tr")
+                        except Exception:
+                            pass
 
-                    # Page Range
-                    full_reference_text = article_element.find_element(By.CLASS_NAME, 'altBilgi').text.strip()
-                    page_range = get_page_range(full_reference_text)
+                    # Page Range, Article Code, Volume, Issue
+                    try:
+                        full_reference_text = article_element.find_elements(By.CLASS_NAME, 'altBilgi')[0].text.strip()
+                        page_range, article_code, article_volume, article_issue = get_page_range(full_reference_text, pdf_scrape_type)
+                    except Exception as e:
+                        send_notification(GeneralError(f"Error encountered while getting page range, article code, "))
+
+                    # DOI
+                    try:
+                        article_doi = article_element.find_element(By.CLASS_NAME, 'doi').text.split(':')[1].strip()
+                    except Exception:
+                        article_doi = None
 
                     # Download Link
                     try:
@@ -188,25 +217,31 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                                 adobe_cropped = split_in_half(file_name)
                                 adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                 adobe_references = AdobeHelper.get_analysis_results(adobe_response)
-                    pprint.pprint(azure_article_data)
-                    correspondence_name, correspondence_mail = azure_article_data.pop("correspondance_name"), \
-                        azure_article_data.pop("correspondance_email")
-                    final_authors = update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail)
+                    final_authors = paired_authors
+                    if with_azure:
+                        correspondence_name, correspondence_mail = azure_article_data.pop("correspondance_name"), \
+                            azure_article_data.pop("correspondance_email")
+                        final_authors = update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail)
+
+                    # IMPORTANT NOTE:
+                    # For the final data dictionary I am writing None values for the data that is either cannot be
+                    # scraped or not available in the website or if any error is encountered while scraping.
                     final_article_data = {
                         "journalName": f"{journal_name}",
-                        "articleType": "",
-                        "articleDOI": "",
-                        "articleCode": 0,
-                        "articleYear": datetime.now().year,
-                        "articleVolume": 0,
-                        "articleIssue": 0,
-                        "articlePage Range": page_range,
+                        "articleType": article_type,
                         "articleTitle": {"TR": turkish_title, "ENG": english_title},
                         "articleAbstracts": {"TR": abstract_tr, "ENG": abstract_eng},
                         "articleKeywords": {"TR": keywords_tr, "ENG": keywords_eng},
+                        "articleDOI": article_doi,
+                        "articleCode": article_code,
+                        "articleYear": datetime.now().year,
+                        "articleVolume": article_volume,
+                        "articleIssue": article_issue,
+                        "articlePageRange": page_range,
                         "articleAuthors": final_authors,
-                        "articleReferences": adobe_references}
-                    final_article_data.update(azure_article_data)
+                        "articleReferences": adobe_references if with_adobe else None}
+                    if with_azure:
+                        final_article_data.update(azure_article_data)
                     pprint.pprint(final_article_data, width=150)
                     i += 1
                     clear_directory(download_path)
