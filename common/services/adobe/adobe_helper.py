@@ -41,6 +41,12 @@ def format_results(json_data):
     :param json_data: JSON data of the Adobe API call
     :return: Returns formatted references list. All elements have a leading number attached such as '1.'
     """
+    """
+    *********************************************************************8888
+    **********************************************************************888
+    Youll come back. you are looking for ParagraphSpan + P
+    
+    """
     try:
 
         keywords = ["References", "Bibliography", "Sources", "Bibliography and references", "Cited Works",
@@ -57,13 +63,11 @@ def format_results(json_data):
         try:
             # Reverse the list to start search from the end
             reversed_elements = list(reversed(json_data["elements"]))
-            found = False
             for idx, element in enumerate(reversed_elements):
                 # Checking if "Text" key is in element dictionary
                 if "Text" in element:
                      to_check = element["Text"].lower().strip()
                 if to_check in keywords:
-                    found = True
                     break
         except KeyError as e:
             print(f"Error finding key in JSON: {e}")
@@ -88,7 +92,7 @@ def format_results(json_data):
 
         return result
     except Exception as e:
-        send_notification(GeneralError(f"Error while formatting the Adobe API data (adobe_helper, format_results). Error encountered: {e}"))
+        send_notification(GeneralError(f"Error while formatting the Adobe API data (format_results, adobe_helper). Error encountered: {e}"))
 
 class AdobeHelper:
     def __init__(self):
@@ -136,16 +140,19 @@ class AdobeHelper:
 
             return zip_path
         except Exception as e:
-            send_notification(GeneralError(f"Adobe API First phase error (adobe_helper, analyse_pdf). Error encountered: {e}"))
+            send_notification(GeneralError(f"Adobe API First phase error (analyse_pdf, adobe_helper). Error encountered: {e}"))
 
     @classmethod
     def get_analysis_results(cls, zip_path):
         """
         Timeout should be multiples of 10.
-        :param operation_location: The "Operation-Location" value acquired from the response of sending PDF for analysis
-        :param timeout: The timeout limit of the operation. How many seconds does the method wait for the analysis to finish.
+        :param zip_path:
         :return: Returns response dictionary, Result key for result status and Data key for response body
         """
+        if not zip_path:
+            send_notification(GeneralError(
+                f"Adobe API Second phase error (adobe_helper, get_analysis_results). No zip path provided."))
+            return None
         try:
             json_path = unzip_results(zip_path)
             with open(json_path, 'r', encoding='utf-8') as json_file:

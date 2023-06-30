@@ -5,6 +5,18 @@ from common.erorrs import GeneralError
 from common.services.send_sms import send_notification
 
 
+def capitalize_first_occurrence(s):
+    # iterate over each character
+    for i in range(len(s)):
+        # if the character is an alphabet
+        if s[i].isalpha():
+            # if it is not already uppercase
+            if not s[i].isupper():
+                # make it uppercase
+                s = s[:i] + s[i].upper() + s[i+1:]
+            break  # stop after encountering the first alphabet
+    return s
+
 def author_converter(author_text: str, author_html: str) -> Author:
     """
 
@@ -22,9 +34,9 @@ def author_converter(author_text: str, author_html: str) -> Author:
             -1] != "Kuzey Kıbrıs Türk Cumhuriyeti":
             is_foreign_author = True
         if "Sorumlu" in split_text[0]:
-            author.is_correspondace = True
+            author.is_correspondence = True
         if "star-of-life" in author_html:
-            author.is_correspondace = True
+            author.is_correspondence = True
 
         # Author last name is always written in capital letters. Same goes for the second last names as well
         author.name = re.sub(r"  Bu kişi benim|&gt;|>", '', split_text[0])
@@ -42,7 +54,7 @@ def author_converter(author_text: str, author_html: str) -> Author:
 
 def get_correspondance_name(authors_list):
     for author in authors_list:
-        if author.is_correspondace:
+        if author.is_correspondence:
             return author.name
     return None
 
@@ -147,7 +159,11 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
         else:
             reference_head = str(count) + ". " + reference_head
         reference_combined = reference_head + reference_tail
+
         reference_combined = (reference_combined.split('(<', 1)[0]).replace('[CrossRef]', '').strip()
+        reference_combined = capitalize_first_occurrence(reference_combined)
+        if reference_combined.endswith("["):
+            return reference_combined[:-2]
 
         return reference_combined
     except Exception as e:
@@ -163,7 +179,9 @@ def format_file_name(downloads_path: str, journal_details_name: str) -> str:
             formatted_element_list.append(item.lower().strip() \
                                           .encode(encoding="ascii", errors="ignore").decode(encoding="UTF-8"))
         formatted_name = os.path.join(downloads_path, ("_".join(formatted_element_list) + ".pdf"))
-
+        # remove linux reserved characters from formatted_name and cut it to 250 characters
+        formatted_name = re.sub(r"[\/\\\:\*\?\"\<\>\|]", "", formatted_name)
+        formatted_name = formatted_name[:250]
         files = [os.path.join(downloads_path, file_name) for file_name in os.listdir(downloads_path)]
 
         os.rename(max(files, key=os.path.getctime), formatted_name)

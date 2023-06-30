@@ -99,7 +99,7 @@ class AzureHelper:
             return response_dictionary
 
     @classmethod
-    def format_general_azure_data(cls, azure_data, correspondence_name):
+    def format_general_azure_data(cls, azure_data, correspondence_name=None):
         """
         Whether we use the following data, the extractor will extract these and return if present in the pdf.
         Sample article_data return:
@@ -167,13 +167,20 @@ class AzureHelper:
         :param tk_data: Raw API data
         :return: Will return formatted article data dictionary
         """
+        tk_extraction_data= None
         try:
+            data_extractor = ApiResponseExtractor(tk_data["Data"])
+            abbreviation = data_extractor.extract_journal_abbreviation(is_tk=True)
+            doi = data_extractor.extract_article_doi(is_tk=True)
+            author_name = data_extractor.extract_author_names(is_tk=True)
+            author_email = data_extractor.extract_authors_emails(is_tk=True)
             tk_extraction_data = {
-                "journal_abbv": "",
-                "doi": "",
-                "correspondance_name": "",
-                "correspondance_email": ""
+                "articleCode": abbreviation,
+                "articleDOI": doi,
+                "correspondance_name": author_name,
+                "correspondance_email": author_email
             }
+            return tk_extraction_data
         except Exception as e:
             send_notification(GeneralError(f"General error while formatting the Azure TK response data ("
                                            f"format_tk_data, azure_helper.py). Error encountered: {e}"))
@@ -197,8 +204,10 @@ def return_mock_tk_response():
 if __name__ == "__main__":
     # import pprint
     # pprint.pprint(AzureHelper.format_general_azure_data(return_mock_response()))
-    tk_header = AzureHelper.analyse_pdf(r"C:\Users\emine\Downloads\api_test.pdf", True)
-    response_data = AzureHelper.get_analysis_results(tk_header, 50)
-    with open(r"C:\Users\emine\Downloads\tkapitest.txt", "w",
-              encoding='utf-8') as file:
-        json.dump(response_data, file, ensure_ascii=False)
+    # tk_header = AzureHelper.analyse_pdf(r"/home/emin/PycharmProjects/Article-Search/tkapitest.txt", True)
+    # response_data = AzureHelper.get_analysis_results(tk_header, 50)
+    # with open(r"C:\Users\emine\Downloads\tkapitest.txt", "w",
+    #           encoding='utf-8') as file:
+    #     json.dump(response_data, file, ensure_ascii=False)
+    with open(r"/home/emin/PycharmProjects/Article-Search/tkapitest.txt", "r", encoding='utf-8') as file:
+        AzureHelper.format_tk_data(json.loads(file.read()))
