@@ -9,6 +9,7 @@ from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification, send_example_log
 from common.erorrs import GeneralError
 
+
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -26,6 +27,7 @@ def get_logs_path(parent_type: str, file_reference: str) -> str:
                              file_reference, "logs")
     return logs_path
 
+
 def log_already_scanned(path_: str):
     """
     This function will create a log file for the already scanned issues.
@@ -37,11 +39,13 @@ def log_already_scanned(path_: str):
         with open(logs_path, 'r') as logs_file:
             old_data = json.loads(logs_file.read())
         new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
-                         'attemptStatus': 'Already Scanned - No Action Needed'})
+                                    'attemptStatus': 'Already Scanned - No Action Needed'})
         with open(logs_path, 'w') as logs_file:
             logs_file.write(json.dumps(new_data, indent=4))
     except Exception as e:
-        send_notification(GeneralError(f"Already scanned issue log creation error for Dergipark journal with path = {path_}. Error: {e}"))
+        send_notification(GeneralError(
+            f"Already scanned issue log creation error for Dergipark journal with path = {path_}. Error: {e}"))
+
 
 def update_scanned_articles(doi=None, url=None, is_doi=True, path_="") -> bool:
     """
@@ -91,28 +95,49 @@ def update_scanned_articles(doi=None, url=None, is_doi=True, path_="") -> bool:
             send_notification(GeneralError("Could not update the scanned article doi records!"))
             return False
 
-def update_scanned_issues(vol_num: int, issue_num: int, path_: str) -> bool:
+
+def update_scanned_issues(vol_num: int, issue_num: int, path_: str, is_tk_no_ref=False, issue_text=None) -> bool:
     """
     Logs path will be passed to the method
+    :param issue_text: The bulk text if the journal is a TK no ref journal (eg: (23.03.2023))
+    :param is_tk_no_ref: Is journal a TK no ref journal
     :param vol_num: Volume number passed to the function
     :param issue_num: Issue number passed to the function
     :param path_: absolute path of the logs file in logs_n_downloads directory
     :return: Returns True if updating was successful
     """
-    scanned_issues_path = os.path.join(path_, "latest_scanned_issue.json")
-    last_scanned_items = {"lastScannedVolume": vol_num,
-                          "lastScannedIssue": issue_num,
-                          "lastEdited": datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
-                          }
-
     try:
-        with open(scanned_issues_path, 'w') as json_file:
-            json_file.write(json.dumps(last_scanned_items, indent=4))
+        scanned_issues_path = os.path.join(path_, "latest_scanned_issue.json")
+        if not is_tk_no_ref:
+            last_scanned_items = {"lastScannedVolume": vol_num,
+                                  "lastScannedIssue": issue_num,
+                                  "lastEdited": datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+                                  }
 
-        return True
-    except FileNotFoundError:
+            try:
+                with open(scanned_issues_path, 'w') as json_file:
+                    json_file.write(json.dumps(last_scanned_items, indent=4))
+
+                return True
+            except FileNotFoundError:
+                send_notification(GeneralError("Could not update the issue records!"))
+                return False
+        else:
+            last_scanned_items = {"lastScannedText": issue_text.strip(),
+                                  "lastEdited": datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
+                                  }
+
+            try:
+                with open(scanned_issues_path, 'w') as json_file:
+                    json_file.write(json.dumps(last_scanned_items, indent=4))
+
+                return True
+            except FileNotFoundError:
+                send_notification(GeneralError("Could not update the issue records!"))
+                return False
+    except Exception as e:
         send_notification(GeneralError("Could not update the issue records!"))
-        return False
+        raise e
 
 
 def create_logs(was_successful: bool, path_: str) -> None:
@@ -128,7 +153,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
             with open(logs_file_path, 'r') as logs_file:
                 old_data = json.loads(logs_file.read())
         new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
-                         'attemptStatus': was_successful})
+                                    'attemptStatus': was_successful})
         with open(logs_file_path, 'w') as logs_file:
             logs_file.write(json.dumps(new_data, indent=4))
 
@@ -339,7 +364,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                         article_title_tr = element.text
                                 for element in abstract_elements:
                                     if element.text:
-                                        abstract_tr = abstract_formatter(element.find_element(By.TAG_NAME, 'p').text, "tr")
+                                        abstract_tr = abstract_formatter(element.find_element(By.TAG_NAME, 'p').text,
+                                                                         "tr")
                                 for element in keywords_elements:
                                     if element.text:
                                         for keyword in element.find_element(By.TAG_NAME, 'p').text.split(','):
@@ -389,7 +415,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                             for part in abstract_eng_element:
                                 if part.get_attribute('innerText'):
                                     abstract_eng = abstract_formatter(part.get_attribute('innerText'), "eng")
-                            keywords_element = dergipark_components.get_multiple_lang_article_keywords(eng_article_element)
+                            keywords_element = dergipark_components.get_multiple_lang_article_keywords(
+                                eng_article_element)
 
                             for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
                                     'innerText').strip().split(','):
@@ -425,7 +452,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                             doi = doi[doi.index("org/") + 4:]
                         except Exception as e:
                             send_notification(GeneralError(f" {journal_name, recent_volume, recent_issue}"
-                            f" with article num {article_num} was not successful. DOI error was encountered. The problem encountered was: {e}"))
+                                                           f" with article num {article_num} was not successful. DOI error was encountered. The problem encountered was: {e}"))
                     except Exception as e:
                         send_notification(GeneralError(
                             f"Scraping journal elements of Dergipark journal"
@@ -454,7 +481,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                 # Format Azure Response and get a dict
                                 azure_article_data = None
                                 if with_azure:
-                                    azure_article_data = AzureHelper.format_general_azure_data(azure_data, correspondance_name)
+                                    azure_article_data = AzureHelper.format_general_azure_data(azure_data,
+                                                                                               correspondance_name)
                                 article_code = f"{journal_name} {article_year};{article_vol}({article_issue})" \
                                                f":{article_page_range[0]}-{article_page_range[1]}"
                                 # So far both the Azure data and the data scraped from Dergipark are constructed
@@ -523,7 +551,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                     final_article_data["articleReferences"] = adobe_references
                         if with_azure:
                             with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\',
-                                                   "azure_" + common.helpers.methods.others.generate_random_string(7)), "w",
+                                                   "azure_" + common.helpers.methods.others.generate_random_string(7)),
+                                      "w",
                                       encoding='utf-8') as f:
                                 f.write(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
                         with open(os.path.join(r'C:\Users\emine\OneDrive\Masaüstü\outputs\\',
@@ -537,12 +566,13 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         i += 1
         else:
             log_already_scanned(get_logs_path(parent_type, file_reference))
-        if random.random() < 0.2: # In the long run sends 20% of the outputs as WP message
+        if random.random() < 0.2:  # In the long run sends 20% of the outputs as WP message
             send_example_log(final_article_data)
         return timeit.default_timer() - start_time
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and cought by outer catch while scraping Dergipark journal"
-                                       f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        send_notification(
+            GeneralError(f"An error encountered and cought by outer catch while scraping Dergipark journal"
+                         f"{journal_name} with article number {i}. Error encountered was: {e}."))
 
 
 if __name__ == "__main__":

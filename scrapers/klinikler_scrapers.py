@@ -10,6 +10,7 @@ import json
 import glob
 import json
 import pprint
+
 # Local imports
 from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
@@ -17,10 +18,9 @@ from common.helpers.methods.common_scrape_helpers.check_download_finish import c
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.klinikler_helper import format_bulk_data, get_article_titles, \
     pair_authors, get_page_range
-from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
 from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
 from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
-from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
+from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned, tk_no_ref_is_scanned
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
     abstract_formatter, get_correspondance_name
@@ -42,7 +42,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
-
 # Scraper body chunks
 with_adobe = False
 with_azure = False
@@ -54,6 +53,7 @@ def get_logs_path(parent_type: str, file_reference: str) -> str:
                              "klinikler_manual", parent_type,
                              file_reference, "logs")
     return logs_path
+
 
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -110,6 +110,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
         send_notification(GeneralError(f"Error encountered while updating TK journal logs file with path = {path_}. "
                                        f"Error encountered: {e}."))
 
+
 def log_already_scanned(path_: str):
     """
     This function will create a log file for the already scanned issues.
@@ -121,13 +122,28 @@ def log_already_scanned(path_: str):
         with open(logs_path, 'r') as logs_file:
             old_data = json.loads(logs_file.read())
         new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
-                         'attemptStatus': 'Already Scanned - No Action Needed'})
+                                    'attemptStatus': 'Already Scanned - No Action Needed'})
         with open(logs_path, 'w') as logs_file:
             logs_file.write(json.dumps(new_data, indent=4))
     except Exception as e:
-        send_notification(GeneralError(f"Already scanned issue log creation error for TK journal with path = {path_}. Error: {e}"))
+        send_notification(
+            GeneralError(f"Already scanned issue log creation error for TK journal with path = {path_}. Error: {e}"))
 
-def check_tk_scan_status(pdf_scrape_type, )
+
+def check_scan_status(**kwargs):
+    try:
+        pdf_scrape_type = kwargs["pdf_scrape_type"]
+        if pdf_scrape_type == "A_KLNK":
+            return tk_no_ref_is_scanned(kwargs["issue"], kwargs["logs_path"])
+        else:
+            return is_issue_scanned(kwargs["vol"], kwargs["issue"], kwargs["logs_path"])
+    except Exception as e:
+        send_notification(
+            GeneralError(f"Error encountered while checking issue scan status for TK journal "
+                         f"with path = {kwargs['logs_path']}. Error: {e}"))
+        raise e
+
+
 def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_reference, pdf_scrape_type="A_KLNK_R"):
     i = 1
     while i < 3:
@@ -161,8 +177,9 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                 except Exception as e:
                     raise e
 
-                is_issue_scanned = check_tk_scan_status(journal_name, volume_no, issue_no)
-                if 2 < 4:  # check scan
+                is_issue_scanned = check_tk_scan_status(logs_path=get_logs_path(parent_type, file_reference),
+                                                        vol=volume_no, issue=issue_no, pdf_scrape_type=pdf_scrape_type)
+                if 2 < 4:  # if not is_issue_scanned
                     issue_link = latest_issue.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
                     article_urls = []
                     article_list = driver.find_element(By.ID, 'articleList')
@@ -172,7 +189,8 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                             article_urls.append(
                                 item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').get_attribute('href'))
                     if pdf_scrape_type == "A_KLNK":
-                        login_button_xpath = driver.find_element(By.XPATH, '/html/body/div/section/div[2]/div[1]/div/a[1]')
+                        login_button_xpath = driver.find_element(By.XPATH,
+                                                                 '/html/body/div/section/div[2]/div[1]/div/a[1]')
                         login_button_xpath.click()
                         time.sleep(3)
                         username_xpath = driver.find_element(By.XPATH, '//*[@id="tpl_login_username"]')
@@ -195,7 +213,8 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                         turkish_title, english_title = get_article_titles(article_element)
 
                         # Article Language
-                        article_language = article_element.find_elements(By.CLASS_NAME, 'altBilgi')[1].text.split(':')[1].strip().lower()
+                        article_language = article_element.find_elements(By.CLASS_NAME, 'altBilgi')[1].text.split(':')[
+                            1].strip().lower()
 
                         # Article Type
                         try:
@@ -213,28 +232,35 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
 
                         # Abstract and Keywords (The order of the languages is not fixed)
                         if article_language == "tr":
-                            abstract_keywords_tr = article_element.find_element(By.CLASS_NAME, 'summaryMain').text.strip()
+                            abstract_keywords_tr = article_element.find_element(By.CLASS_NAME,
+                                                                                'summaryMain').text.strip()
                             abstract_tr, keywords_tr = format_bulk_data(abstract_keywords_tr, language="tr")
                             try:
-                                abstract_keywords_eng = article_element.find_element(By.CLASS_NAME, 'summarySub').text.strip()
+                                abstract_keywords_eng = article_element.find_element(By.CLASS_NAME,
+                                                                                     'summarySub').text.strip()
                                 abstract_eng, keywords_eng = format_bulk_data(abstract_keywords_eng, language="eng")
                             except Exception:
                                 pass
                         else:
-                            abstract_keywords_eng = article_element.find_element(By.CLASS_NAME, 'summaryMain').text.strip()
+                            abstract_keywords_eng = article_element.find_element(By.CLASS_NAME,
+                                                                                 'summaryMain').text.strip()
                             abstract_eng, keywords_eng = format_bulk_data(abstract_keywords_eng, language="eng")
                             try:
-                                abstract_keywords_tr = article_element.find_element(By.CLASS_NAME, 'summarySub').text.strip()
+                                abstract_keywords_tr = article_element.find_element(By.CLASS_NAME,
+                                                                                    'summarySub').text.strip()
                                 abstract_tr, keywords_tr = format_bulk_data(abstract_keywords_tr, language="tr")
                             except Exception:
                                 pass
 
                         # Page Range, Article Code, Volume, Issue
                         try:
-                            full_reference_text = article_element.find_elements(By.CLASS_NAME, 'altBilgi')[0].text.strip()
-                            page_range, article_code, article_volume, article_issue = get_page_range(full_reference_text, pdf_scrape_type)
+                            full_reference_text = article_element.find_elements(By.CLASS_NAME, 'altBilgi')[
+                                0].text.strip()
+                            page_range, article_code, article_volume, article_issue = get_page_range(
+                                full_reference_text, pdf_scrape_type)
                         except Exception as e:
-                            send_notification(GeneralError(f"Error encountered while getting page range, article code, "))
+                            send_notification(
+                                GeneralError(f"Error encountered while getting page range, article code, "))
 
                         # DOI
                         try:
@@ -247,9 +273,10 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                             pdf_element = article_element.find_element(By.CLASS_NAME, 'pdf')
                             download_link = pdf_element.find_element(By.TAG_NAME, 'a').get_attribute('href')
                         except Exception as e:
-                            send_notification(GeneralError(f"No pdf link found for TK article of journal {journal_name} "
-                                                           f"(klinikler_no_ref_scraper, klinikler_scrapers). "
-                                                           f"Error encountered was: {e}."))
+                            send_notification(
+                                GeneralError(f"No pdf link found for TK article of journal {journal_name} "
+                                             f"(klinikler_no_ref_scraper, klinikler_scrapers). "
+                                             f"Error encountered was: {e}."))
                             download_link = None
                             if pdf_scrape_type == "A_KLNK":
                                 raise e
@@ -264,7 +291,8 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                                     first_pages_cropped_pdf = crop_pages(file_name)
 
                                     location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf, is_tk=True)  # Location header is the response address of Azure API
+                                        first_pages_cropped_pdf,
+                                        is_tk=True)  # Location header is the response address of Azure API
                                     time.sleep(10)
                                     azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                                     azure_data = azure_response_dictionary
@@ -279,7 +307,8 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                         if with_azure:
                             correspondence_name, correspondence_mail = azure_article_data.pop("correspondance_name"), \
                                 azure_article_data.pop("correspondance_email")
-                            final_authors = update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail)
+                            final_authors = update_authors_with_correspondence(paired_authors, correspondence_name,
+                                                                               correspondence_mail)
 
                         # IMPORTANT NOTE:
                         # For the final data dictionary I am writing None values for the data that is either cannot be
@@ -303,6 +332,14 @@ def klinikler_no_ref_scraper(journal_name, start_page_url, parent_type, file_ref
                         pprint.pprint(final_article_data, width=150)
                         clear_directory(download_path)
                         create_logs(True, get_logs_path(parent_type, file_reference))
+                        # Update the the most recently scanned issue according to the journal type
+                        if pdf_scrape_type == "A_KLNK":
+                            scrapers.dergipark_scraper.update_scanned_issues(0, 0,
+                                                                             get_logs_path(parent_type, file_reference),
+                                                                             True, issue_no)
+                        else:
+                            scrapers.dergipark_scraper.update_scanned_issues(volume_no, issue_no,
+                                                                             get_logs_path(parent_type, file_reference))
                         i += 1
                         time.sleep(15)
                 else:
