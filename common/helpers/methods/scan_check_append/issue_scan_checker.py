@@ -4,10 +4,10 @@ import os
 
 def is_issue_scanned(vol_num: int, issue_num: int, path_: str) -> bool:
     """
-    It is very important to name scanned issues json as latest_scanned_issue.json in the same directory.
+
     :param vol_num: Volume number passed to the function
     :param issue_num: Issue number passed to the function
-    :param path_: PATH value of the script, "__file__" should be used
+    :param path_: PATH of the logs folder
     :return: Returns boolean value, True if the issue has already been scanned
     """
     try:
@@ -32,6 +32,36 @@ def is_issue_scanned(vol_num: int, issue_num: int, path_: str) -> bool:
             return is_issue_scanned
 
         return is_issue_scanned
+    except FileNotFoundError:
+        raise Exception("Scanned issues file does not exist!")
+    except KeyError:
+        raise Exception("Contents of issues file is corrupted!")
+
+
+def tk_no_ref_is_scanned(recent_text: str, path_: str) -> bool:
+    try:
+        scanned_issues_path = os.path.join(path_, "latest_scanned_issue.json")
+        with open(scanned_issues_path, 'r', encoding='utf-8') as json_file:
+            scanned_issue_dict = json.load(json_file)
+            """
+            Sample:
+            {
+                "lastScannedText": (23.03.2023),
+                "lastEdited": ""
+            }
+            """
+            last_scanned_text = scanned_issue_dict['lastScannedText'].replace("(", "").replace(")", "")
+            scanned_month, scanned_year = int(last_scanned_text.split(".")[1]), \
+                int(last_scanned_text.split(".")[2])
+
+            recent_text = recent_text.replace("(", "").replace(")", "")
+            recent_month, recent_year = int((recent_text.split(".")[1])), \
+                int(recent_text.split(".")[2])
+
+            if recent_year > scanned_year or recent_month > scanned_month:
+                return False
+
+            return True
     except FileNotFoundError:
         raise Exception("Scanned issues file does not exist!")
     except KeyError:

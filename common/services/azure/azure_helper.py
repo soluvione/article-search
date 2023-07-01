@@ -80,7 +80,7 @@ class AzureHelper:
             if get_results_response.json()["status"] == "succeeded":
                 is_finished = True
             while time_past < timeout and not is_finished:
-                time.sleep(10)
+                time.sleep(14)
                 get_results_response = requests.get(operation_location, headers=get_results_header)
                 if get_results_response.json()["status"] == "succeeded":
                     is_finished = True
