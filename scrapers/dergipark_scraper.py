@@ -573,6 +573,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
         send_notification(
             GeneralError(f"An error encountered and cought by outer catch while scraping Dergipark journal"
                          f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        return timeit.default_timer() - start_time
 
 
 if __name__ == "__main__":

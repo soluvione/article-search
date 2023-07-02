@@ -17,7 +17,6 @@ def similarity(name, correspondence_name):
     :param correspondence_name: String
     :return: Integer
     """
-    print(name, correspondence_name)
     try:
         return fuzz.ratio(name.lower(), correspondence_name.lower())
     except Exception as e:

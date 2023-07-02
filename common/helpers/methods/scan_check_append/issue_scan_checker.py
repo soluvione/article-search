@@ -33,7 +33,7 @@ def is_issue_scanned(vol_num: int, issue_num: int, path_: str) -> bool:
 
         return is_issue_scanned
     except FileNotFoundError:
-        raise Exception("Scanned issues file does not exist!")
+        raise Exception("Scanned issues file does not exist! (is_issue_scanned, issue_scan_checker.py)")
     except KeyError:
         raise Exception("Contents of issues file is corrupted!")
 
@@ -63,7 +63,7 @@ def tk_no_ref_is_scanned(recent_text: str, path_: str) -> bool:
 
             return True
     except FileNotFoundError:
-        raise Exception("Scanned issues file does not exist!")
+        raise Exception("Scanned issues file does not exist! (tk_no_ref_is_scanned, issue_scan_checker.py)")
     except KeyError:
         raise Exception("Contents of issues file is corrupted!")
 

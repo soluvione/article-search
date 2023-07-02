@@ -10,7 +10,7 @@ import json
 import glob
 import json
 import pprint
-
+import timeit
 # Local imports
 from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
@@ -45,8 +45,8 @@ from selenium.common.exceptions import WebDriverException, NoSuchElementExceptio
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Scraper body chunks
-with_adobe = False
-with_azure = False
+with_adobe = True
+with_azure = True
 
 def get_logs_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -89,6 +89,9 @@ def update_authors_with_correspondence(paired_authors, correspondence_name, corr
             author.is_correspondence = True
             author.mail = correspondence_mail
     return paired_authors
+
+
+# create_logs(True, get_logs_path(parent_type, file_reference))
 
 
 def create_logs(was_successful: bool, path_: str) -> None:
@@ -142,25 +145,29 @@ def check_scan_status(**kwargs):
     except Exception as e:
         send_notification(
             GeneralError(f"Error encountered while checking issue scan status for TK journal "
-                         f"with path = {kwargs['logs_path']}. Error: {e}"))
+                         f"with path = {kwargs['logs_path']}, (check_scan_status, klinikler_scrapers.py). Error: {e}"))
         raise e
 
 
-def klinikler_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference):
-    i = 1
+def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
+    i = 0
     try:
+        i += 1
         start_page_url = "https://www.turkiyeklinikleri.com/journal/anesteziyoloji-reanimasyon-dergisi/14/issue-list/tr-index.html"
         # Webdriver options
         # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
         options = Options()
         options.page_load_strategy = 'eager'
-        # download_path = get_downloads_path(parent_type, file_reference)
-        download_path = "/home/emin/Desktop/tk_downloads"
+        download_path = get_downloads_path(parent_type, file_reference)
         prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
         options.add_experimental_option('prefs', prefs)
         options.add_argument("--disable-notifications")
         options.add_argument("--headless")  # This line enables headless mode
         service = ChromeService(executable_path=ChromeDriverManager().install())
+
+        # Set start time
+        start_time = timeit.default_timer()
+
         with webdriver.Chrome(service=service, options=options) as driver:
             driver.get(start_page_url)
             time.sleep(1.25)
@@ -173,7 +180,7 @@ def klinikler_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                     else int(latest_issue.find_element(By.CLASS_NAME, 'issueNo').text.split(' ')[-1])
                 # TK no ref journals do not have volume or issue numbers
                 volume_no = int(volume_items.find_element(By.CLASS_NAME, 'header').text.split(' ')[-1]) \
-                    if pdf_scrape_type == "A_KLNK_R" \
+                    if pdf_scrape_type == "A_KLNK & R" \
                     else None
             except Exception as e:
                 raise e
@@ -182,13 +189,6 @@ def klinikler_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                                     vol=volume_no, issue=issue_no, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
                 issue_link = latest_issue.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
-                article_urls = []
-                article_list = driver.find_element(By.ID, 'articleList')
-                article_elements = article_list.find_elements(By.ID, 'article')
-                for item in article_elements:
-                    if not item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').text.strip() == "ÖN SÖZ":
-                        article_urls.append(
-                            item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').get_attribute('href'))
                 if pdf_scrape_type == "A_KLNK":
                     login_button_xpath = driver.find_element(By.XPATH,
                                                              '/html/body/div/section/div[2]/div[1]/div/a[1]')
@@ -203,8 +203,18 @@ def klinikler_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                     confirm_button_xpath = driver.find_element(By.XPATH, '//*[@id="tpl_login_submit"]')
                     confirm_button_xpath.click()
                     time.sleep(7)
+                # Get to the unscanned issue page
                 driver.get(issue_link)
                 time.sleep(7)
+
+                # Scrape URLs
+                article_urls = []
+                article_list = driver.find_element(By.ID, 'articleList')
+                article_elements = article_list.find_elements(By.ID, 'article')
+                for item in article_elements:
+                    if not item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').text.strip() == "ÖN SÖZ":
+                        article_urls.append(
+                            item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').get_attribute('href'))
 
                 for url in article_urls:
                     driver.get(url)
@@ -341,13 +351,15 @@ def klinikler_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                     else:
                         update_scanned_issues(volume_no, issue_no,
                                                                          get_logs_path(parent_type, file_reference))
-                    i += 1
                     time.sleep(15)
+                    return timeit.default_timer() - start_time
             else:
                 log_already_scanned(get_logs_path(parent_type, file_reference))
+                return timeit.default_timer() - start_time
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and cought by outer catch while scraping TK journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        return timeit.default_timer() - start_time
 
 
 if __name__ == '__main__':
