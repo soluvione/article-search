@@ -1,59 +1,80 @@
-url = "https://dergipark.org.tr/tr/pub/hacettepesid/issue/76286/1076956"
-
-"""
-This is the template scraper that will be used to multiply.
-"""
-# Python libraries
-from datetime import datetime
-import time
-import os
-import glob
+# import time
+#
+# from selenium import webdriver
+# import re
+#
+# # Your URLs string
+# urls_string = ('https://actamedica.org/index.php/actamedica, '
+#  'https://beslenmevediyetdergisi.org/index.php/bdd, https://eurjther.com/index.php/home, '
+#  'https://experimentalbiomedicalresearch.com/ojs/index.php/ebr, https://medicaljournal.gazi.edu.tr/index.php/GMJ, '
+#  'https://ijcmbs.com/index.php/ijcmbs, https://jointdrs.org/current-issue, https://www.jabsonline.org/index.php/jabs/issue/archive, '
+#  'https://www.jsoah.com/index.php/jsoah/issue/archive, https://www.medscidiscovery.com/index.php/msd/issue/archive, '
+#  'https://natprobiotech.com/index.php/natprobiotech, https://www.pbsciences.org/?sec=archive, '
+#  'http://journals.iku.edu.tr/sybd/index.php/sybd/issue/archive, http://www.cityhealthj.org/index.php/cityhealthj/issue/archive, '
+#  'https://injectormedicaljournal.com/index.php/theinjector/issue/archive, https://www.ulutasmedicaljournal.com/index.php?sec=archive, '
+#  'https://www.derleme.gen.tr/index.php/derleme, http://saglikokuryazarligidergisi.com/index.php/soyd/issue/archive')
+#
+# # Use a regex to extract the URLs from the string
+# urls = re.findall(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', urls_string)
+#
+# # Initialize the Chrome driver
+# driver = webdriver.Chrome()
+#
+# # Open the first URL
+# driver.get(urls[0])
+#
+# # For remaining URLs, open each in a new tab
+# for url in urls[1:]:
+#     # Open a new tab
+#     driver.execute_script("window.open('');")
+#
+#     # Switch to the new tab
+#     driver.switch_to.window(driver.window_handles[-1])
+#
+#     # Open URL in new tab
+#     driver.get(url)
+#
+# # After opening all tabs, switch to the first tab
+# driver.switch_to.window(driver.window_handles[0])
+# time.sleep(6000)
+import pandas as pd
 import re
-from pathlib import Path
-# Local imports
-from classes.author import Author
-from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
-from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
-from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
-from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
-from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
-from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
-from common.services.post_json import post_json
-from common.services.send_sms import send_notification
-import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
-# 3rd Party libraries
-import requests
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.common.exceptions import WebDriverException, NoSuchElementException
-from webdriver_manager.chrome import ChromeDriverManager
+from urllib.parse import urlparse
 
-# Webdriver options
-# Eager option shortens the load time. Always download the pdfs and does not display them.
-options = Options()
-options.page_load_strategy = 'eager'
-download_path = os.path.dirname(os.path.abspath(__file__)) + r'\downloads'
-prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path, "detach": True}
-options.add_experimental_option('prefs', prefs)
-options.add_argument("--disable-notifications")
-service = ChromeService(executable_path=ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=options)
+# Your URLs string
+urls_string = ('Group: https://www.turkarchotolaryngol.net/archives, URLs: https://www.turkarchotolaryngol.net/archives, '
+ 'https://turkjanaesthesiolreanim.org/en/archive-1710, https://www.turkjorthod.org/archives, https://www.turkosteoporozdergisi.org/archives, '
+ 'https://viralhepatitisjournal.org/archives, https://www.adlitipbulteni.com/index.php/atb, https://www.ankaratipfakultesimecmuasi.net/, '
+ 'https://journal.archepilepsy.org/, https://www.behmedicalbulletin.org/, https://www.bezmialemscience.org/archives, https://cyprusjmedsci.com/, '
+ 'https://www.caybdergi.com/, https://www.dirjournal.org/, https://eajem.com/, https://eurarchmedres.org/, https://www.eurjbreasthealth.com/, '
+ 'https://ejgg.org/, https://gulhanemedj.org/, https://www.guncelpediatri.com/, https://www.hasekidergisi.com/, https://istanbulmedicaljournal.org/, '
+ 'https://www.jtad.org/archives, https://www.jtgga.org/archives, https://jurolsurgery.org/archives, https://meandrosmedicaljournal.org/archives/, '
+ 'https://bakirkoymedj.org/archives/, https://mirt.tsnmjournals.org/archives/, https://namikkemalmedj.com/archives, '
+ 'https://nukleertipseminerleri.org/archives/, https://jpedres.org/archives, https://www.jtss.org/archives, https://tjoddergisi.org/archives, '
+ 'https://www.turkjps.org/archives, https://www.oftalmoloji.org/archives, https://www.turkishjic.org/archives, '
+ 'https://www.turkiyeparazitolderg.org/archives, https://raeddergisi.org/archives, https://uroonkolojibulteni.com/archives')
 
-article_url = "https://dergipark.org.tr/tr/pub/abantmedj/issue/74313/1225644"
-driver.get(article_url)
+# Use a regex to extract the URLs from the string
+urls = re.findall(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', urls_string)
 
-el = driver.find_element(By.XPATH, '/html/body/div[2]/div/div/div[3]/div[1]/div[1]/div[1]/div[1]/div/span').text
-print(el)
+# Remove duplicates and convert to DataFrame
+urls_df = pd.DataFrame(list(set(urls)), columns=['URLs'])
 
-reference_list_elements = driver.find_elements(
-                        By.CSS_SELECTOR, 'div.article-citationssdsdds.data-section')
+# Extract root domain from each URL
+urls_df['URLs'] = urls_df['URLs'].apply(lambda url: urlparse(url).netloc)
 
-print(len(reference_list_elements))
-# test
+# Write to Excel
+urls_df.to_excel('urls.xlsx', index=False)
+
+# Assuming that the original Excel file is 'original.xlsx' and
+# the first column contains the journal names and the second column contains the URLs.
+original_df = pd.read_excel('Book1.xlsx', header=None, names=['Names', 'URLs'])
+
+# Extract root domain from each URL
+original_df['URLs'] = original_df['URLs'].apply(lambda url: urlparse(url).netloc)
+
+# Merge the original DataFrame with the new DataFrame based on URLs
+merged_df = pd.merge(original_df, urls_df, how='inner', on='URLs')
+
+# Write the merged DataFrame to a new Excel file
+merged_df.to_excel('merged.xlsx', index=False)
