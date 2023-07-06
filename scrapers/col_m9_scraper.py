@@ -30,7 +30,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 with_azure = True
 with_adobe = True
-
+json_two_articles = False
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
@@ -304,7 +304,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         azure_article_data = AzureHelper.format_general_azure_data(azure_data)
                         if len(azure_article_data["emails"]) == 1:
                             for author in authors:
-                                author.email = azure_article_data["emails"][0] if author.is_correspondence else None
+                                author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
                         # Abstract
                         abstract = abstract_full[: abstract_full.index(
@@ -335,17 +335,16 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             "articleReferences": references if references else []}
                         final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
-                        file_path = "/home/emin/Desktop/col_m9_jsons/" + f"{file_reference}.json"
-
-                        json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
-
-                        with open(file_path, "w") as file:
-                            file.write(json_data)
+                        if json_two_articles:
+                            file_path = "/home/emin/Desktop/col_m9_jsons/" + f"{file_reference}.json"
+                            json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
+                            with open(file_path, "w") as file:
+                                file.write(json_data)
+                            if i == 3:
+                                break
                         # Send data to Client API
                         # TODO send col_m9 data
                         clear_directory(download_path)
-                        if i == 2:
-                            break
                     except Exception as e:
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
