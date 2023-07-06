@@ -145,7 +145,8 @@ class AzureHelper:
                 "article_abstracts": data_extractor.extract_abstracts(),
                 "article_keywords": data_extractor.extract_keywords(),
                 "article_authors": article_authors,
-                "correspondace_data": data_extractor.extract_correspondance_data()
+                "correspondence_data": data_extractor.extract_correspondance_data(),
+                "emails": author_emails,
             }
 
             return azure_extraction_data

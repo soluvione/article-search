@@ -99,27 +99,35 @@ def identify_article_type(string, num_of_references) -> str:
     :return: Returns a string that is selected from the dropdown menu of Atıf Dizini
     """
     # Orijinal Araştırma
-    if string.lower() == "research article":
+    if string.strip().lower() == "research article" or string.strip().lower() == "original article" or string.strip().lower() == "research" or string.strip().lower() == "original research":
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesi":
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesı":
         return "ORİJİNAL ARAŞTIRMA"
-    if string == "KLINIK ARAŞTIRMA" or string == "Klinik Araştırma" or string == "KLİNİK ARAŞTIRMA":
+    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "özgün araştırma":
+        return "ORİJİNAL ARAŞTIRMA"
+
+    # Klinik Araştırma
+    if string.strip() == "KLINIK ARAŞTIRMA" or string.strip() == "Klinik Araştırma" or string.strip() == "KLİNİK ARAŞTIRMA":
+        return "KLİNİK ARAŞTIRMA"
+    if string.strip().lower() == "original investigation" or string.strip().lower() == "clinical investigation":
         return "KLİNİK ARAŞTIRMA"
 
     # Derlemeler
-    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme":
+    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme" or string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme makalesi":
         return "DERLEME"
-    if string.lower() == "review":
+    if string.strip().lower() == "review" or string.strip().lower() == "review article":
         return "DERLEME"
 
     # Olgu Sunumu
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "olgu sunumu":
         return "OLGU SUNUMU"
+    if string.strip().lower() == "case report":
+        return "OLGU SUNUMU"
 
     # Orijinal Görüntü
-    if string == "sajnfdıkosjnadjasosa":
+    if string.strip().lower() == "interesting image":
         return "ORİJİNAL GÖRÜNTÜ"
 
     # Diğer

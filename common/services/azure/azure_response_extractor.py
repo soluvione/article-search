@@ -4,7 +4,9 @@ It does the cleaning part so that the Azure Data Formatter methods will be worki
 """
 import json
 import re
-from common.services.send_sms import send_notifications
+
+from common.erorrs import GeneralError
+from common.services.send_sms import send_notification
 
 
 def _extract_keywords_from_string(keyword_string):
@@ -63,12 +65,12 @@ class ApiResponseExtractor:
             try:
                 self.api_response = json.loads(api_response_json_string)
             except json.JSONDecodeError:
-                send_notifications()
+                send_notification(GeneralError("Invalid JSON string provided to the Azure response extractor"))
                 raise ValueError("Invalid JSON string provided to the Azure response extractor")
         elif isinstance(api_response_json_string, dict):
             self.api_response = api_response_json_string
         else:
-            send_notifications()
+            send_notification(GeneralError("Invalid type for api_response_json_string. Expected str or dict."))
             raise ValueError("Invalid type for api_response_json_string. Expected str or dict.")
         # Additional validation
         if "analyzeResult" not in self.api_response or \
@@ -76,7 +78,7 @@ class ApiResponseExtractor:
                 not isinstance(self.api_response["analyzeResult"]["documents"], list) or \
                 len(self.api_response["analyzeResult"]["documents"]) == 0 or \
                 "fields" not in self.api_response["analyzeResult"]["documents"][0]:
-            send_notifications()
+            send_notification(GeneralError("Invalid structure for api_response_json_string. Expected specific structure."))
             raise ValueError("Invalid structure for api_response_json_string. Expected specific structure.")
 
     def extract_titles(self):

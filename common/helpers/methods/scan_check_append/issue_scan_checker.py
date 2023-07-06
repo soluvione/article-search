@@ -1,7 +1,6 @@
 import json
 import os
 
-
 def is_issue_scanned(vol_num: int, issue_num: int, path_: str) -> bool:
     """
 

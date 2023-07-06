@@ -153,7 +153,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
             with open(logs_file_path, 'r') as logs_file:
                 old_data = json.loads(logs_file.read())
         new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
-                                    'attemptStatus': was_successful})
+                                    'attemptStatus': "Scraping was successful" if was_successful else "Scraping failed"})
         with open(logs_file_path, 'w') as logs_file:
             logs_file.write(json.dumps(new_data, indent=4))
 
@@ -573,6 +573,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
         send_notification(
             GeneralError(f"An error encountered and cought by outer catch while scraping Dergipark journal"
                          f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        clear_directory(download_path)
         return timeit.default_timer() - start_time
 
 

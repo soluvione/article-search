@@ -6,42 +6,28 @@ This is the template scraper that will be used to multiply.
 import time
 import os
 from datetime import datetime
-import json
 import glob
 import json
 import pprint
 import timeit
 # Local imports
-from classes.author import Author
-from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
+from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.klinikler_helper import format_bulk_data, get_article_titles, \
     pair_authors, get_page_range
-from common.helpers.methods.scan_check_append.update_scanned_article import update_scanned_articles
-from common.helpers.methods.scan_check_append.article_scan_checker import is_article_scanned_url
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned, tk_no_ref_is_scanned
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
-    abstract_formatter, get_correspondance_name
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
-import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
-from common.helpers.methods.data_to_atifdizini import get_to_artc_page, paste_data
-from common.services.post_json import post_json
 from common.services.azure.azure_helper import AzureHelper
 from common.services.adobe.adobe_helper import AdobeHelper
-from common.services.send_sms import send_notification, send_example_log
+from common.services.send_sms import send_notification
 import common.helpers.methods.others
 from scrapers.dergipark_scraper import update_scanned_issues
 # 3rd Party libraries
-import requests
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Scraper body chunks
@@ -93,7 +79,6 @@ def update_authors_with_correspondence(paired_authors, correspondence_name, corr
 
 # create_logs(True, get_logs_path(parent_type, file_reference))
 
-
 def create_logs(was_successful: bool, path_: str) -> None:
     """
     Creates a logs file in the given path
@@ -105,11 +90,11 @@ def create_logs(was_successful: bool, path_: str) -> None:
         logs_file_path = os.path.join(path_, 'logs.json')
         if was_successful:
             with open(logs_file_path, 'r') as logs_file:
-                old_data = json.loads(logs_file.read())
-        new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
+                logs_data = json.loads(logs_file.read())
+        logs_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                                     'attemptStatus': was_successful})
         with open(logs_file_path, 'w') as logs_file:
-            logs_file.write(json.dumps(new_data, indent=4))
+            logs_file.write(json.dumps(logs_data, indent=4))
 
     except Exception as e:
         send_notification(GeneralError(f"Error encountered while updating TK journal logs file with path = {path_}. "
@@ -125,15 +110,14 @@ def log_already_scanned(path_: str):
     try:
         logs_path = os.path.join(path_, "logs.json")
         with open(logs_path, 'r') as logs_file:
-            old_data = json.loads(logs_file.read())
-        new_data = old_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
+            logs_data = json.loads(logs_file.read())
+        logs_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
                                     'attemptStatus': 'Already Scanned - No Action Needed'})
         with open(logs_path, 'w') as logs_file:
-            logs_file.write(json.dumps(new_data, indent=4))
+            logs_file.write(json.dumps(logs_data, indent=4))
     except Exception as e:
         send_notification(
             GeneralError(f"Already scanned issue log creation error for TK journal with path = {path_}. Error: {e}"))
-
 
 def check_scan_status(**kwargs):
     try:
@@ -152,8 +136,6 @@ def check_scan_status(**kwargs):
 def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
     i = 0
     try:
-        i += 1
-        start_page_url = "https://www.turkiyeklinikleri.com/journal/anesteziyoloji-reanimasyon-dergisi/14/issue-list/tr-index.html"
         # Webdriver options
         # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
         options = Options()
@@ -184,7 +166,6 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                     else None
             except Exception as e:
                 raise e
-
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                     vol=volume_no, issue=issue_no, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
@@ -212,11 +193,17 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 article_list = driver.find_element(By.ID, 'articleList')
                 article_elements = article_list.find_elements(By.ID, 'article')
                 for item in article_elements:
-                    if not item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').text.strip() == "ÖN SÖZ":
+                    string_to_check = item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').text.strip()
+                    string1 = "EDİTÖRDEN"
+                    string2 = "ÖN SÖZ"
+                    print(string1.casefold() == string_to_check.casefold())
+                    if not (string1.casefold() == string_to_check.casefold() or
+                             string2.casefold() == string_to_check.casefold()):
                         article_urls.append(
                             item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').get_attribute('href'))
 
                 for url in article_urls:
+                    i += 1
                     driver.get(url)
 
                     # Titles in Turkish and English
@@ -232,7 +219,10 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         article_type = article_element.find_element(By.CLASS_NAME, 'header').text.strip()
                         article_type = ''.join([char for char in article_type if char.isalpha() or char.isspace()])
                     except Exception:
-                        article_type = None
+                        if pdf_scrape_type == "A_KLNK":
+                            article_type = "BÖLÜMLER"
+                        else:
+                            article_type = None
 
                     # Author Names and Specialities
                     authors_element = article_element.find_element(By.CLASS_NAME, 'author')
@@ -307,7 +297,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 time.sleep(10)
                                 azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                                 azure_data = azure_response_dictionary
-                                azure_article_data = AzureHelper.format_tk_data(azure_data)
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
 
                             # Send PDF to Adobe and format response
                             if with_adobe:
@@ -341,26 +331,34 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                     if with_azure:
                         final_article_data.update(azure_article_data)
                     pprint.pprint(final_article_data, width=150)
+
+                    # Send data to Client API
+                    # TODO send TK data
                     clear_directory(download_path)
-                    create_logs(True, get_logs_path(parent_type, file_reference))
-                    # Update the most recently scanned issue according to the journal type
-                    if pdf_scrape_type == "A_KLNK":
-                        update_scanned_issues(0, 0,
-                                                                         get_logs_path(parent_type, file_reference),
-                                                                         True, issue_no)
-                    else:
-                        update_scanned_issues(volume_no, issue_no,
-                                                                         get_logs_path(parent_type, file_reference))
-                    time.sleep(15)
-                    return timeit.default_timer() - start_time
+                    if i == 2:
+                        break
+                create_logs(True, get_logs_path(parent_type, file_reference))
+                # Update the most recently scanned issue according to the journal type
+                if pdf_scrape_type == "A_KLNK":
+                    update_scanned_issues(0, 0,
+                                                                     get_logs_path(parent_type, file_reference),
+                                                                     True, issue_no)
+                else:
+                    update_scanned_issues(volume_no, issue_no,
+                                                                     get_logs_path(parent_type, file_reference))
+                time.sleep(15)
+                return 599
+                # return timeit.default_timer() - start_time
             else:
                 log_already_scanned(get_logs_path(parent_type, file_reference))
-                return timeit.default_timer() - start_time
+                return 599
+                # return timeit.default_timer() - start_time
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and cought by outer catch while scraping TK journal "
+        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping TK journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
-        return timeit.default_timer() - start_time
-
+        # return timeit.default_timer() - start_time
+        clear_directory(download_path)
+        return 599
 
 if __name__ == '__main__':
-    klinikler_scraper('foo', 'bar', 'zoo', 'poo')
+    klinikler_scraper('foo', 'bar', 'zoo', 'poo', 'A_KLNK', 1,)
