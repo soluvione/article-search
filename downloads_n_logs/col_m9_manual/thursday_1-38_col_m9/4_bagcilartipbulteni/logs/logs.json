@@ -1,0 +1,10 @@
+[
+    {
+        "timeOfTrial": "2023-07-06T04:15:13",
+        "attemptStatus": true
+    },
+    {
+        "timeOfTrial": "2023-07-06T04:35:04",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    }
+]

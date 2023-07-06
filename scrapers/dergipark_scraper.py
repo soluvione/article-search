@@ -537,7 +537,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                         if azure_article_data.get("article_authors", None):
                                             final_article_data["articleAuthors"] = azure_article_data["article_authors"]
                                         elif authors:
-                                            final_article_data["articleAuthors"] = Author.author_to_json(authors)
+                                            final_article_data["articleAuthors"] = Author.author_to_dict(authors)
 
                                 elif keywords_tr or keywords_eng:
                                     if keywords_tr:

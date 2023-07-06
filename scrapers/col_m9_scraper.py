@@ -1,5 +1,6 @@
 import time
 import os
+import traceback
 from datetime import datetime
 import glob
 import json
@@ -27,7 +28,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-journal_name = 's'
 with_azure = True
 with_adobe = True
 
@@ -78,8 +78,6 @@ def update_authors_with_correspondence(paired_authors, correspondence_name, corr
     return paired_authors
 
 
-# create_logs(True, get_logs_path(parent_type, file_reference))
-
 def create_logs(was_successful: bool, path_: str) -> None:
     """
     Creates a logs file in the given path
@@ -98,7 +96,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
             logs_file.write(json.dumps(logs_data, indent=4))
 
     except Exception as e:
-        send_notification(GeneralError(f"Error encountered while updating TK journal logs file with path = {path_}. "
+        send_notification(GeneralError(f"Error encountered while updating col_m9 journal logs file with path = {path_}. "
                                        f"Error encountered: {e}."))
 
 
@@ -118,14 +116,14 @@ def log_already_scanned(path_: str):
             logs_file.write(json.dumps(logs_data, indent=4))
     except Exception as e:
         send_notification(
-            GeneralError(f"Already scanned issue log creation error for TK journal with path = {path_}. Error: {e}"))
+            GeneralError(f"Already scanned issue log creation error for col_m9 journal with path = {path_}. Error: {e}"))
 
 def check_scan_status(**kwargs):
     try:
         return is_issue_scanned(kwargs["vol"], kwargs["issue"], kwargs["logs_path"])
     except Exception as e:
         send_notification(
-            GeneralError(f"Error encountered while checking issue scan status for TK journal "
+            GeneralError(f"Error encountered while checking issue scan status for col_m9 journal "
                          f"with path = {kwargs['logs_path']}, (check_scan_status, col_m9_scraper.py). Error: {e}"))
         raise e
 
@@ -137,19 +135,23 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     :return:
     """
     if not final_article_data["articleTitle"]["TR"]:
-        final_article_data["articleTitle"]["TR"] = azure_article_data["article_titles"]["tr"]
+        final_article_data["articleTitle"]["TR"] = azure_article_data.get("article_titles", {}).get("tr", "")
     if not final_article_data["articleTitle"]["ENG"]:
-        final_article_data["articleTitle"]["ENG"] = azure_article_data["article_titles"]["eng"]
+        final_article_data["articleTitle"]["ENG"] = azure_article_data.get("article_titles", {}).get("eng", "")
     if not final_article_data["articleAbstracts"]["TR"]:
-        final_article_data["articleAbstracts"]["TR"] = azure_article_data["article_abstracts"]["tr"]
+        tr_abstract = azure_article_data.get("article_abstracts", {}).get("tr#1", "")
+        tr_abstract2 = azure_article_data.get("article_abstracts", {}).get("tr#2", "")
+        final_article_data["articleAbstracts"]["TR"] = tr_abstract + " " + tr_abstract2
     if not final_article_data["articleAbstracts"]["ENG"]:
-        final_article_data["articleAbstracts"]["ENG"] = azure_article_data["article_abstracts"]["eng"]
+        eng_abstract = azure_article_data.get("article_abstracts", {}).get("eng#1", "")
+        eng_abstract2 = azure_article_data.get("article_abstracts", {}).get("eng#2", "")
+        final_article_data["articleAbstracts"]["ENG"] = eng_abstract + " " + eng_abstract2
     if not final_article_data["articleKeywords"]["TR"]:
-        final_article_data["articleKeywords"]["TR"] = azure_article_data["article_keywords"]["tr"]
+        final_article_data["articleKeywords"]["TR"] = azure_article_data.get("article_keywords", {}).get("tr", "")
     if not final_article_data["articleKeywords"]["ENG"]:
-        final_article_data["articleKeywords"]["ENG"] = azure_article_data["article_keywords"]["eng"]
+        final_article_data["articleKeywords"]["ENG"] = azure_article_data.get("article_keywords", {}).get("eng", "")
     if not final_article_data["articleAuthors"]:
-        final_article_data["articleAuthors"] = azure_article_data["article_authors"]
+        final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     return final_article_data
 
 def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
@@ -170,7 +172,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
-            driver.get(check_url("jurolsurgery.org")) # driver.get(start_page_url)
+            i += 1
+            driver.get(check_url(start_page_url))
             time.sleep(3)
             try:
                 close_button = driver.find_element(By.XPATH, '//*[@id="dvPopupModal"]/button')
@@ -193,7 +196,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                     vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
-            if True: #             if not is_issue_scanned:
+            if not is_issue_scanned:
                 article_urls = list()
                 for item in document_detail_items:
                     item_article_type = item.find_element(By.TAG_NAME, "h3").text.strip()
@@ -221,14 +224,13 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 file_name = get_recently_downloaded_file_name(download_path)
                                 # Send PDF to Azure and format response
                                 if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name)
-
+                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
                         article_data_element = driver.find_element(By.CSS_SELECTOR, ".document-detail.about.search-detail")
                         article_type = identify_article_type(
-                            article_data_element.find_element(By.TAG_NAME, "h3").text.strip())
+                            article_data_element.find_element(By.TAG_NAME, "h3").text.strip(), 0)
                         article_title = article_data_element.find_element(By.CSS_SELECTOR,
                                                                           ".doc-title.doc-title-txt.text-decoration-none").text.strip()
                         article_doi = article_data_element.find_elements(By.TAG_NAME, "p")[1].text.strip()
@@ -288,7 +290,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 time.sleep(0.75)
                                 abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
 
-                        if not references:
+                        if not references and download_link:
                             # Send PDF to Adobe and format response
                             if with_adobe:
                                 adobe_cropped = split_in_half(file_name)
@@ -310,9 +312,9 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             "Keywords")].strip()
                         # Keywords
                         keywords = abstract_full[abstract_full.index(
-                            "Anahtar Kelimeler:"):].strip() if page_language == "tr" else abstract_full[abstract_full.index(
-                            "Keywords:"):].strip()
-                        keywords = [keyword.strip() for keyword in keywords.split(';')]
+                            "Anahtar Kelimeler:") + 18:].strip() if page_language == "tr" else abstract_full[abstract_full.index(
+                            "Keywords:") + 10:].strip()
+                        keywords = [keyword.strip() for keyword in keywords.split(',')]
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
@@ -329,19 +331,28 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                                  "ENG": abstract if page_language == "en" else ""},
                             "articleKeywords": {"TR": keywords if page_language == "tr" else [],
                                                 "ENG": keywords if page_language == "en" else []},
-                            "articleAuthors": authors if authors else [],
-                            "articleReferences": references if references else [], }
-
+                            "articleAuthors": Author.author_to_dict(authors) if authors else [],
+                            "articleReferences": references if references else []}
                         final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
+                        file_path = "/home/emin/Desktop/col_m9_jsons/" + f"{file_reference}.json"
+
+                        json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
+
+                        with open(file_path, "w") as file:
+                            file.write(json_data)
                         # Send data to Client API
-                        # TODO send TK data
+                        # TODO send col_m9 data
                         clear_directory(download_path)
                         if i == 2:
                             break
                     except Exception as e:
                         clear_directory(download_path)
+                        tb_str = traceback.format_exc()
+                        send_notification(GeneralError(
+                            f"Passed one article of col_m9 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
+
                     create_logs(True, get_logs_path(parent_type, file_reference))
                     # Update the most recently scanned issue according to the journal type
                     update_scanned_issues(recent_volume, recent_issue,
@@ -355,7 +366,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 # return timeit.default_timer() - start_time
 
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping TK journal "
+        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_m9 journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         # return timeit.default_timer() - start_time

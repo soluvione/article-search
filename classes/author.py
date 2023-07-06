@@ -29,12 +29,13 @@ class Author:
         print(self.all_speciality)
 
     @classmethod
-    def author_to_json(cls, authors):
+    def author_to_dict(cls, authors):
         author_list = list()
         for author in authors:
             author_dictionary = dict()
-            author_dictionary["Name"] = author.name
-            author_dictionary["Full Speciality"] = author.all_speciality
-            author_dictionary["Is Correspondance?"] = author.is_correspondence
+            author_dictionary["name"] = author.name
+            author_dictionary["fullSpeciality"] = author.all_speciality
+            author_dictionary["isCorrespondence"] = author.is_correspondence
+            author_dictionary["email"] = author.mail
             author_list.append(author_dictionary)
         return author_list

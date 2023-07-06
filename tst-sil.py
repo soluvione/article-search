@@ -353,7 +353,7 @@ if True:
                                 final_article_data["articleKeywords"]["ENG"] = keywords_eng
 
                         if authors:
-                            final_article_data["articleAuthors"] = Author.author_to_json(authors)
+                            final_article_data["articleAuthors"] = Author.author_to_dict(authors)
 
                         if dergipark_references:
                             final_article_data["articleReferences"] = dergipark_references

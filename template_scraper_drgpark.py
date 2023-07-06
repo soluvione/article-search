@@ -376,7 +376,7 @@ if not is_issue_scanned(vol_num=recent_volume, issue_num=recent_issue, path_=__f
                     if keywords_eng:
                         article_data["Article Keywords"]["ENG"] = keywords_eng
                 if authors:
-                    article_data["Article Authors"] = Author.author_to_json(authors)
+                    article_data["Article Authors"] = Author.author_to_dict(authors)
                 if references:
                     article_data["Article References"] = references
 
