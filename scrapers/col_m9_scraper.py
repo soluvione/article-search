@@ -150,6 +150,8 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleKeywords"]["TR"] = azure_article_data.get("article_keywords", {}).get("tr", "")
     if not final_article_data["articleKeywords"]["ENG"]:
         final_article_data["articleKeywords"]["ENG"] = azure_article_data.get("article_keywords", {}).get("eng", "")
+    if not final_article_data["articleType"]:
+        final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     return final_article_data
@@ -164,6 +166,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
     prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
+    options.add_argument('--ignore-certificate-errors')
     options.add_argument("--headless")  # This line enables headless mode
     service = ChromeService(executable_path=ChromeDriverManager().install())
 

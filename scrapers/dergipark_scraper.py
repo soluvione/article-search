@@ -225,6 +225,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
         prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
         options.add_experimental_option('prefs', prefs)
         options.add_argument("--disable-notifications")
+        options.add_argument('--ignore-certificate-errors')
         service = ChromeService(executable_path=ChromeDriverManager().install())
         driver = webdriver.Chrome(service=service, options=options)
 
