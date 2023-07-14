@@ -468,20 +468,20 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
 
                             # The request headers
                             headers = {
-                                "authorization": "t0U/A2dhjvWuMKkTabbp5IOkXXE2mpfpquMixFFUlTpkwJuOIU93CY=4ftz20-/jUxuxBxW7nqtgWpNf7bJUck6pqGr7=0ZTwA0je6ryUsvYieT?AlPo75TrLiRi0ZBeB/ySwZLfzfB=vjUd4PNx7uAfn?mJ0nL",
+                                "Authorization": "t0U/A2dhjvWuMKkTabbp5IOkXXE2mpfpquMixFFUlTpkwJuOIU93CY=4ftz20-/jUxuxBxW7nqtgWpNf7bJUck6pqGr7=0ZTwA0je6ryUsvYieT?AlPo75TrLiRi0ZBeB/ySwZLfzfB=vjUd4PNx7uAfn?mJ0nL",
+                                "Content-Type": "application/json",
+                                "Connection": "Keep-Alive",
+                                "Keep-Alive": "timeout=5, max=1000",
+                                "Accept": "*/*",
                             }
 
                             # Your dictionary
                             my_dict = final_article_data
                             # Convert the dictionary to a JSON string
-                            body = json.dumps(my_dict, ensure_ascii=False)
-
-                            # Encode the payload using UTF-8
-                            encoded_payload = {key: value.encode('utf-8') if isinstance(value, str) else value for
-                                               key, value in body.items()}
+                            body = json.dumps(my_dict)
 
                             # Make the POST request
-                            response = requests.post(url, headers=headers, data=encoded_payload)
+                            response = requests.post(url, headers=headers, data=body)
 
                             # Print the response
                             print(response.json())
