@@ -1,6 +1,6 @@
 # Hidden variables
 __endpoint = "https://article-search-recognizer-endpoint.cognitiveservices.azure.com/"
-__form_recognizer_model_ID = "AllDataExtractor2_v02"  # This is the model ID
+__form_recognizer_model_ID = "AllDataExtractor2_v03"  # This is the model ID
 __tk_form_recognizer_model_ID = "TK_Extractor_V01"  # This is the model ID
 
 # Twilio

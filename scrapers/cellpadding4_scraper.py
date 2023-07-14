@@ -7,9 +7,6 @@ import json
 import pprint
 import timeit
 import re
-
-from fuzzywuzzy import fuzz
-
 # Local imports
 from classes.author import Author
 from common.erorrs import GeneralError
@@ -31,7 +28,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-
+from fuzzywuzzy import fuzz
 with_azure = True
 with_adobe = True
 json_two_articles = False
@@ -427,11 +424,11 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         pprint.pprint(final_article_data)
                         gir = input("devam mı?")
                         if gir == "Y":
-                            file_path = r"C:\Users\emine\OneDrive\Masaüstü" + rf"\{file_reference}.json"
-                            json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
-                            with open(file_path, "w", encoding="utf-8") as file:
-                                file.write(json_data)
-                            time.sleep(100)
+                            # file_path = r"C:\Users\emine\OneDrive\Masaüstü" + rf"\{file_reference}.json"
+                            # json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
+                            # with open(file_path, "w", encoding="utf-8") as file:
+                            #     file.write(json_data)
+                            # time.sleep(100)
                             import requests
                             # The URL endpoint
                             url = "http://178.62.217.122:8080/article/store"

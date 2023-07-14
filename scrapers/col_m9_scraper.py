@@ -31,10 +31,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 with_azure = True
 with_adobe = True
 json_two_articles = False
+
+
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
     return url
+
 
 def get_logs_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -62,6 +65,7 @@ def get_recently_downloaded_file_name(download_path):
     list_of_files = glob.glob(download_path + '/*')
     latest_file = max(list_of_files, key=os.path.getctime)
     return latest_file
+
 
 def update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail):
     """
@@ -91,13 +95,14 @@ def create_logs(was_successful: bool, path_: str) -> None:
             with open(logs_file_path, 'r') as logs_file:
                 logs_data = json.loads(logs_file.read())
         logs_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
-                                    'attemptStatus': was_successful})
+                          'attemptStatus': was_successful})
         with open(logs_file_path, 'w') as logs_file:
             logs_file.write(json.dumps(logs_data, indent=4))
 
     except Exception as e:
-        send_notification(GeneralError(f"Error encountered while updating col_m9 journal logs file with path = {path_}. "
-                                       f"Error encountered: {e}."))
+        send_notification(
+            GeneralError(f"Error encountered while updating col_m9 journal logs file with path = {path_}. "
+                         f"Error encountered: {e}."))
 
 
 def log_already_scanned(path_: str):
@@ -111,12 +116,14 @@ def log_already_scanned(path_: str):
         with open(logs_path, 'r') as logs_file:
             logs_data = json.loads(logs_file.read())
         logs_data.append({'timeOfTrial': datetime.now().strftime('%Y-%m-%dT%H:%M:%S'),
-                                    'attemptStatus': 'Already Scanned - No Action Needed'})
+                          'attemptStatus': 'Already Scanned - No Action Needed'})
         with open(logs_path, 'w') as logs_file:
             logs_file.write(json.dumps(logs_data, indent=4))
     except Exception as e:
         send_notification(
-            GeneralError(f"Already scanned issue log creation error for col_m9 journal with path = {path_}. Error: {e}"))
+            GeneralError(
+                f"Already scanned issue log creation error for col_m9 journal with path = {path_}. Error: {e}"))
+
 
 def check_scan_status(**kwargs):
     try:
@@ -126,6 +133,7 @@ def check_scan_status(**kwargs):
             GeneralError(f"Error encountered while checking issue scan status for col_m9 journal "
                          f"with path = {kwargs['logs_path']}, (check_scan_status, col_m9_scraper.py). Error: {e}"))
         raise e
+
 
 def populate_with_azure_data(final_article_data, azure_article_data):
     """
@@ -155,6 +163,7 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     return final_article_data
+
 
 def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
     i = 0
@@ -198,17 +207,14 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 raise e
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
-                                                    vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
+                                                 vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
                 article_urls = list()
                 for item in document_detail_items:
                     item_article_type = item.find_element(By.TAG_NAME, "h3").text.strip()
                     item_pass = check_article_type_pass(identify_article_type(item_article_type, 0))
                     if not item_pass:
-                        print("Article type not accepted", item_article_type)
                         continue
-                    else:
-                        print("Article type accepted", item_article_type)
                     try:
                         for url_item in item.find_elements(By.CSS_SELECTOR, ".document-detail > a"):
                             article_urls.append(url_item.get_attribute("href"))
@@ -231,7 +237,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
-                        article_data_element = driver.find_element(By.CSS_SELECTOR, ".document-detail.about.search-detail")
+                        article_data_element = driver.find_element(By.CSS_SELECTOR,
+                                                                   ".document-detail.about.search-detail")
                         article_type = identify_article_type(
                             article_data_element.find_element(By.TAG_NAME, "h3").text.strip(), 0)
                         article_title = article_data_element.find_element(By.CSS_SELECTOR,
@@ -239,7 +246,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         article_doi = article_data_element.find_elements(By.TAG_NAME, "p")[1].text.strip()
 
                         # Abbreviation
-                        full_abbreviation = article_data_element.find_element(By.CLASS_NAME, "date-detail-txt").text.strip()
+                        full_abbreviation = article_data_element.find_element(By.CLASS_NAME,
+                                                                              "date-detail-txt").text.strip()
                         abbreviation = ''.join([i for i in full_abbreviation if i.isalpha() or i.isspace()])
                         abbreviation = abbreviation.strip()
 
@@ -282,7 +290,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             if item.get_attribute('id') == "ctl09_liRef":
                                 item.click()
                                 time.sleep(0.75)
-                                references = article_data_element.find_element(By.CSS_SELECTOR, ".detail-text.font-12").text
+                                references = article_data_element.find_element(By.CSS_SELECTOR,
+                                                                               ".detail-text.font-12").text
                                 references = references.split(
                                     '\n')  # Split the references string into a list of reference strings
                                 references = [reference_formatter(reference, False, count) for count, reference in
@@ -311,12 +320,14 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
 
                         # Abstract
                         abstract = abstract_full[: abstract_full.index(
-                            "Anahtar Kelimeler")].strip() if page_language == "tr" else abstract_full[: abstract_full.index(
-                            "Keywords")].strip()
+                            "Anahtar Kelimeler")].strip() if page_language == "tr" else abstract_full[
+                                                                                        : abstract_full.index(
+                                                                                            "Keywords")].strip()
                         # Keywords
                         keywords = abstract_full[abstract_full.index(
-                            "Anahtar Kelimeler:") + 18:].strip() if page_language == "tr" else abstract_full[abstract_full.index(
-                            "Keywords:") + 10:].strip()
+                            "Anahtar Kelimeler:") + 18:].strip() if page_language == "tr" else abstract_full[
+                                                                                               abstract_full.index(
+                                                                                                   "Keywords:") + 10:].strip()
                         keywords = [keyword.strip() for keyword in keywords.split(',')]
 
                         final_article_data = {
@@ -358,7 +369,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                     create_logs(True, get_logs_path(parent_type, file_reference))
                     # Update the most recently scanned issue according to the journal type
                     update_scanned_issues(recent_volume, recent_issue,
-                                              get_logs_path(parent_type, file_reference))
+                                          get_logs_path(parent_type, file_reference))
                     time.sleep(15)
                     return 599
                     # return timeit.default_timer() - start_time
@@ -373,8 +384,6 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
         clear_directory(download_path)
         # return timeit.default_timer() - start_time
         return 599
-
-
 
 
 """         

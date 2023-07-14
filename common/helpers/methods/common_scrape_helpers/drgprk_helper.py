@@ -99,9 +99,13 @@ def identify_article_type(string, num_of_references) -> str:
     :return: Returns a string that is selected from the dropdown menu of Atıf Dizini
     """
     # Orijinal Araştırma
-    if string.strip().lower() == "research article" or string.strip().lower() == "original article" or string.strip().lower() == "research" or string.strip().lower() == "original research":
+    if string.strip().lower() == "research article" or string.strip().lower() == "original article" or string.strip().lower() == "research" or string.strip().lower() == "original research" or string.strip().lower() == "original articles":
+        return "ORİJİNAL ARAŞTIRMA"
+    if string.strip().lower() == "articles":
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesi":
+        return "ORİJİNAL ARAŞTIRMA"
+    if "araştırma makale" in string.strip().replace("I", "ı").replace("İ", "i").lower():
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesı":
         return "ORİJİNAL ARAŞTIRMA"
@@ -119,15 +123,19 @@ def identify_article_type(string, num_of_references) -> str:
         return "DERLEME"
     if string.strip().lower() == "review" or string.strip().lower() == "review article":
         return "DERLEME"
+    if "review" in string.strip().lower():
+        return "DERLEME"
+    if "derleme" in string.strip().lower():
+        return "DERLEME"
 
     # Olgu Sunumu
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "olgu sunumu":
         return "OLGU SUNUMU"
-    if string.strip().lower() == "case report":
+    if string.strip().lower() == "case report" or string.strip().lower() == "case reports":
         return "OLGU SUNUMU"
 
     # Orijinal Görüntü
-    if string.strip().lower() == "interesting image":
+    if "orijinal görüntü" in string.strip().lower() or "original image" in string.strip().lower():
         return "ORİJİNAL GÖRÜNTÜ"
 
     # Diğer
