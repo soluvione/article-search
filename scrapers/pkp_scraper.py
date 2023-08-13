@@ -215,7 +215,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                                                           "h2").find_element(By.TAG_NAME, "a").get_attribute("href")
                     else:
                         recent_vol_issue_text = article_issues_element.find_element(By.CLASS_NAME, "series").text
-                        volume_link = article_issues_element.find_element(By.CLASS_NAME, "title").get_attribute("href") \
+                        volume_link = article_issues_element.find_element(By.CLASS_NAME, "title").get_attribute("href")\
                             if "press" not in article_issues_element.find_element(By.CLASS_NAME, "title").text else None
 
                 numbers = re.findall(r'\d+', recent_vol_issue_text)
@@ -226,7 +226,6 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                     raise GeneralError(f"No volume_link found for the journal {journal_name}")
             except Exception as e:
                 raise e
-            print("vol link found")
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
@@ -243,16 +242,18 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             section_elements = article_section.find_elements(By.CLASS_NAME, "obj_article_summary")
                         for section_element in section_elements:
                             article_urls.append(section_element.find_element(By.TAG_NAME, "a").get_attribute("href"))
-                            page_ranges.append(section_element.find_element(By.CLASS_NAME, "pages").text.strip())
+                            try:
+                                page_ranges.append(section_element.find_element(By.CLASS_NAME, "pages").text.strip())
+                            except Exception:
+                                page_ranges.append("1-12")
                             article_types.append(
                                 identify_article_type(article_section.find_element(By.TAG_NAME, "h2").text, 0))
                 except Exception as e:
                     raise e
-                print("url gezmeye başladık")
                 for url in article_urls:
                     try:
                         driver.get(url)
-                        time.sleep(2)
+                        time.sleep(3)
                         article_element = driver.find_element(By.CLASS_NAME, "obj_article_details")
                         try:
                             english_page = driver.find_element(By.CSS_SELECTOR, "[class^='locale_en_US']")
@@ -267,8 +268,11 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             for author_element in authors_element.find_elements(By.TAG_NAME, "li"):
                                 author = Author()
                                 author.name = author_element.find_element(By.CLASS_NAME, "name").text.strip()
-                                author.all_speciality = author_element.find_element(By.CLASS_NAME,
-                                                                                    "affiliation").text.strip()
+                                try:
+                                    author.all_speciality = author_element.find_element(By.CLASS_NAME,
+                                                                                        "affiliation").text.strip()
+                                except Exception:
+                                    author.all_speciality = "Format dışı ya da hatalı yazar bilgisi."
                                 authors.append(author)
                         except Exception as e:
                             raise e
@@ -355,7 +359,6 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                 keywords = ""
 
                         else:
-                            print("çift dil")
                             # Scrape English first by clicking English button
                             driver.find_element(By.CSS_SELECTOR, "[class^='locale_en']").find_element(By.TAG_NAME,
                                                                                                       "a").click()
@@ -397,7 +400,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                     By.CLASS_NAME, "value").text.strip()
                                 keywords_tr = [keyword.strip() for keyword in keywords.split(",")]
                             except Exception:
-                                keywords = ""
+                                keywords_tr = ""
 
                         # Page range
                         article_page_range = [int(page_ranges[i - 1].split('-')[0].strip()),
@@ -460,7 +463,6 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
                             with open(file_path, "w", encoding="utf-8") as file:
                                 file.write(json_data)
-                                print("yazdı")
                             time.sleep(10)
                             import requests
                             # The URL endpoint

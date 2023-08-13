@@ -138,4 +138,4 @@ def get_text_with_specs(path_=None, num_pages=0, font1_type=None, font1_size=-1.
 
 
 if __name__ == '__main__':
-    pass
+    print_all_elements(r"C:\Users\emine\Downloads\2020TUSdonem1_TTBT-3-12.pdf", 0)
