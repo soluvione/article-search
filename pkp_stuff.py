@@ -27,7 +27,6 @@ from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference
     abstract_formatter
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
-from common.helpers.methods.data_to_atifdizini import get_to_artc_page, paste_data
 from common.services.post_json import post_json
 from common.services.send_sms import send_notification
 from common.services.azure.azure_helper import AzureHelper
@@ -53,9 +52,8 @@ download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downlo
 prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
 options.add_experimental_option('prefs', prefs)
 options.add_argument("--disable-notifications")
-options.add_argument("--headless")  # This line enables headless mode
+#options.add_argument("--headless")  # This line enables headless mode
 service = ChromeService(executable_path=ChromeDriverManager().install())
-driver = webdriver.Chrome(service=service, options=options)
 
 urls = [
     'https://norosirurji.dergisi.org/archive.php',
@@ -75,99 +73,87 @@ urls = [
 
 with webdriver.Chrome(service=service, options=options) as driver:
     i = 0
-    # Webdriver options
-    # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
-    options = Options()
-    options.page_load_strategy = 'eager'
-    download_path = r"C:\Users\emine\OneDrive\Masaüstü\test_downloads"
-    prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
-    options.add_experimental_option('prefs', prefs)
-    options.add_argument("--disable-notifications")
-    options.add_argument('--ignore-certificate-errors')
-    # options.add_argument("--headless")  # This line enables headless mode
-    service = ChromeService(executable_path=ChromeDriverManager().install())
-    # for url in urls:
-    #     # Start with going to archive
-    #     from bs4 import BeautifulSoup
-    #     driver.get(url)
-    #     driver.maximize_window()
-    #     time.sleep(1)
-    #     # The archive page has either two styles, list or boxes
-    #     try:
-    #         col_lg_element = driver.find_element(By.CSS_SELECTOR, ".col-lg-6.col-md-6.col-sm-6.col-xs-12")
-    #     except Exception:
-    #         col_lg_element = None
-    #
-    #     if col_lg_element:
-    #         year = int(col_lg_element.find_element(By.CLASS_NAME, "panel-heading").text)
-    #         vol_issue_text = col_lg_element.find_element(By.CLASS_NAME, "list-group-item-archive").text
-    #         numbers = re.findall(r'\d+', vol_issue_text)
-    #         numbers = [int(i) for i in numbers]
-    #         vol, issue = numbers
-    #         issue_link = col_lg_element.find_element(By.CLASS_NAME, "list-group-item-archive").find_element(By.TAG_NAME, "a")\
-    #             .get_attribute("href")
-    #         print(vol, issue, issue_link)
-    #     else:
-    #         try:
-    #             driver.find_element(By.CSS_SELECTOR, "[data-toggle='collapse']").click()
-    #         except Exception:
-    #             pass
-    #         time.sleep(1)
-    #         main_element = driver.find_element(By.ID, "content_icerik").find_element(By.CLASS_NAME,
-    #                                                                                  "col-md-12").get_attribute(
-    #             'outerHTML')
-    #         soup = BeautifulSoup(main_element, 'html.parser')
-    #
-    #         # Find all 'a' tags
-    #         a_tags = soup.find_all('a')
-    #
-    #         # Filter out 'a' tags that have no text inside them
-    #         a_tags_with_text = [tag for tag in a_tags if tag.text.strip() and "supp" not in tag.text.lower()
-    #                             and "ek" not in tag.text.lower()]
-    #         first_six_a_tags_with_text = a_tags_with_text[1:7]
-    #
-    #         # Remove 'a' tags that contain 'ek' or 'supp'
-    #         first_six_a_tags_with_text = [tag for tag in first_six_a_tags_with_text if
-    #                                       "ek" not in tag.text.lower() and "supp" not in tag.text.lower()]
-    #
-    #         # Remove the first element
-    #         first_six_a_tags_with_text.pop(0) if first_six_a_tags_with_text[0].text == "2023" or first_six_a_tags_with_text[0].text == "2022" else -1
-    #
-    #         # Identify issue number and issue link
-    #         issue, issue_link = None, None
-    #         for i in range(len(first_six_a_tags_with_text)):
-    #             current_issue = re.findall(r'\d+', first_six_a_tags_with_text[i].text)
-    #             next_issue = re.findall(r'\d+', first_six_a_tags_with_text[i + 1].text) if i + 1 < len(
-    #                 first_six_a_tags_with_text) else None
-    #             if int(current_issue[0]) == 2022 or int(next_issue[0]) == 2022:
-    #                 break
-    #             if current_issue and next_issue and int(current_issue[0]) > int(next_issue[0]):
-    #                 issue = int(current_issue[0])
-    #                 issue_link = urljoin(url, first_six_a_tags_with_text[i]['href'])
-    #                 break
-    #
-    #             elif current_issue and i + 1 == len(first_six_a_tags_with_text):
-    #                 issue = int(current_issue[0])
-    #                 issue_link = urljoin(url, first_six_a_tags_with_text[i]['href'])
-    #                 break
-    #
-    #         # Extract year
-    #         year = int(driver.find_element(By.ID, "content_icerik").find_element(By.CLASS_NAME,
-    #                                                                              "col-md-12").text.split()[1])
-    #         vol = None
-    #         print(year, issue, issue_link)
-    #         driver.get(issue_link)
-    #         time.sleep(2)
-    #         if not vol:
-    urls = ["https://cts.tgcd.org.tr/content.php?id=59",
-            "https://norosirurji.dergisi.org/content.php?id=117",
-            "http://www.cshd.org.tr/content.php?id=75",
-            "https://jrespharm.com/content.php?id=87",
-            "https://vetdergikafkas.org/content.php?id=213",
-            "https://www.turkishjournalpediatrics.org/content.php?id=125",
-            "http://onkder.org/content.php?id=139",
-            "https://www.ftrdergisi.com/content.php?id=326",
-            "http://turkishneurosurgery.org.tr/content.php?id=137"]
+    for url in urls:
+        # ARCHIEVE PAGE TO THE LATEST ISSUE
+        driver.get(url)
+        driver.maximize_window()
+        time.sleep(1)
+        # The archive page has either two styles, list or boxes
+        try:
+            col_lg_element = driver.find_element(By.CSS_SELECTOR, ".col-lg-6.col-md-6.col-sm-6.col-xs-12")
+        except Exception:
+            col_lg_element = None
+
+        if col_lg_element:
+            year = int(col_lg_element.find_element(By.CLASS_NAME, "panel-heading").text)
+            vol_issue_text = col_lg_element.find_element(By.CLASS_NAME, "list-group-item-archive").text
+            numbers = re.findall(r'\d+', vol_issue_text)
+            numbers = [int(i) for i in numbers]
+            vol, issue = numbers
+            issue_link = col_lg_element.find_element(By.CLASS_NAME, "list-group-item-archive").find_element(By.TAG_NAME, "a")\
+                .get_attribute("href")
+            print(vol, issue, issue_link)
+        else:
+            try:
+                driver.find_element(By.CSS_SELECTOR, "[data-toggle='collapse']").click()
+            except Exception:
+                pass
+            time.sleep(1)
+            main_element = driver.find_element(By.ID, "content_icerik").find_element(By.CLASS_NAME,
+                                                                                     "col-md-12").get_attribute(
+                'outerHTML')
+            soup = BeautifulSoup(main_element, 'html.parser')
+
+            # Find all 'a' tags
+            a_tags = soup.find_all('a')
+
+            # Filter out 'a' tags that have no text inside them
+            a_tags_with_text = [tag for tag in a_tags if tag.text.strip() and "supp" not in tag.text.lower()
+                                and "ek" not in tag.text.lower()]
+            first_six_a_tags_with_text = a_tags_with_text[1:7]
+
+            # Remove 'a' tags that contain 'ek' or 'supp'
+            first_six_a_tags_with_text = [tag for tag in first_six_a_tags_with_text if
+                                          "ek" not in tag.text.lower() and "supp" not in tag.text.lower()]
+
+            # Remove the first element
+            first_six_a_tags_with_text.pop(0) if first_six_a_tags_with_text[0].text == "2023" or first_six_a_tags_with_text[0].text == "2022" else -1
+
+            # Identify issue number and issue link
+            issue, issue_link = None, None
+            for i in range(len(first_six_a_tags_with_text)):
+                current_issue = re.findall(r'\d+', first_six_a_tags_with_text[i].text)
+                next_issue = re.findall(r'\d+', first_six_a_tags_with_text[i + 1].text) if i + 1 < len(
+                    first_six_a_tags_with_text) else None
+                if int(current_issue[0]) == 2022 or int(next_issue[0]) == 2022:
+                    break
+                if current_issue and next_issue and int(current_issue[0]) > int(next_issue[0]):
+                    issue = int(current_issue[0])
+                    issue_link = urljoin(url, first_six_a_tags_with_text[i]['href'])
+                    break
+
+                elif current_issue and i + 1 == len(first_six_a_tags_with_text):
+                    issue = int(current_issue[0])
+                    issue_link = urljoin(url, first_six_a_tags_with_text[i]['href'])
+                    break
+
+            # Extract year
+            year = int(driver.find_element(By.ID, "content_icerik").find_element(By.CLASS_NAME,
+                                                                                 "col-md-12").text.split()[1])
+            vol = None
+            print(year, issue, issue_link)
+            driver.get(issue_link)
+            time.sleep(2)
+
+    # urls = ["https://cts.tgcd.org.tr/content.php?id=59",
+    #         "https://norosirurji.dergisi.org/content.php?id=117",
+    #         "http://www.cshd.org.tr/content.php?id=75",
+    #         "https://jrespharm.com/content.php?id=87",
+    #         "https://vetdergikafkas.org/content.php?id=213",
+    #         "https://www.turkishjournalpediatrics.org/content.php?id=125",
+    #         "http://onkder.org/content.php?id=139",
+    #         "https://www.ftrdergisi.com/content.php?id=326",
+    #         "http://turkishneurosurgery.org.tr/content.php?id=137"]
     # for url in urls:
     #     driver.get(url)
     #     text = driver.find_element(By.ID, "content_icerik").find_element(By.CLASS_NAME, "col-md-12").text
@@ -212,24 +198,52 @@ with webdriver.Chrome(service=service, options=options) as driver:
     #     driver.find_element(By.ID, "content_icerik").find_element(By.CLASS_NAME, "col-md-12").get_attribute(
     #         "outerHTML"), 'html.parser')
     # print(soup.prettify())
-    driver.get("https://onkder.org/abstract.php?id=1384")
-    main_element = driver.find_element(By.ID, "icerik-alani")
-    soup = BeautifulSoup(main_element.get_attribute("outerHTML"), 'html.parser')
-    try:
-        el = soup.find('h2').get_text(strip=True)
-    except:
-        el = driver.find_element(By.XPATH, '//*[@id="icerik-alani"]/div[2]/div[2]/div[1]').text
-
-    try:
-        authors_element = driver.find_element(By.ID, "authors_div").text.split(',')
-    except:
-        pass
-
-
-    def has_sup_with_text(element):
-        return element.name == 'span' and element.find('sup') is not None
-
+    # driver.get("https://onkder.org/abstract.php?id=1385")
+    # main_element = driver.find_element(By.ID, "icerik-alani")
+    # soup = BeautifulSoup(main_element.get_attribute("outerHTML"), 'html.parser')
+    # try:
+    #     el = soup.find('h2').get_text(strip=True)
+    # except:
+    #     el = driver.find_element(By.XPATH, '//*[@id="icerik-alani"]/div[2]/div[2]/div[1]').text
+    # print(el)
+    # try:
+    #     authors_element = driver.find_element(By.ID, "authors_div").text.split(',')
+    # except:
+    #     pass
+    # print(authors_element)
+    #
+    # def has_sup_with_text(element):
+    #     return element.name == 'span' and element.find('sup') is not None
 
     # Find <span> elements with <sup> children
-    span_elements = soup.find_all(has_sup_with_text)
-    print(span_elements)
+    # span_element = soup.find_all(has_sup_with_text)[0]
+    # specialities = []
+    # n, index = 0, 0
+    # for char in span_element.get_text().strip():
+    #     if char.isnumeric() and index > 0:
+    #         specialities.append(span_element.get_text()[n + 1:index+1].strip()[1:])
+    #         n = index
+    #     if index == len(span_element.get_text().strip()) - 1:
+    #         specialities.append(span_element.get_text()[n + 1:].strip()[1:])
+    #     index += 1
+    # print(specialities)
+
+    # DOI
+    # print(soup.get_text()[soup.get_text().index("DOI"):].split()[2])
+    # response = requests.get("https://cts.tgcd.org.tr/abstract.php?id=188")
+    # soup = BeautifulSoup(response.content, 'html.parser')
+    # meta_tag = soup.find('meta', attrs={'name': 'citation_keywords'})
+    #
+    # # Check if the tag is found and print the content
+    # if meta_tag:
+    #     keywords = meta_tag['content']
+    #     print(keywords)
+    # else:
+    #     print("Meta tag not found!")
+    # soup = BeautifulSoup(main_element.get_attribute("outerHTML"), 'html.parser')
+
+    #abstract = soup.get_text()[soup.get_text().index("DOI")+20: soup.get_text().index("Keywords")].replace("\n", " ")
+
+    # print(abstract)
+
+    # download_link = start_page.replace("abtract", "pdf")
