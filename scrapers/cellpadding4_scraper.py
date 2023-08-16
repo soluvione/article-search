@@ -424,10 +424,10 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         pprint.pprint(final_article_data)
                         gir = input("devam mı?")
                         if gir == "Y":
-                            # file_path = r"C:\Users\emine\OneDrive\Masaüstü" + rf"\{file_reference}.json"
-                            # json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
-                            # with open(file_path, "w", encoding="utf-8") as file:
-                            #     file.write(json_data)
+                            file_path = r"C:\Users\emine\OneDrive\Masaüstü" + rf"\{file_reference}.json"
+                            json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
+                            with open(file_path, "w", encoding="utf-8") as file:
+                                file.write(json_data)
                             # time.sleep(100)
                             import requests
                             # The URL endpoint
@@ -435,7 +435,11 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
                             # The request headers
                             headers = {
-                                "authorization": "t0U/A2dhjvWuMKkTabbp5IOkXXE2mpfpquMixFFUlTpkwJuOIU93CY=4ftz20-/jUxuxBxW7nqtgWpNf7bJUck6pqGr7=0ZTwA0je6ryUsvYieT?AlPo75TrLiRi0ZBeB/ySwZLfzfB=vjUd4PNx7uAfn?mJ0nL",
+                                "Authorization": "t0U/A2dhjvWuMKkTabbp5IOkXXE2mpfpquMixFFUlTpkwJuOIU93CY=4ftz20-/jUxuxBxW7nqtgWpNf7bJUck6pqGr7=0ZTwA0je6ryUsvYieT?AlPo75TrLiRi0ZBeB/ySwZLfzfB=vjUd4PNx7uAfn?mJ0nL",
+                                "Content-Type": "application/json",
+                                "Connection": "Keep-Alive",
+                                "Keep-Alive": "timeout=5, max=1000",
+                                "Accept": "*/*",
                             }
 
                             # Your dictionary

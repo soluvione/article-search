@@ -43,15 +43,11 @@ import re
 from urllib.parse import urlparse
 
 # Your URLs string
-urls_string = ('https://actamedica.org/index.php/actamedica, '
- 'https://beslenmevediyetdergisi.org/index.php/bdd, https://eurjther.com/index.php/home, '
- 'https://experimentalbiomedicalresearch.com/ojs/index.php/ebr, https://medicaljournal.gazi.edu.tr/index.php/GMJ, '
- 'https://ijcmbs.com/index.php/ijcmbs, https://jointdrs.org/current-issue, https://www.jabsonline.org/index.php/jabs/issue/archive, '
- 'https://www.jsoah.com/index.php/jsoah/issue/archive, https://www.medscidiscovery.com/index.php/msd/issue/archive, '
- 'https://natprobiotech.com/index.php/natprobiotech,'
- 'http://journals.iku.edu.tr/sybd/index.php/sybd/issue/archive, http://www.cityhealthj.org/index.php/cityhealthj/issue/archive, '
- 'https://injectormedicaljournal.com/index.php/theinjector/issue/archive, https://www.ulutasmedicaljournal.com/index.php?sec=archive, '
- 'https://www.derleme.gen.tr/index.php/derleme, http://saglikokuryazarligidergisi.com/index.php/soyd/issue/archive')
+urls_string = ('https://norosirurji.dergisi.org/archive.php, https://agridergisi.com/, '
+ 'https://cts.tgcd.org.tr/, http://www.cshd.org.tr/, http://www.jcritintensivecare.org/, https://jrespharm.com/archive.php, '
+ 'https://vetdergikafkas.org/archive.php, https://medicaljournal-ias.org/jvi.aspx?pdir=ias&plng=eng&list=pub, '
+ 'https://www.turkishjournalpediatrics.org/, http://geriatri.dergisi.org/archive.php, http://onkder.org/archive.php, '
+ 'https://www.ftrdergisi.com/archive.php, http://turkishneurosurgery.org.tr/archive.php')
 
 # Use a regex to extract the URLs from the string
 urls = re.findall(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', urls_string)
@@ -67,7 +63,7 @@ urls_df.to_excel('urls.xlsx', index=False)
 
 # Assuming that the original Excel file is 'original.xlsx' and
 # the first column contains the journal names and the second column contains the URLs.
-original_df = pd.read_excel('Book1.xlsx', header=None, names=['Names', 'URLs'])
+original_df = pd.read_excel('all_journals_n_links.xlsx', header=None, names=['Names', 'URLs'])
 
 # Extract root domain from each URL
 original_df['URLs'] = original_df['URLs'].apply(lambda url: urlparse(url).netloc)
@@ -76,4 +72,4 @@ original_df['URLs'] = original_df['URLs'].apply(lambda url: urlparse(url).netloc
 merged_df = pd.merge(original_df, urls_df, how='inner', on='URLs')
 
 # Write the merged DataFrame to a new Excel file
-merged_df.to_excel('merged.xlsx', index=False)
+merged_df.to_excel('col_md12.xlsx', index=False)

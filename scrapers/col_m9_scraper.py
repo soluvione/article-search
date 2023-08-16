@@ -366,17 +366,15 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             f"Passed one article of col_m9 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
-                    create_logs(True, get_logs_path(parent_type, file_reference))
-                    # Update the most recently scanned issue according to the journal type
-                    update_scanned_issues(recent_volume, recent_issue,
-                                          get_logs_path(parent_type, file_reference))
-                    time.sleep(15)
-                    return 599
-                    # return timeit.default_timer() - start_time
+                create_logs(True, get_logs_path(parent_type, file_reference))
+                # Update the most recently scanned issue according to the journal type
+                update_scanned_issues(recent_volume, recent_issue,
+                                      get_logs_path(parent_type, file_reference))
+                time.sleep(15)
+                return timeit.default_timer() - start_time
             else:
                 log_already_scanned(get_logs_path(parent_type, file_reference))
-                return 599
-                # return timeit.default_timer() - start_time
+                return timeit.default_timer() - start_time
 
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_m9 journal "
