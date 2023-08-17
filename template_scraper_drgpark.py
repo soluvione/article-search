@@ -5,10 +5,7 @@ This is the template scraper that will be used to multiply.
 from datetime import datetime
 import time
 import os
-import glob
 import re
-import json
-from pathlib import Path
 # Local imports
 from classes.author import Author
 from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
@@ -21,12 +18,8 @@ from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter, identify_article_type
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
     abstract_formatter
-from common.helpers.methods.pdf_cropper import crop_pages
-import common.helpers.methods.pdf_parse_helpers.pdf_parser as parser
-from common.helpers.methods.data_to_atifdizini import get_to_artc_page, paste_data
 from common.services.post_json import post_json
 from common.services.send_sms import send_notification
-from common.services.azure.azure_helper import AzureHelper
 # 3rd Party libraries
 import requests
 from selenium import webdriver
@@ -38,7 +31,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from selenium.common.exceptions import WebDriverException, NoSuchElementException
 from webdriver_manager.chrome import ChromeDriverManager
 # Scraper body chunks
-from common.helpers.methods.scraper_body_components import dergipark_components
 
 # Webdriver options
 # Eager option shortens the load time. Always download the pdfs and does not display them.

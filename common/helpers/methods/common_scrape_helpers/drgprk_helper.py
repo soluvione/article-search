@@ -145,6 +145,8 @@ def identify_article_type(string, num_of_references) -> str:
         return "Editoryal"
     if string == "DÜZELTME" and num_of_references > 0:
         return "ORİJİNAL ARAŞTIRMA"
+    if "article" in string.strip().lower():
+        return "ORİJİNAL ARAŞTIRMA"
     else:
         return "Diğer"
 

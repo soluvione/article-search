@@ -194,7 +194,6 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
-            i += 1
             driver.get(check_url(start_page_url))
             time.sleep(3)
             try:
@@ -500,6 +499,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                         # Send data to Client API
                         # TODO send pkp data
                         clear_directory(download_path)
+                        i += 1
                         return 550
                     except Exception as e:
                         clear_directory(download_path)

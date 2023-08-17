@@ -4,6 +4,7 @@ from common.erorrs import GeneralError
 from common.services.send_sms import send_notification
 from fuzzywuzzy import fuzz
 
+
 def generate_random_string(length):
     letters = string.ascii_letters
     result_str = ''.join(random.choice(letters) for i in range(length))

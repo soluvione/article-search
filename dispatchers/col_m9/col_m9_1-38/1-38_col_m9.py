@@ -24,6 +24,7 @@ with open('1-38_col_m9_params.json', 'r', encoding='utf-8') as f:
 #     "36_ulusalromatolojidergisi"
 # ],
 
+# Not: Akademik Geriatri dergisinin hem Tr hem de Eng halleri ayrı ayrı listemizde var fakat teki burada yer alıyor.
 for dergi_params in params_data:
     try:
         time_spent = col_m9_scraper(*dergi_params)
