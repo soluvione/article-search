@@ -1,3 +1,4 @@
+import re
 import time
 import os
 import traceback
@@ -30,8 +31,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 with_azure = True
 with_adobe = True
-json_two_articles = False
-
+is_test = True
+json_two_articles = True if is_test else False
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
@@ -43,7 +44,7 @@ def get_logs_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
     logs_path = os.path.join(parent_directory_path, "downloads_n_logs",
-                             "col_m9_manual", parent_type,
+                             "aves_manual", parent_type,
                              file_reference, "logs")
     return logs_path
 
@@ -52,7 +53,7 @@ def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
     downloads_path = os.path.join(parent_directory_path, "downloads_n_logs",
-                                  "col_m9_manual", parent_type,
+                                  "aves_manual", parent_type,
                                   file_reference, "downloads")
     return downloads_path
 
@@ -101,7 +102,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
 
     except Exception as e:
         send_notification(
-            GeneralError(f"Error encountered while updating col_m9 journal logs file with path = {path_}. "
+            GeneralError(f"Error encountered while updating aves journal logs file with path = {path_}. "
                          f"Error encountered: {e}."))
 
 
@@ -122,7 +123,7 @@ def log_already_scanned(path_: str):
     except Exception as e:
         send_notification(
             GeneralError(
-                f"Already scanned issue log creation error for col_m9 journal with path = {path_}. Error: {e}"))
+                f"Already scanned issue log creation error for aves journal with path = {path_}. Error: {e}"))
 
 
 def check_scan_status(**kwargs):
@@ -130,8 +131,8 @@ def check_scan_status(**kwargs):
         return is_issue_scanned(kwargs["vol"], kwargs["issue"], kwargs["logs_path"])
     except Exception as e:
         send_notification(
-            GeneralError(f"Error encountered while checking issue scan status for col_m9 journal "
-                         f"with path = {kwargs['logs_path']}, (check_scan_status, col_m9_scraper.py). Error: {e}"))
+            GeneralError(f"Error encountered while checking issue scan status for aves journal "
+                         f"with path = {kwargs['logs_path']}, (check_scan_status, aves_scraper.py). Error: {e}"))
         raise e
 
 
@@ -165,7 +166,7 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     return final_article_data
 
 
-def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
+def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
     i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
@@ -184,48 +185,49 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
-            driver.get(check_url(start_page_url))
+            driver.get(start_page_url)
             time.sleep(3)
-            try:
-                close_button = driver.find_element(By.XPATH, '//*[@id="dvPopupModal"]/button')
-                close_button.click()
-                time.sleep(2)
-            except Exception as e:
-                pass
+            # Scroll to the bottom
+            start = timeit.default_timer()
+            while timeit.default_timer() - start < 10:
+                driver.execute_script("window.scrollBy(0,500)")
+                time.sleep(0.2)
+
+            # Go up
+            driver.execute_script("window.scrollBy(0,-5000)")
+            driver.maximize_window()
+            time.sleep(1)
 
             try:
-                # get element with class name press-date journal-volume-info
-                issue_data = driver.find_element(By.CLASS_NAME, "press-date.journal-volume-info")
-                recent_issue = int(issue_data.text.split('\n')[1].split(':')[1].strip().split(' ')[0])
-                recent_volume = int(issue_data.text.split('\n')[1].split(':')[2].strip())
+                numbers = [int(number) for number in
+                           re.findall(r'\d+', driver.find_element(By.CLASS_NAME, "article_type_head").text)]
 
-                # col-m9 gives the name to the scraper and has the article elements
-                col_m9_element = driver.find_element(By.CLASS_NAME, "col-md-9")
-                document_detail_items = col_m9_element.find_elements(By.CLASS_NAME, "document-detail")
+                recent_volume, recent_issue, article_year = numbers[0], numbers[1], numbers[2]
             except Exception as e:
-                raise e
+                raise GeneralError("Volume, issue or year data of aves journal is absent!")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
                 article_urls = list()
-                for item in document_detail_items:
-                    item_article_type = item.find_element(By.TAG_NAME, "h3").text.strip()
-                    item_pass = check_article_type_pass(identify_article_type(item_article_type, 0))
-                    if not item_pass:
-                        continue
-                    try:
-                        for url_item in item.find_elements(By.CSS_SELECTOR, ".document-detail > a"):
-                            article_urls.append(url_item.get_attribute("href"))
-                    except Exception as e:
-                        send_notification(GeneralError(
-                            f"Error while getting col_m9 article urls of journal: {journal_name}. Error encountered was: {e}"))
+                try:
+                    for item in driver.find_elements(By.CSS_SELECTOR, "[class='article']"):
+                        article_urls.append(item.find_element(By.TAG_NAME, 'a').get_attribute('href'))
+                except Exception as e:
+                    send_notification(GeneralError(
+                        f"Error while getting aves article urls of journal: {journal_name}. Error encountered was: {e}"))
 
                 for url in article_urls:
                     driver.get(url)
                     try:
-                        column_bar = driver.find_element(By.CLASS_NAME, "col-md-3")
-                        download_link = column_bar.find_element(By.ID, 'ctl09_ArticleTools_aPdf').get_attribute('href')
+                        # You need to click on collapsed arrow head to expand the affiliations
+                        driver.find_element(By.CSS_SELECTOR, '.reference.collapsed').click()
+                        time.sleep(5)
+
+                        # Download Link
+                        download_link = driver.find_element(By.CLASS_NAME, 'articles').find_element(By.TAG_NAME,
+                                                                                                    'a').get_attribute(
+                            'href')
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
@@ -236,32 +238,39 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
-                        article_data_element = driver.find_element(By.CSS_SELECTOR,
-                                                                   ".document-detail.about.search-detail")
 
-                        # Type
+                        # Article Type
                         article_type = identify_article_type(
-                            article_data_element.find_element(By.TAG_NAME, "h3").text.strip(), 0)
+                            driver.find_element(By.CLASS_NAME, 'article_type_head').text.strip(), 0)
 
-                        # Title
-                        article_title = article_data_element.find_element(By.CSS_SELECTOR,
-                                                                          ".doc-title.doc-title-txt.text-decoration-none").text.strip()
+                        # Article Title - Only English Available for Aves Journals
+                        article_title = driver.find_element(By.CLASS_NAME, 'article_content').text.strip()
 
-                        # DOI
-                        article_doi = article_data_element.find_elements(By.TAG_NAME, "p")[1].text.strip()
+                        # Abstract - Only English Available for Aves Journals
+                        abstract = driver.find_element(By.CSS_SELECTOR, '.content').text.split("Cite this")[0].strip()
 
-                        # Abbreviation
-                        full_abbreviation = article_data_element.find_element(By.CLASS_NAME,
-                                                                              "date-detail-txt").text.strip()
-                        abbreviation = ''.join([i for i in full_abbreviation if i.isalpha() or i.isspace()])
-                        abbreviation = abbreviation.strip()
+                        # Keywords - Only English Available for Aves Journals
+                        keywords = driver.find_element(By.CSS_SELECTOR, '.keyword').text.split(':')[-1].strip().split(
+                            ',')
+                        keywords = [keyword.strip() for keyword in keywords]
 
-                        # Page range
-                        article_page_range = [int(full_abbreviation.split(':')[-1].split('-')[0]),
-                                              int(full_abbreviation.split(':')[-1].split('-')[1])]
+                        # Abbreviation and Page Range
+                        bulk_text = driver.find_element(By.CSS_SELECTOR, 'div.journal').text
+                        abbreviation = re.sub(r'\d+|[:.;-]+', '', bulk_text).strip()
+                        article_page_range = [int(number) for number in bulk_text.split()[-1].split('-')]
 
                         # Authors
-                        author_elements = article_data_element.find_element(By.CLASS_NAME, "mb-20")
+                        authors_element = driver.find_element(By.CLASS_NAME, 'article-author')
+                        authors_bulk_text = authors_element.text
+
+                        specialities_bulk = driver.find_element(By.CSS_SELECTOR,
+                                                                '.reference-detail.collapse.in').text.split('\n')
+                        #  There are number values so need to clean it
+                        for item in specialities_bulk:
+                            if '.' in item:
+                                specialities_bulk.pop(specialities_bulk.index(item))
+                        specilities = specialities_bulk
+
                         authors = list()
                         for author_element in author_elements.find_elements(By.TAG_NAME, "li"):
                             author = Author()
@@ -276,38 +285,14 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 authors.append(author)
                             except Exception as e:
                                 send_notification(GeneralError(
-                                    f"Error while getting col_m9 article authors' data of journal: {journal_name}. Error encountered was: {e}"))
+                                    f"Error while getting aves article authors' data of journal: {journal_name}. Error encountered was: {e}"))
 
-                        navigation_bar = article_data_element.find_element(By.CSS_SELECTOR, ".nav.nav-tabs")
-                        navigation_bar.find_elements(By.TAG_NAME, "li")[0].click()
-                        # Note!
-                        # The col_m9 type journals have the abstract in either Turkish or English but not both
-                        # If there are two abstracts, the second ones should be gotten from Azure services
-                        # Page language
-                        if "Abstract" in navigation_bar.text:
-                            page_language = "en"
-                        else:
-                            page_language = "tr"
+                        # DOI
+                        article_doi = driver.find_element(By.CSS_SELECTOR, '.doi').text.split(':')[-1].strip()
 
-                        nav_bar_elements = navigation_bar.find_elements(By.TAG_NAME, "li")
-                        references = None
-                        for item in nav_bar_elements:
-                            if item.get_attribute('id') == "ctl09_liRef":
-                                item.click()
-                                time.sleep(0.75)
-                                references = article_data_element.find_element(By.CSS_SELECTOR,
-                                                                               ".detail-text.font-12").text
-                                references = references.split(
-                                    '\n')  # Split the references string into a list of reference strings
-                                references = [reference_formatter(reference, False, count) for count, reference in
-                                              enumerate(references, start=1)]
+                        references = None  # Aves Journals never have references
 
-                            elif item.get_attribute('id') == "ctl09_liAbstract":
-                                item.click()
-                                time.sleep(0.75)
-                                abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
-
-                        if not references and download_link:
+                        if download_link:
                             # Send PDF to Adobe and format response
                             if with_adobe:
                                 adobe_cropped = split_in_half(file_name)
@@ -323,53 +308,37 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             for author in authors:
                                 author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
-                        # Abstract
-                        abstract = abstract_full[: abstract_full.index(
-                            "Anahtar Kelimeler")].strip() if page_language == "tr" else abstract_full[
-                                                                                        : abstract_full.index(
-                                                                                            "Keywords")].strip()
-                        # Keywords
-                        keywords = abstract_full[abstract_full.index(
-                            "Anahtar Kelimeler:") + 18:].strip() if page_language == "tr" else abstract_full[
-                                                                                               abstract_full.index(
-                                                                                                   "Keywords:") + 10:].strip()
-                        keywords = [keyword.strip() for keyword in keywords.split(',')]
-
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
                             "articleCode": abbreviation if abbreviation else "",
-                            "articleYear": datetime.now().year,
+                            "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
                             "articlePageRange": article_page_range,
-                            "articleTitle": {"TR": article_title if page_language == "tr" else "",
-                                             "ENG": article_title if page_language == "en" else ""},
-                            "articleAbstracts": {"TR": abstract if page_language == "tr" else "",
-                                                 "ENG": abstract if page_language == "en" else ""},
-                            "articleKeywords": {"TR": keywords if page_language == "tr" else [],
-                                                "ENG": keywords if page_language == "en" else []},
+                            "articleTitle": {"TR": None,
+                                             "ENG": article_title},
+                            "articleAbstracts": {"TR": None,
+                                                 "ENG": abstract},
+                            "articleKeywords": {"TR": None,
+                                                "ENG": keywords},
                             "articleAuthors": Author.author_to_dict(authors) if authors else [],
-                            "articleReferences": references if references else []}
+                            "articleReferences": references}
                         final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
                         i += 1
                         if json_two_articles:
-                            file_path = "/home/emin/Desktop/col_m9_jsons/" + f"{file_reference}.json"
-                            json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
-                            with open(file_path, "w") as file:
-                                file.write(json_data)
-                            if i == 3:
+                            if i == 2:
                                 break
                         # Send data to Client API
-                        # TODO send col_m9 data
+                        # TODO send aves data
                         clear_directory(download_path)
                     except Exception as e:
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of col_m9 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of aves journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
                         i += 1
                         continue
 
@@ -378,34 +347,14 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 time.sleep(15)
-                return timeit.default_timer() - start_time
+                return 590 if is_test else timeit.default_timer() - start_time
             else:
                 log_already_scanned(get_logs_path(parent_type, file_reference))
-                return timeit.default_timer() - start_time
+                return 590 if is_test else timeit.default_timer() - start_time
 
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_m9 journal "
+        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping aves journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         # return timeit.default_timer() - start_time
         return 599
-
-
-"""         
-Derleme
-Özgün Araştırma
-Olgu Sunumu
-Tam PDF
-Editörden
-Editöre Mektup
-
-Message from the Editor-in-Chief
-Review
-Original Article
-Case Report
-research
-Original Investigation
-Interesting Image
-Clinical Investigation
-Kitap Tanıtımı
-"""
