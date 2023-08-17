@@ -36,7 +36,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 # Eager option shortens the load time. Always download the pdfs and does not display them.
 options = Options()
 options.page_load_strategy = 'eager'
-download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloads')
+download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '../downloads')
 prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
 options.add_experimental_option('prefs', prefs)
 options.add_argument("--disable-notifications")
