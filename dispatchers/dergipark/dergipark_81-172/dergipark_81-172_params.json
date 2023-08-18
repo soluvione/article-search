@@ -734,5 +734,53 @@
         1,
         "tuesday_81-172_drg",
         "172_younbakmhemireliidergisi"
+    ],
+        [
+        "Caucasian Journal of Science",
+        "https://dergipark.org.tr/tr/pub/cjo",
+        "A_DRG & R",
+        1,
+        "tuesday_81-172_drg",
+        "173_caucasianjournalofscience"
+    ],
+    [
+        "Cukurova Medical Journal",
+        "https://dergipark.org.tr/tr/pub/cumj",
+        "A_DRG & R",
+        1,
+        "tuesday_81-172_drg",
+        "174_cukurovamedicaljournal"
+    ],
+    [
+        "Dicle Tıp Dergisi",
+        "https://dergipark.org.tr/tr/pub/dicletip",
+        "A_DRG & R",
+        1,
+        "tuesday_81-172_drg",
+        "175_dicletpdergisi"
+    ],
+    [
+        "Fenerbahçe Üniversitesi Sağlık Bilimleri Dergisi",
+        "https://dergipark.org.tr/tr/pub/fbujohs",
+        "A_DRG & R",
+        1,
+        "tuesday_81-172_drg",
+        "176_fenerbaheniversitesisalkbilimleridergisi"
+    ],
+    [
+        "Fenerbahçe Üniversitesi Spor Bilimleri Dergisi",
+        "https://dergipark.org.tr/tr/pub/fbujss",
+        "A_DRG & R",
+        1,
+        "tuesday_81-172_drg",
+        "177_fenerbaheniversitesisporbilimleridergisi"
+    ],
+    [
+        "Psikiyatride Güncel Yaklaşımlar",
+        "https://dergipark.org.tr/tr/pub/pgy",
+        "A_DRG & R",
+        1,
+        "tuesday_81-172_drg",
+        "178_psikiyatridegncelyaklamlar"
     ]
 ]
