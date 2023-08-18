@@ -31,7 +31,7 @@ import timeit
 # Eager option shortens the load time. Always download the pdfs and does not display them.
 options = Options()
 options.page_load_strategy = 'eager'
-# options.add_argument("--headless")
+options.add_argument("--headless")
 download_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'downloads')
 prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
 options.add_experimental_option('prefs', prefs)
@@ -43,7 +43,7 @@ driver = webdriver.Chrome(service=service, options=options)
 # Aves journals' latest issue is on the main page all the time.
 # You need to scroll the aves articles down
 """
-driver.get("https://www.advancedotology.org/")
+driver.get("https://www.aott.org.tr/")
 time.sleep(10)
 
 # Scroll to the bottom
@@ -56,7 +56,8 @@ driver.execute_script("window.scrollBy(0,-5000)")
 driver.maximize_window()
 time.sleep(5)
 
-numbers = [int(number) for number in re.findall(r'\d+', driver.find_element(By.CLASS_NAME, "article_type_head").text)]
+numbers = [int(number) for number in
+           re.findall(r'\d+', driver.find_element(By.CSS_SELECTOR, "[class^='article_type_head']").text)]
 recent_volume, recent_issue, year = numbers[0], numbers[1], numbers[2]
 
 article_urls = list()
@@ -65,15 +66,42 @@ for item in driver.find_elements(By.CSS_SELECTOR, "[class='article']"):
     
 for article_url in article_urls:
     driver.get(article_url)
-"""
 
+"""
 # From the article page and so on
-driver.get("https://www.advancedotology.org/en/comparison-of-computed-tomography-based-artificial-intelligence-modeling-and-magnetic-resonance-imaging-in-diagnosis-of-cholesteatoma-131842")
+driver.get("https://www.aott.org.tr/en/identification-of-risk-factors-for-reconstructive-hip-surgery-after-intrathecal-baclofen-therapy-in-children-with-cerebral-palsy-137312")
+time.sleep(5)
 driver.find_element(By.CSS_SELECTOR, '.reference.collapsed').click()
 time.sleep(5)
+# Authors
+authors_element = driver.find_element(By.CLASS_NAME, 'article-author')
+authors_bulk_text = authors_element.text
+authors_list = [author.strip() for author in authors_bulk_text.split(',')]
 
+specialities_bulk = driver.find_element(By.CSS_SELECTOR,
+                                        '.reference-detail.collapse.in').text.split('\n')
+#  There are number values so need to clean it
+for item in specialities_bulk:
+    if '.' in item:
+        specialities_bulk.pop(specialities_bulk.index(item))
+specilities = specialities_bulk
+
+authors = list()
+for author_name in authors_list:
+    author = Author()
+    try:
+        author.name = author_name[:-1].strip()
+        author.all_speciality = specilities[int(author_name[-1])-1]
+        author.is_correspondence = True if authors_list.index(author_name) == 0 else False
+        authors.append(author)
+    except Exception as e:
+        send_notification(GeneralError(
+            f"Error while getting aves article authors' data of journal: {journal_name}. Error encountered was: {e}"))
+print(authors)
 # Type
-article_type = identify_article_type(driver.find_element(By.CLASS_NAME, 'article_type_head').text.strip(), 0)
+article_type = identify_article_type(
+    driver.find_element(By.CSS_SELECTOR, "[class^='article_type_hea']").text.strip(), 0)
+print(article_type)
 
 # Title
 article_title = driver.find_element(By.CLASS_NAME, 'article_content').text.strip()

@@ -185,8 +185,8 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
-            driver.get(start_page_url)
-            time.sleep(3)
+            driver.get(check_url(start_page_url))
+            time.sleep(10)
             # Scroll to the bottom
             start = timeit.default_timer()
             while timeit.default_timer() - start < 10:
@@ -196,11 +196,11 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
             # Go up
             driver.execute_script("window.scrollBy(0,-5000)")
             driver.maximize_window()
-            time.sleep(1)
+            time.sleep(5)
 
             try:
                 numbers = [int(number) for number in
-                           re.findall(r'\d+', driver.find_element(By.CLASS_NAME, "article_type_head").text)]
+                           re.findall(r'\d+', driver.find_element(By.CSS_SELECTOR, "[class^='article_type_hea']").text)]
 
                 recent_volume, recent_issue, article_year = numbers[0], numbers[1], numbers[2]
             except Exception as e:
@@ -219,6 +219,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
 
                 for url in article_urls:
                     driver.get(url)
+                    time.sleep(5)
                     try:
                         # You need to click on collapsed arrow head to expand the affiliations
                         driver.find_element(By.CSS_SELECTOR, '.reference.collapsed').click()
@@ -228,20 +229,10 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         download_link = driver.find_element(By.CLASS_NAME, 'articles').find_element(By.TAG_NAME,
                                                                                                     'a').get_attribute(
                             'href')
-                        if download_link:
-                            driver.get(download_link)
-                            if check_download_finish(download_path):
-                                file_name = get_recently_downloaded_file_name(download_path)
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
 
                         # Article Type
                         article_type = identify_article_type(
-                            driver.find_element(By.CLASS_NAME, 'article_type_head').text.strip(), 0)
+                            driver.find_element(By.CSS_SELECTOR, "[class^='article_type_hea']").text.strip(), 0)
 
                         # Article Title - Only English Available for Aves Journals
                         article_title = driver.find_element(By.CLASS_NAME, 'article_content').text.strip()
@@ -262,6 +253,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         # Authors
                         authors_element = driver.find_element(By.CLASS_NAME, 'article-author')
                         authors_bulk_text = authors_element.text
+                        authors_list = [author.strip() for author in authors_bulk_text.split(',')]
 
                         specialities_bulk = driver.find_element(By.CSS_SELECTOR,
                                                                 '.reference-detail.collapse.in').text.split('\n')
@@ -272,16 +264,12 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         specilities = specialities_bulk
 
                         authors = list()
-                        for author_element in author_elements.find_elements(By.TAG_NAME, "li"):
+                        for author_name in authors_list:
                             author = Author()
                             try:
-                                author.name = author_element.find_element(By.TAG_NAME, "span").text.strip()
-                                # Author specialities are not available all the time
-                                author.all_speciality = author_element.find_element(By.TAG_NAME, "span").get_attribute(
-                                    "data-department").strip()
-
-                                class_name = author_element.find_element(By.TAG_NAME, "span").get_attribute("class")
-                                author.is_correspondence = True if class_name == "active inline-block-list-item" else False
+                                author.name = author_name[:-1].strip()
+                                author.all_speciality = specilities[int(author_name[-1]) - 1]
+                                author.is_correspondence = True if authors_list.index(author_name) == 0 else False
                                 authors.append(author)
                             except Exception as e:
                                 send_notification(GeneralError(
@@ -291,22 +279,35 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         article_doi = driver.find_element(By.CSS_SELECTOR, '.doi').text.split(':')[-1].strip()
 
                         references = None  # Aves Journals never have references
-
+                        file_name = None
                         if download_link:
+                            driver.get(download_link)
+                            if check_download_finish(download_path, is_long=True):
+                                file_name = get_recently_downloaded_file_name(download_path)
+                                # Send PDF to Azure and format response
+                                if with_azure:
+                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
+                                    location_header = AzureHelper.analyse_pdf(
+                                        first_pages_cropped_pdf,
+                                        is_tk=False)  # Location header is the response address of Azure API
+
+                        if download_link and file_name:
                             # Send PDF to Adobe and format response
                             if with_adobe:
                                 adobe_cropped = split_in_half(file_name)
+                                time.sleep(1)
                                 adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                 adobe_references = AdobeHelper.get_analysis_results(adobe_response)
                                 references = adobe_references
 
                         # Get Azure Data
-                        azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                        azure_data = azure_response_dictionary["Data"]
-                        azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                        if len(azure_article_data["emails"]) == 1:
-                            for author in authors:
-                                author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                        if download_link and file_name:
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                            azure_data = azure_response_dictionary["Data"]
+                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                            if len(azure_article_data["emails"]) == 1:
+                                for author in authors:
+                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
