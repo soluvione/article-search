@@ -206,6 +206,10 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                     elements = driver.find_element(By.CLASS_NAME, "issues_archive").find_elements(By.TAG_NAME, "li")
                     recent_vol_issue_text = elements[-1].find_element(By.CLASS_NAME, "title").text
                     volume_link = elements[-1].find_element(By.CLASS_NAME, "title").get_attribute("href")
+                elif "jicah" in start_page_url:
+                    recent_issue_element = article_issues_element.find_element(By.CLASS_NAME, 'obj_issue_summary')
+                    volume_link = recent_issue_element.find_element(By.CLASS_NAME, 'title').get_attribute('href')
+                    recent_vol_issue_text = recent_issue_element.find_element(By.CLASS_NAME, 'title').text
                 else:
                     if "beslenmevediyetdergisi" in start_page_url or "actamedica" in start_page_url:
                         recent_vol_issue_text = article_issues_element.find_element(By.TAG_NAME,
@@ -402,8 +406,11 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                 keywords_tr = ""
 
                         # Page range
-                        article_page_range = [int(page_ranges[i - 1].split('-')[0].strip()),
-                                              int(page_ranges[i - 1].split('-')[1].strip())]
+                        try:
+                            article_page_range = [int(page_ranges[i].split('-')[0].strip()),
+                                                  int(page_ranges[i].split('-')[1].strip())]
+                        except Exception:
+                            article_page_range = [0, 1]
 
                         if not references and download_link:
                             # Send PDF to Adobe and format response

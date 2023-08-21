@@ -32,8 +32,6 @@ from fuzzywuzzy import fuzz
 with_azure = True
 with_adobe = True
 json_two_articles = False
-# These modern looking pages have slightly different DOM for the volume and issue data
-modern_cellpadding_journals = ["anatoljcardiol.com", "jer-nursing.org", "khd.tkd.org.tr", "archivestsc.com"]
 
 
 def check_url(url):
@@ -46,7 +44,7 @@ def get_logs_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
     logs_path = os.path.join(parent_directory_path, "downloads_n_logs",
-                             "cellpadding4_manual", parent_type,
+                             "sayi_sayfalar_manual", parent_type,
                              file_reference, "logs")
     return logs_path
 
@@ -55,7 +53,7 @@ def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
     downloads_path = os.path.join(parent_directory_path, "downloads_n_logs",
-                                  "cellpadding4_manual", parent_type,
+                                  "sayi_sayfalar_manual", parent_type,
                                   file_reference, "downloads")
     return downloads_path
 
@@ -104,7 +102,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
 
     except Exception as e:
         send_notification(
-            GeneralError(f"Error encountered while updating cellpadding4 journal logs file with path = {path_}. "
+            GeneralError(f"Error encountered while updating sayi_sayfalar journal logs file with path = {path_}. "
                          f"Error encountered: {e}."))
 
 
@@ -125,7 +123,7 @@ def log_already_scanned(path_: str):
     except Exception as e:
         send_notification(
             GeneralError(
-                f"Already scanned issue log creation error for cellpadding4 journal with path = {path_}. Error: {e}"))
+                f"Already scanned issue log creation error for sayi_sayfalar journal with path = {path_}. Error: {e}"))
 
 
 def check_scan_status(**kwargs):
@@ -133,8 +131,8 @@ def check_scan_status(**kwargs):
         return is_issue_scanned(kwargs["vol"], kwargs["issue"], kwargs["logs_path"])
     except Exception as e:
         send_notification(
-            GeneralError(f"Error encountered while checking issue scan status for cellpadding4 journal "
-                         f"with path = {kwargs['logs_path']}, (check_scan_status, cellpadding4_scraper.py). Error: {e}"))
+            GeneralError(f"Error encountered while checking issue scan status for sayi_sayfalar journal "
+                         f"with path = {kwargs['logs_path']}, (check_scan_status, sayi_sayfalar_scraper.py). Error: {e}"))
         raise e
 
 
@@ -168,7 +166,7 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     return final_article_data
 
 
-def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
+def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
     i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
@@ -186,61 +184,52 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
     start_time = timeit.default_timer()
 
     try:
-        with webdriver.Chrome(service=service, options=options) as driver:
-            i += 1
+        with (webdriver.Chrome(service=service, options=options) as driver):
             driver.get(check_url(start_page_url))
             time.sleep(3)
             try:
                 close_button = driver.find_element(By.XPATH, '//*[@id="myModal2"]/div[2]/div/div[3]/button')
                 close_button.click()
                 time.sleep(2)
-            except Exception as e:
+            except Exception:
                 pass
 
             try:
-                if not start_page_url in modern_cellpadding_journals:
-                    try:
-                        vol_issue_text = driver.find_element(By.CLASS_NAME, "kapakYazi").text
-                    except:
-                        vol_issue_text = driver.find_element(By.CLASS_NAME, "ListArticleIssue").text
-                    numbers = re.findall(r'\d+', vol_issue_text)
-                    numbers = [int(i) for i in numbers]
-                    recent_volume, recent_issue = numbers[:2]
-                else:
-                    vol_issue = driver.find_element(By.CSS_SELECTOR, '.badge.badge-danger').text.split('/')
-                    recent_volume = int(vol_issue[0])
-                    recent_issue = int(vol_issue[1])
-
-                article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
-                # rows = article_list.find_elements(By.CSS_SELECTOR, ".td_pubtype")
+                main_element = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table')
+                child_element = main_element.find_elements(By.TAG_NAME, 'tr')[2].find_element(By.TAG_NAME, 'tbody')
+                volume_link = child_element.find_element(By.TAG_NAME, 'a').get_attribute('href')
+                numbers = [int(number) for number in re.findall('\d+', child_element.text)]
+                # Volume, Issue and Year
+                recent_volume = numbers[0]
+                recent_issue = numbers[2]
+                year = numbers[1]
             except Exception as e:
                 raise e
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
-                article_urls = list()
-                rows = article_list.find_elements(By.CLASS_NAME, 'ListArticleTitle')
-                for row in rows:
-                    try:
-                        link = row.get_attribute('href')
-                        if not link.startswith("https://jag"):
-                            article_urls.append(link)
-                    except Exception:
-                        pass
-                if not article_urls:
+                driver.get(volume_link)
+                article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
+                hrefs = list()
+                hrefs = [item.get_attribute('href') for item in article_list.find_elements(By.TAG_NAME, 'a')
+                         if ("Makale" in item.text or "Abstract" in item.text)]
+
+                if not hrefs:
                     send_notification(
-                        GeneralError(f'No URLs scraped from cellpadding4 journal with name: {journal_name}'))
+                        GeneralError(f'No URLs scraped from sayi_sayfalar journal with name: {journal_name}'))
                     raise GeneralError("Error!")
-                for url in article_urls:
+
+                for url in hrefs:
                     driver.get(url)
                     try:
-                        article_data_body = driver.find_element(By.CSS_SELECTOR,
-                                                                '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
-                        tools_bar_element = driver.find_element(By.CSS_SELECTOR, ".list-group.siteArticleShare")
-                        download_link = tools_bar_element.find_element(By.CSS_SELECTOR,
-                                                                       ".list-group-item.list-group-item-toolbox").get_attribute(
-                            "href")
+                        article_data_body = driver.find_element(By.XPATH,
+                                                                '//*[@id="ContentPlaceHolder1_lblContent"]/table')
+                        download_link = driver.find_element(By.XPATH,
+                                                            '//*[@id="ContentPlaceHolder1_lblContent"]/table/tbody'
+                                                            '/tr[3]/td[2]/table[1]').find_element(By.CSS_SELECTOR,
+                                                                                                  'a[target="_blank"]'
+                                                                                                  ).get_attribute('href')
                         references = None
                         if download_link:
                             driver.get(download_link)
@@ -260,39 +249,36 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
                         # Abbreviation and DOI
                         try:
-                            abbv_doi_element = article_data_body.find_element(By.CSS_SELECTOR,
-                                                                          ".journalArticleinTitleDOI").text.strip()
-                            article_doi = abbv_doi_element.split(":")[-1].strip()
-                            abbreviation = abbv_doi_element[:abbv_doi_element.index(".")].strip()
+                            abbv_doi_element = driver.find_element(By.CSS_SELECTOR, 'td.tool_j')
+                            article_code = abbv_doi_element.text.strip().split('.')[0].strip()
+                            if not article_code:
+                                article_code = None
+                            article_doi = abbv_doi_element.text.split("DOI:")[-1].strip()
+                            abbreviation = article_code
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 abbreviationg and DOI of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar abbreviation and DOI of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
 
                         # Page range
                         try:
-                            first_page = int(
-                                driver.find_element(By.XPATH, '//meta[@name="citation_firstpage"]').get_attribute(
-                                    'content'))
-                            last_page = int(
-                                driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]').get_attribute('content'))
-
-                            article_page_range = [first_page, last_page]
+                            article_page_range = [int(number.strip()) for number in abbv_doi_element.text[
+                                                                            abbv_doi_element.text.index(
+                                                                                ':') + 1: abbv_doi_element.text.index(
+                                                                                '|')].split('-')]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 page range data of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar page range data of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
 
                         # Language Order
                         # Here we are designating the order in which abstracts etc. are listed
                         try:
                             h2_elements = article_data_body.find_elements(By.TAG_NAME, "h2")
-                            for item in h2_elements:
-                                first_language = "tr"
-                                if item.get_attribute("class") == "journalArticleinTitleeng":
-                                    first_language = "en"
-                                    break
+                            first_language = driver.find_element(By.CSS_SELECTOR,
+                                                                 'meta[name="citation_language"]').get_attribute(
+                                'content')
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 language order of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar language order of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
 
                         # Authors
                         try:
@@ -314,7 +300,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             affiliations = [str(affiliation).strip() for affiliation in soup.stripped_strings]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article authors' data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar article authors' data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
                             raise e
 
                         # Construct Authors List
@@ -337,7 +323,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                          article_data_body.find_elements(By.TAG_NAME, "p")]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article abstracts data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar article abstracts data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
                             raise e
 
 
@@ -350,7 +336,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
                         # Keywords
-                        # There are 2 kinds of keywords for cellpadding4 journals. The one acquired from the meta tagged
+                        # There are 2 kinds of keywords for sayi_sayfalar journals. The one acquired from the meta tagged
                         # elements and the one acquired from the bulk of text
                         try:
                             keywords_element_meta = driver.find_elements(By.CSS_SELECTOR, 'meta[name="keywords"]')
@@ -370,7 +356,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 keywords_last_element = [keyword.strip() for keyword in keywords_text.split(',')]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article keywords data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar article keywords data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
 
                         # Distribute the acquired data in accordance with the number and order of the languages in the
                         # article page
@@ -427,7 +413,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                                 "ENG": keywords_eng},
                             "articleAuthors": Author.author_to_dict(author_list) if author_list else [],
                             "articleReferences": references if references else []}
-                        final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
+                        if with_azure:
+                            final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
                         gir = input("devam mı?")
                         if gir == "Y":
@@ -468,13 +455,15 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             if i == 3:
                                 break
                         # Send data to Client API
-                        # TODO send cellpadding4 data
+                        # TODO send sayi_sayfalar data
                         clear_directory(download_path)
+                        i += 1
                     except Exception as e:
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of cellpadding4 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of sayi_sayfalar journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                        i += 1
                         continue
 
                     create_logs(True, get_logs_path(parent_type, file_reference))
@@ -490,7 +479,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 # return timeit.default_timer() - start_time
 
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping cellpadding4 journal "
+        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping sayi_sayfalar journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         # return timeit.default_timer() - start_time
