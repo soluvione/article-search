@@ -29,8 +29,8 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
-with_azure = True
-with_adobe = True
+with_azure = False
+with_adobe = False
 json_two_articles = False
 
 
@@ -177,9 +177,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
-    options.add_argument("--headless")  # This line enables headless mode
+    # options.add_argument("--headless")  # This line enables headless mode
     service = ChromeService(executable_path=ChromeDriverManager().install())
-
     # Set start time
     start_time = timeit.default_timer()
 
@@ -194,22 +193,40 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
             except Exception:
                 pass
 
+            try:  # Salak Behçet Uz dergisinde pop-up çıkıyor her sayfada
+                driver.find_element(By.CSS_SELECTOR, 'button[class="confirm"]').click()
+            except:
+                pass
+
             try:
-                main_element = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table')
-                child_element = main_element.find_elements(By.TAG_NAME, 'tr')[2].find_element(By.TAG_NAME, 'tbody')
-                volume_link = child_element.find_element(By.TAG_NAME, 'a').get_attribute('href')
+                try:
+                    main_element = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table')
+                except:
+                    try:
+                        main_element = driver.find_element(By.XPATH,
+                                                           '//*[@id="ContentPlaceHolder1_ContentPlaceHolder1_lblContent"]/table')
+                    except:
+                        main_element = driver.find_element(By.XPATH, '//*[@id="table10"]/tbody/tr/td/table')
+
+                child_element = main_element.find_elements(By.TAG_NAME, 'tr')[2].find_element(By.CLASS_NAME, 'td_parent').find_element(By.TAG_NAME, 'tbody')
+                issue_link = child_element.find_elements(By.TAG_NAME, 'a')[-1].get_attribute('href')
                 numbers = [int(number) for number in re.findall('\d+', child_element.text)]
                 # Volume, Issue and Year
                 recent_volume = numbers[0]
-                recent_issue = numbers[2]
-                year = numbers[1]
+                pattern = r"(: \d+)"
+                recent_issue = int(re.findall(pattern, child_element.text)[-1][-1])
+                article_year = numbers[1]
             except Exception as e:
                 raise e
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
-                driver.get(volume_link)
+                driver.get(issue_link)
+                try:  # Salak Behçet Uz dergisinde pop-up çıkıyor her sayfada
+                    driver.find_element(By.CSS_SELECTOR, 'button[class="confirm"]').click()
+                except:
+                    pass
                 article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
                 hrefs = list()
                 hrefs = [item.get_attribute('href') for item in article_list.find_elements(By.TAG_NAME, 'a')
@@ -221,15 +238,32 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                     raise GeneralError("Error!")
 
                 for url in hrefs:
+                    if "showabs" in url:
+                        continue
                     driver.get(url)
+                    try:  # Salak Behçet Uz dergisinde pop-up çıkıyor her sayfada
+                        driver.find_element(By.CSS_SELECTOR, 'button[class="confirm"]').click()
+                    except:
+                        pass
                     try:
-                        article_data_body = driver.find_element(By.XPATH,
-                                                                '//*[@id="ContentPlaceHolder1_lblContent"]/table')
-                        download_link = driver.find_element(By.XPATH,
+                        try:
+                            article_data_body = driver.find_element(By.XPATH,
+                                                                    '//*[@id="ContentPlaceHolder1_lblContent"]/table')
+                        except:
+                            article_data_body = driver.find_element(By.XPATH,
+                                                                    '//*[@id="table10"]/tbody/tr/td/table')
+
+                        try:
+                            download_link = driver.find_element(By.XPATH,
                                                             '//*[@id="ContentPlaceHolder1_lblContent"]/table/tbody'
                                                             '/tr[3]/td[2]/table[1]').find_element(By.CSS_SELECTOR,
                                                                                                   'a[target="_blank"]'
                                                                                                   ).get_attribute('href')
+                        except:
+                            download_link = driver.find_element(By.XPATH,
+                                                            '//*[@id="table10"]/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr[2]/td/a[1]').get_attribute('href')
+
+
                         references = None
                         if download_link:
                             driver.get(download_link)
@@ -328,12 +362,13 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
 
 
                         # Get Azure Data
-                        azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                        azure_data = azure_response_dictionary["Data"]
-                        azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                        if len(azure_article_data["emails"]) == 1:
-                            for author in author_list:
-                                author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                        if with_azure:
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                            azure_data = azure_response_dictionary["Data"]
+                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                            if len(azure_article_data["emails"]) == 1:
+                                for author in author_list:
+                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
                         # Keywords
                         # There are 2 kinds of keywords for sayi_sayfalar journals. The one acquired from the meta tagged
@@ -401,7 +436,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             "articleType": article_type,
                             "articleDOI": article_doi,
                             "articleCode": abbreviation if abbreviation else "",
-                            "articleYear": datetime.now().year,
+                            "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
                             "articlePageRange": article_page_range,

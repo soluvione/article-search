@@ -56,50 +56,59 @@ i = 0  # Will be used to distinguish article numbers
 try:
     with webdriver.Chrome(service=service, options=options) as driver:
         # From archives to issue page
-        """
-        driver.get("https://medicaljournal-ias.org/jvi.aspx?pdir=ias&plng=eng&list=pub")
+        driver.get("https://behcetuzdergisi.com/jvi.asp?pdir=behcetuz&plng=eng&list=pub")
+        try:
+            main_element = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table')
+        except:
+            try:
+                main_element = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_ContentPlaceHolder1_lblContent"]/table')
+            except:
+                main_element = driver.find_element(By.XPATH, '//*[@id="table10"]/tbody/tr/td/table')
+
+        child_element = main_element.find_elements(By.TAG_NAME, 'tr')[2].find_element(By.CLASS_NAME,
+                                                                                     'td_parent').find_element(
+            By.TAG_NAME, 'tbody')
+
+        issue_link = child_element.find_elements(By.TAG_NAME, 'a')[-1].get_attribute('href')
+        numbers = [int(number) for number in re.findall(r'\d+', child_element.text)]
+        # Volume, Issue and Year
+        recent_volume = numbers[0]
+        pattern = r"(: \d+)"
+        recent_issue = int(re.findall(pattern, child_element.text)[-1][-1])
+        article_year = numbers[1]
+        print(recent_volume, recent_issue, issue_link)
+except Exception as e:
+    print(e)
+"""
         main_element = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table')
         child_element = main_element.find_elements(By.TAG_NAME, 'tr')[2].find_element(By.TAG_NAME, 'tbody')
-        volume_link = child_element.find_element(By.TAG_NAME, 'a').get_attribute('href')
+        volume_link = child_element.find_elements(By.TAG_NAME, 'a')[-1].get_attribute('href')
         print(volume_link)
-        numbers = [int(number) for number in re.findall('\d+', child_element.text)]
+        numbers = [int(number) for number in re.findall('\d+', child_element.find_elements(By.TAG_NAME, 'tr')[-1].text)]
         recent_volume = numbers[0]
         recent_issue = numbers[2]
         year = numbers[1]
-        """
 
         # Issue to urls
-        """
+
         driver.get("https://jarengteah.org/jvi.aspx?pdir=jaren&plng=tur&volume=9&issue=1")
         article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
         article_urls = list()
         hrefs = [item.get_attribute('href') for item in article_list.find_elements(By.TAG_NAME, 'a')
                  if ("Makale" in item.text or "Abstract" in item.text)]
-        """
-        driver.get("https://shydergisi.org/jvi.aspx?pdir=shyd&plng=tur&un=SHYD-41033")
+   
+        driver.get("https://agridergisi.com/jvi.aspx?pdir=agri&plng=eng&un=AGRI-46514")
 
 
 
         article_data_body = driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table')
-        # print(driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table/tbody/tr[3]/td[2]/table[1]').find_element(By.CSS_SELECTOR, 'a[target="_blank"]').get_attribute('href'))
+        print(driver.find_element(By.XPATH, '//*[@id="ContentPlaceHolder1_lblContent"]/table/tbody/tr[3]/td[2]/table[1]').find_element(By.CSS_SELECTOR, 'a[target="_blank"]').get_attribute('href'))
         doi_abbv_element = driver.find_element(By.CSS_SELECTOR, 'td.tool_j')
         article_code = doi_abbv_element.text.strip().split('.')[0].strip()
         if not article_code:
             article_code = None
         doi = doi_abbv_element.text.split("DOI:")[-1].strip()
         page_range = [int(number.strip()) for number in doi_abbv_element.text[doi_abbv_element.text.index(':')+1: doi_abbv_element.text.index('|')].split('-')]
-
-
-
-
-
-
-
-
-
-
-
-
 
         try:
             authors_element = article_data_body.find_element(By.CLASS_NAME, "JAgAuthors")
@@ -186,7 +195,5 @@ try:
                 abstract_tr = abstracts[0].strip()
                 keywords_eng = keywords_last_element
                 keywords_tr = keywords_meta
-        # print("vur")
-
-except Exception as e:
-    print(e)
+        print("vur")
+"""
