@@ -29,8 +29,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
-with_azure = True
-with_adobe = True
 json_two_articles = False
 # These modern looking pages have slightly different DOM for the volume and issue data
 modern_cellpadding_journals = ["anatoljcardiol.com", "jer-nursing.org", "khd.tkd.org.tr", "archivestsc.com"]
@@ -233,14 +231,20 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         GeneralError(f'No URLs scraped from cellpadding4 journal with name: {journal_name}'))
                     raise GeneralError("Error!")
                 for url in article_urls:
+                    with_adobe, with_azure = True, True
                     driver.get(url)
                     try:
                         article_data_body = driver.find_element(By.CSS_SELECTOR,
                                                                 '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
                         tools_bar_element = driver.find_element(By.CSS_SELECTOR, ".list-group.siteArticleShare")
-                        download_link = tools_bar_element.find_element(By.CSS_SELECTOR,
-                                                                       ".list-group-item.list-group-item-toolbox").get_attribute(
-                            "href")
+                        try:
+                            download_link = tools_bar_element.find_element(By.CSS_SELECTOR,
+                                                                           ".list-group-item.list-group-item-toolbox").get_attribute(
+                                "href")
+                        except Exception:
+                            download_link = None
+
+                        file_name = None
                         references = None
                         if download_link:
                             driver.get(download_link)
@@ -257,6 +261,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                     adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                     adobe_references = AdobeHelper.get_analysis_results(adobe_response)
                                     references = adobe_references
+                            else:
+                                with_adobe, with_azure = False, False
 
                         # Abbreviation and DOI
                         try:
@@ -342,12 +348,13 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
 
                         # Get Azure Data
-                        azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                        azure_data = azure_response_dictionary["Data"]
-                        azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                        if len(azure_article_data["emails"]) == 1:
-                            for author in author_list:
-                                author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                        if download_link and file_name:
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                            azure_data = azure_response_dictionary["Data"]
+                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                            if len(azure_article_data["emails"]) == 1:
+                                for author in author_list:
+                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
                         # Keywords
                         # There are 2 kinds of keywords for cellpadding4 journals. The one acquired from the meta tagged
@@ -427,7 +434,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                                 "ENG": keywords_eng},
                             "articleAuthors": Author.author_to_dict(author_list) if author_list else [],
                             "articleReferences": references if references else []}
-                        final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
+                        if with_azure:
+                            final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
                         gir = input("devam mı?")
                         if gir == "Y":

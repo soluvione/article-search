@@ -30,9 +30,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-# Scraper body chunks
-with_adobe = True
-with_azure = True
 
 def get_logs_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -204,6 +201,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             item.find_element(By.CSS_SELECTOR, '.middle .name .nameMain a').get_attribute('href'))
 
                 for url in article_urls:
+                    with_adobe, with_azure = True, True
                     i += 1
                     driver.get(url)
 
@@ -305,6 +303,9 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 adobe_cropped = split_in_half(file_name)
                                 adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                 adobe_references = AdobeHelper.get_analysis_results(adobe_response)
+                        else:
+                            with_adobe, with_azure = False, False
+
                     final_authors = paired_authors
                     if with_azure:
                         correspondence_name, correspondence_mail = azure_article_data.pop("correspondance_name"), \

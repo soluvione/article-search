@@ -28,8 +28,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-with_azure = True
-with_adobe = True
 json_two_articles = False
 
 
@@ -222,10 +220,14 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             f"Error while getting col_m9 article urls of journal: {journal_name}. Error encountered was: {e}"))
 
                 for url in article_urls:
+                    with_adobe, with_azure = True, True
                     driver.get(url)
                     try:
                         column_bar = driver.find_element(By.CLASS_NAME, "col-md-3")
-                        download_link = column_bar.find_element(By.ID, 'ctl09_ArticleTools_aPdf').get_attribute('href')
+                        try:
+                            download_link = column_bar.find_element(By.ID, 'ctl09_ArticleTools_aPdf').get_attribute('href')
+                        except Exception:
+                            download_link = None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
@@ -236,6 +238,9 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
+                            else:
+                                with_adobe, with_azure = False, False
+
                         article_data_element = driver.find_element(By.CSS_SELECTOR,
                                                                    ".document-detail.about.search-detail")
 
@@ -316,12 +321,13 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 references = adobe_references
 
                         # Get Azure Data
-                        azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                        azure_data = azure_response_dictionary["Data"]
-                        azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                        if len(azure_article_data["emails"]) == 1:
-                            for author in authors:
-                                author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                        if download_link and file_name:
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                            azure_data = azure_response_dictionary["Data"]
+                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                            if len(azure_article_data["emails"]) == 1:
+                                for author in authors:
+                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
 
                         # Abstract
                         abstract = abstract_full[: abstract_full.index(
@@ -352,7 +358,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                                 "ENG": keywords if page_language == "en" else []},
                             "articleAuthors": Author.author_to_dict(authors) if authors else [],
                             "articleReferences": references if references else []}
-                        final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
+                        if with_azure:
+                            final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
                         i += 1
                         if json_two_articles:

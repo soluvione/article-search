@@ -33,8 +33,6 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests
 
-with_azure = False
-with_adobe = False
 json_two_articles = False
 
 
@@ -322,17 +320,12 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                     raise e
 
                 for article_url in article_urls:
+                    with_adobe, with_azure = True, True
                     try:
                         driver.get(urljoin(start_page_url, article_url))
                         time.sleep(3)
                         main_element = driver.find_element(By.ID, "icerik-alani")
                         soup = BeautifulSoup(main_element.get_attribute("outerHTML"), 'html.parser')
-                        # el ne bilmiyorum
-                        # try:
-                        #     el = soup.find('h2').get_text(strip=True)
-                        # except:
-                        #     el = driver.find_element(By.XPATH, '//*[@id="icerik-alani"]/div[2]/div[2]/div[1]').text
-                        # print(el)
 
                         try:
                             authors_element = driver.find_element(By.ID, "authors_div").text.split(',')
@@ -396,10 +389,13 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             raise e
 
                         # Download Link
-                        download_link = urljoin(start_page_url, article_url).replace("abtract", "pdf")
+                        try:
+                            download_link = urljoin(start_page_url, article_url).replace("abtract", "pdf")
+                        except Exception:
+                            download_link = None
 
                         # Download, crop and send to Azure Form Recognizer Endpoint
-                        if False:
+                        if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
                                 file_name = get_recently_downloaded_file_name(download_path)
@@ -409,7 +405,10 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
+                            else:
+                                with_adobe, with_azure = False, False
 
+                        references = []
                         # Send PDF to Adobe and format response
                         if with_adobe:
                             adobe_cropped = split_in_half(file_name)
@@ -440,6 +439,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                                 selected_author = random.choice(authors)
                                 selected_author.mail = azure_article_data["emails"][0]
                                 selected_author.is_correspondence = True
+
                         article_lang = "tr" if "ü" in journal_name or "ğ" in journal_name else "en"
                         abbreviation = ""
                         final_article_data = {
@@ -458,7 +458,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             "articleKeywords": {"TR": re.sub(r'[\t\n]', '', keywords) if article_lang == "tr" else None,
                                                 "ENG": re.sub(r'[\t\n]', '', keywords) if article_lang == "en" else None},
                             "articleAuthors": Author.author_to_dict(authors) if authors else [],
-                            "articleReferences": []}
+                            "articleReferences": references}
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)

@@ -30,8 +30,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from fuzzywuzzy import fuzz
 
-with_azure = True
-with_adobe = True
 json_two_articles = False
 
 
@@ -254,6 +252,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                 except Exception as e:
                     raise e
                 for url in article_urls:
+                    with_adobe, with_azure = True, True
                     try:
                         driver.get(url)
                         time.sleep(3)
@@ -281,7 +280,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             raise e
 
                         # References
-                        references = list()
+                        references = []
                         try:
                             references_element = article_element.find_element(By.CSS_SELECTOR,
                                                                               ".item.references").find_element(
@@ -290,7 +289,6 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                 references.append(reference_item.text.strip())
                             references = [reference_formatter(reference, False, count) for count, reference in
                                           enumerate(references, start=1)]
-
                         except Exception:
                             pass
 
@@ -302,11 +300,15 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                         except Exception:
                             doi = ""
 
-                        # Download Link
-                        download_link = article_element.find_element(By.CSS_SELECTOR,
-                                                                     ".obj_galley_link.pdf").get_attribute("href")
+                        try:
+                            # Download Link
+                            download_link = article_element.find_element(By.CSS_SELECTOR,
+                                                                         ".obj_galley_link.pdf").get_attribute("href")
+                            download_link = download_link.replace("view", "download")
+                        except Exception:
+                            download_link = None
+
                         # Download, crop and send to Azure Form Recognizer Endpoint
-                        download_link = download_link.replace("view", "download")
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
@@ -317,6 +319,8 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
+                            else:
+                                with_adobe, with_azure = False, False
 
                         if article_language_number == 1:
                             article_page_language = "en"
@@ -412,7 +416,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                         except Exception:
                             article_page_range = [0, 1]
 
-                        if not references and download_link:
+                        if not references and download_link and with_adobe:
                             # Send PDF to Adobe and format response
                             if with_adobe:
                                 adobe_cropped = split_in_half(file_name)
@@ -421,27 +425,28 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                 references = adobe_references
 
                         # Get Azure Data
-                        azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                        azure_data = azure_response_dictionary["Data"]
-                        azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                        success = False
-                        mail = ""
-                        if len(azure_article_data["emails"]) == 1:
-                            try:
-                                mail = azure_article_data["emails"][0][:azure_article_data["emails"][0].index("@")]
-                            except Exception as e:
-                                pass
-                            if mail:
-                                for author in authors:
-                                    if fuzz.ratio(author.name.lower(), mail) > 70:
-                                        author.mail = azure_article_data["emails"][0]
-                                        author.is_correspondence = True
-                                        success = True
-                                        break
-                        if not success and mail:
-                            selected_author = random.choice(authors)
-                            selected_author.mail = azure_article_data["emails"][0]
-                            selected_author.is_correspondence = True
+                        if with_azure:
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                            azure_data = azure_response_dictionary["Data"]
+                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                            success = False
+                            mail = ""
+                            if len(azure_article_data["emails"]) == 1:
+                                try:
+                                    mail = azure_article_data["emails"][0][:azure_article_data["emails"][0].index("@")]
+                                except Exception as e:
+                                    pass
+                                if mail:
+                                    for author in authors:
+                                        if fuzz.ratio(author.name.lower(), mail) > 70:
+                                            author.mail = azure_article_data["emails"][0]
+                                            author.is_correspondence = True
+                                            success = True
+                                            break
+                            if not success and mail:
+                                selected_author = random.choice(authors)
+                                selected_author.mail = azure_article_data["emails"][0]
+                                selected_author.is_correspondence = True
 
                         abbreviation = ""
                         final_article_data = {
@@ -461,7 +466,8 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                                 "ENG": keywords_eng},
                             "articleAuthors": Author.author_to_dict(authors) if authors else [],
                             "articleReferences": references if references else []}
-                        final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
+                        if with_azure:
+                            final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
                         gir = input("devam mı?")
                         if gir == "Y":

@@ -218,6 +218,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         f"Error while getting aves article urls of journal: {journal_name}. Error encountered was: {e}"))
 
                 for url in article_urls:
+                    with_adobe, with_azure = True, True
                     driver.get(url)
                     time.sleep(5)
                     try:
@@ -225,10 +226,13 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         driver.find_element(By.CSS_SELECTOR, '.reference.collapsed').click()
                         time.sleep(5)
 
-                        # Download Link
-                        download_link = driver.find_element(By.CLASS_NAME, 'articles').find_element(By.TAG_NAME,
-                                                                                                    'a').get_attribute(
-                            'href')
+                        try:
+                            # Download Link
+                            download_link = driver.find_element(By.CLASS_NAME, 'articles').find_element(By.TAG_NAME,
+                                                                                                        'a').get_attribute(
+                                'href')
+                        except Exception:
+                            download_link = None
 
                         # Article Type
                         article_type = identify_article_type(
@@ -290,6 +294,8 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                     location_header = AzureHelper.analyse_pdf(
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
+                            else:
+                                with_azure, with_adobe = False, False
 
                         if download_link and file_name:
                             # Send PDF to Adobe and format response
@@ -326,7 +332,8 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                                 "ENG": keywords},
                             "articleAuthors": Author.author_to_dict(authors) if authors else [],
                             "articleReferences": references}
-                        final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
+                        if with_azure:
+                            final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
                         i += 1
                         if json_two_articles:

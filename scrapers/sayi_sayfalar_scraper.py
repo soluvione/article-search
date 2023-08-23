@@ -29,8 +29,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
-with_azure = False
-with_adobe = False
 json_two_articles = False
 
 
@@ -238,6 +236,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                     raise GeneralError("Error!")
 
                 for url in hrefs:
+                    with_adobe, with_azure = True, True
                     if "showabs" in url:
                         continue
                     driver.get(url)
@@ -260,8 +259,11 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                                                                                   'a[target="_blank"]'
                                                                                                   ).get_attribute('href')
                         except:
-                            download_link = driver.find_element(By.XPATH,
-                                                            '//*[@id="table10"]/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr[2]/td/a[1]').get_attribute('href')
+                            try:
+                                download_link = driver.find_element(By.XPATH,
+                                                                '//*[@id="table10"]/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr[2]/td/a[1]').get_attribute('href')
+                            except:
+                                download_link = None
 
 
                         references = None
@@ -280,6 +282,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                     adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                     adobe_references = AdobeHelper.get_analysis_results(adobe_response)
                                     references = adobe_references
+                            else:
+                                with_adobe, with_azure = False, False
 
                         # Abbreviation and DOI
                         try:
