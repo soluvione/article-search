@@ -241,8 +241,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
         temp_txt = latest_publication_element.text
         recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip())
         recent_issue = int(temp_txt.split()[-1])
-        with_azure = False
-        with_adobe = False
+
         # START DOWNLOADS IF ISSUE IS NOT SCANNED
         if True:
             dergipark_components.go_to_issue_page(driver, latest_publication_element, journal_name, recent_volume,
@@ -262,6 +261,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
             # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
             article_num = 0
             for i in range(3):  # article_url in article_url_list
+                with_adobe, with_azure = True, True
                 article_url = article_url_list[i]
                 article_num += 1
                 if article_num > 1:
@@ -320,6 +320,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                 adobe_pdf_path = split_in_half(formatted_name)
                                 adobe_zip_path = AdobeHelper.analyse_pdf(adobe_pdf_path, download_path)
                                 adobe_references = AdobeHelper.get_analysis_results(adobe_zip_path)
+                        else:
+                            with_adobe, with_azure = False, False
                         # So far, the article has been downloaded if possible, and the name of the file is reformatted
                         # Afterwards the pdf is sent for analysis. In the later stages of the code the response will be fetched.
 

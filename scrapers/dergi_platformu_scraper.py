@@ -29,8 +29,6 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
-with_azure = False
-with_adobe = False
 json_two_articles = False
 
 
@@ -186,7 +184,6 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
         with (webdriver.Chrome(service=service, options=options) as driver):
             driver.get(check_url(start_page_url))
             time.sleep(3)
-
             try:
                 archives_element = driver.find_element(By.CSS_SELECTOR, 'div[id="sayilar-menusu"]')
                 archives_element.find_element(By.CSS_SELECTOR,
@@ -233,9 +230,10 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
 
                 # Start scraping from individual article pages
                 for url in article_urls:
-                    driver.get(url)
-                    index_of_journal = article_urls.index(url)
+                    with_adobe, with_azure = True, True
                     try:
+                        driver.get(url)
+                        index_of_journal = article_urls.index(url)
                         if "target" in start_page_url:
                             title_eng = driver.find_element(By.CSS_SELECTOR, 'h3[id="baslik"]').text.strip()
                             keywords_eng = [keyword.text.strip() for keyword in
@@ -318,6 +316,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                                     adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                     adobe_references = AdobeHelper.get_analysis_results(adobe_response)
                                     references = adobe_references
+                            with_adobe, with_azure = False, False
 
                         # Get Azure Data
                         if with_azure:
@@ -406,7 +405,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                             if i == 3:
                                 break
                         # Send data to Client API
-                        # TODO send dergi_platformu data
+                        # TODO send dergi_platfo rmu data
                         clear_directory(download_path)
                         i += 1
                     except Exception as e:
