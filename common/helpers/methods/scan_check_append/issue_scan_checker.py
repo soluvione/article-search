@@ -26,7 +26,7 @@ def is_issue_scanned(vol_num: int, issue_num: int, path_: str) -> bool:
         is_issue_scanned = True
         json_file.close()
 
-        if last_scanned_volume < vol_num or (last_scanned_volume == vol_num and last_scanned_issue < issue_num):
+        if last_scanned_volume < int(vol_num) or (last_scanned_volume == int(vol_num) and last_scanned_issue < int(issue_num)):
             is_issue_scanned = False
             return is_issue_scanned
 

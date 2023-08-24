@@ -153,6 +153,8 @@ def identify_article_type(string, num_of_references) -> str:
 
 def reference_formatter(reference: str, is_first: bool, count: int) -> str:
     try:
+        if "reference" in reference.lower() or "referans" in reference.lower() or "kaynak" in reference.lower():
+            return ""
         if is_first:
             reference = re.sub(r"kaynakça|kaynakca|references", "", reference, flags=re.IGNORECASE)
         reference_head = reference[0:18]
@@ -167,7 +169,7 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
             reference_tail = reference_tail[:re.search(r"doi:|DOI:|https://doi", reference_tail).start()]
         except:
             pass
-        reference_head = re.sub(r"[\[\]-_:0-9\.]", "", reference_head)
+        reference_head = re.sub(r"[\[\]-_\(\):0-9\.]", "", reference_head)
         reference_head = re.sub(r"\t{1,}", "", reference_head)
         reference_head = re.sub(r"\s{2,}", "", reference_head)
         if reference_head and reference_head[0] == " ":
@@ -182,6 +184,7 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
         reference_combined = capitalize_first_occurrence(reference_combined)
         if reference_combined.endswith("["):
             return reference_combined[:-2]
+        reference_combined = reference_combined.replace("[Crossref]", "").replace("[PubMed]", "").replace("[PMC]", "").strip()
 
         return reference_combined
     except Exception as e:

@@ -1,0 +1,38 @@
+[
+    {
+        "timeOfTrial": "2023-08-24T15:29:30",
+        "attemptStatus": true
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:31:36",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:33:00",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:37:20",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:39:26",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:40:26",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:44:31",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:46:48",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    },
+    {
+        "timeOfTrial": "2023-08-24T15:48:49",
+        "attemptStatus": "Already Scanned - No Action Needed"
+    }
+]
