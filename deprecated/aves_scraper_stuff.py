@@ -96,7 +96,7 @@ for author_name in authors_list:
         authors.append(author)
     except Exception as e:
         send_notification(GeneralError(
-            f"Error while getting aves article authors' data of journal: {journal_name}. Error encountered was: {e}"))
+            f"Error while getting aves article authors' data of journal: {e}. Error encountered was: {e}"))
 print(authors)
 # Type
 article_type = identify_article_type(

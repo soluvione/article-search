@@ -8,29 +8,29 @@ import json
 
 from common.erorrs import GeneralError
 from common.services.send_sms import send_notification
-from scrapers.col_md12_scraper import col_md12_scraper
+from scrapers.karep_scraper import karep_scraper
 
-with open('1-11_col_md12_params.json', 'r', encoding='utf-8') as f:
+with open('karep_1-3_params.json', 'r', encoding='utf-8') as f:
     params_data = json.load(f)
 
 # Sample Params
 # [
-#     "Turkish Journal of Physical Medicine and Rehabilitation",
-#     "https://www.ftrdergisi.com/archive.php",
-#     "col_md12",
+#     "Düşünen Adam: Psikiyatri ve Nörolojik Bilimler Dergisi",
+#     "dusunenadamdergisi.org",
+#     "karep",
 #     1,
-#     "thursday_1-11_col_md12",
-#     "9_turkishjournalofphysicalmedicineandrehabilitation"
+#     "sunday_1-3_karep",
+#     "1_dusunenadampsikiyatrivenrolojikbilimlerdergisi"
 # ],
 
 for dergi_params in params_data:
     try:
-        time_spent = col_md12_scraper(*dergi_params)
+        time_spent = karep_scraper(*dergi_params)
         if time_spent <= 600:
             time.sleep(600 - time_spent)
         else:
             time.sleep(5)
     except Exception as e:
-        send_notification(GeneralError("""An error occurred whilst the operations of col_md12 scraper with journal name: {}, Error:{}.
+        send_notification(GeneralError("""An error occurred whilst the operations of karep scraper with journal name: {}, Error:{}.
         **************************************************""".format(dergi_params[0], e)))
         pass

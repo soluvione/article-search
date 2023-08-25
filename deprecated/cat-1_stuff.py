@@ -86,7 +86,6 @@ with webdriver.Chrome(service=service, options=options) as driver:
             author_objects = list()
             for author_name in author_names:
                 if len(author_affiliations) == 1:
-                if len(author_affiliations) == 1:
                     author_objects.append(Author(name=author_name, all_speciality=author_affiliations[0]))
                 else:
                     author = Author()
