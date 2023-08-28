@@ -194,15 +194,23 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
             try:
                 #Get Vol, Issue and Year from the home page
                 try:
-                    numbers_text = driver.find_element(By.XPATH,
+                    numbers_text = driver.find_element(By.XPATH,""
                                                        '/html/body/center/table[2]/tbody/tr/td[1]/table/tbody/tr[2]/td/table/tbody/tr[2]/td[2]').text
                 except:
                     try:
                         numbers_text = driver.find_element(By.XPATH,
                                                            '/html/body/center/table[2]/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr[2]/td[2]').text
                     except:
-                        numbers_text = driver.find_element(By.XPATH,
-                                                           '/html/body/center/table[2]/tbody/tr/td[1]/table/tbody/tr[2]/td/table/tbody').text
+                        try:
+                            numbers_text = driver.find_element(By.XPATH,
+                                                               '/html/body/center/table[2]/tbody/tr/td[1]/table/tbody/tr[2]/td/table/tbody').text
+                        except:
+                            try:
+                                numbers_text = driver.find_element(By.XPATH,
+                                                                   '/html/body/center/table[2]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td[2]/font').text
+                            except:
+                                numbers_text = driver.find_element(By.XPATH,
+                                                                   '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/font').text
 
                 regex = re.findall(r'\d+', numbers_text)
                 article_year = regex[0]
@@ -220,10 +228,24 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                     driver.get(issue_url)
                     time.sleep(1)
                 except Exception as e:
-                    issue_url = driver.find_element(By.XPATH,
-                                              '/html/body/center/table[2]/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/a').get_attribute('href')
-                    driver.get(issue_url)
-                    time.sleep(1)
+                    try:
+                        issue_url = driver.find_element(By.XPATH,
+                                                  '/html/body/center/table[2]/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/a').get_attribute('href')
+                        driver.get(issue_url)
+                        time.sleep(1)
+                    except:
+                        try:
+                            issue_url = driver.find_element(By.XPATH,
+                                                            '/html/body/center/table[2]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td[2]/a').get_attribute(
+                                'href')
+                            driver.get(issue_url)
+                            time.sleep(1)
+                        except:
+                            issue_url = driver.find_element(By.XPATH,
+                                                            '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/a').get_attribute(
+                                'href')
+                            driver.get(issue_url)
+                            time.sleep(1)
 
                 article_urls = list()
                 try:
