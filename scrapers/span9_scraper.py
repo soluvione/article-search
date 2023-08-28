@@ -21,6 +21,7 @@ from common.services.azure.azure_helper import AzureHelper
 from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
+from common.services.tk_api.tk_service import TKServiceWorker
 from scrapers.dergipark_scraper import update_scanned_issues
 # 3rd Party libraries
 from selenium import webdriver
@@ -393,31 +394,33 @@ def span9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
-                        return 599
-                        i += 1
-                        if json_two_articles:
-                            if i == 2:
-                                break
+
                         # Send data to Client API
-                        # TODO send span9 data
+                        tk_worker = TKServiceWorker()
+                        response = tk_worker.send_data(final_article_data)
+                        if isinstance(response, Exception):
+                            clear_directory(download_path)
+                            raise response
+
+                        i += 1  # Loop continues with the next article
                         clear_directory(download_path)
                     except Exception as e:
+                        i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of span9 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
-                        i += 1
+                            f"Passed one article of span9 journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
                 create_logs(True, get_logs_path(parent_type, file_reference))
                 # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
-                time.sleep(15)
                 return 590 if is_test else timeit.default_timer() - start_time
-            else:
+            else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
-                return 590 if is_test else timeit.default_timer() - start_time
+                return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
 
     except Exception as e:
         tb_str = traceback.format_exc()
@@ -425,5 +428,4 @@ def span9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping span9 journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
-        # return timeit.default_timer() - start_time
-        return 599
+        return 590 if is_test else timeit.default_timer() - start_time

@@ -22,6 +22,7 @@ from common.services.azure.azure_helper import AzureHelper
 from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
+from common.services.tk_api.tk_service import TKServiceWorker
 from scrapers.dergipark_scraper import update_scanned_issues
 # 3rd Party libraries
 from selenium import webdriver
@@ -30,6 +31,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
+is_test = True
 
 def get_logs_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -335,10 +337,14 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                     pprint.pprint(final_article_data, width=150)
 
                     # Send data to Client API
-                    # TODO send TK data
+                    tk_worker = TKServiceWorker()
+                    response = tk_worker.send_data(final_article_data)
+                    if isinstance(response, Exception):
+                        clear_directory(download_path)
+                        raise response
+
+                    i += 1  # Loop continues with the next article
                     clear_directory(download_path)
-                    if i == 2:
-                        break
                 create_logs(True, get_logs_path(parent_type, file_reference))
                 # Update the most recently scanned issue according to the journal type
                 if pdf_scrape_type == "A_KLNK":
@@ -348,19 +354,15 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 else:
                     update_scanned_issues(volume_no, issue_no,
                                                                      get_logs_path(parent_type, file_reference))
-                time.sleep(15)
-                return 599
-                # return timeit.default_timer() - start_time
-            else:
+                return 590 if is_test else timeit.default_timer() - start_time
+            else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
-                return 599
-                # return timeit.default_timer() - start_time
+                return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping TK journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
-        # return timeit.default_timer() - start_time
         clear_directory(download_path)
-        return 599
+        return 590 if is_test else timeit.default_timer() - start_time
 
 if __name__ == '__main__':
     klinikler_scraper('foo', 'bar', 'zoo', 'poo', 'A_KLNK', 1,)

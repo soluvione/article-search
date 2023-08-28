@@ -20,6 +20,7 @@ from common.services.azure.azure_helper import AzureHelper
 from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
+from common.services.tk_api.tk_service import TKServiceWorker
 from scrapers.dergipark_scraper import update_scanned_issues
 # 3rd Party libraries
 from selenium import webdriver
@@ -29,9 +30,11 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
-json_two_articles = False
+
 # These modern looking pages have slightly different DOM for the volume and issue data
 modern_cellpadding_journals = ["anatoljcardiol.com", "jer-nursing.org", "khd.tkd.org.tr", "archivestsc.com"]
+is_test = True
+json_two_articles = False
 
 
 def check_url(url):
@@ -437,48 +440,18 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         pprint.pprint(final_article_data)
-                        gir = input("devam mı?")
-                        if gir == "Y":
-                            file_path = r"C:\Users\emine\OneDrive\Masaüstü" + rf"\{file_reference}.json"
-                            json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
-                            with open(file_path, "w", encoding="utf-8") as file:
-                                file.write(json_data)
-                            # time.sleep(100)
-                            import requests
-                            # The URL endpoint
-                            url = "http://178.62.217.122:8080/article/store"
 
-                            # The request headers
-                            headers = {
-                                "Authorization": "t0U/A2dhjvWuMKkTabbp5IOkXXE2mpfpquMixFFUlTpkwJuOIU93CY=4ftz20-/jUxuxBxW7nqtgWpNf7bJUck6pqGr7=0ZTwA0je6ryUsvYieT?AlPo75TrLiRi0ZBeB/ySwZLfzfB=vjUd4PNx7uAfn?mJ0nL",
-                                "Content-Type": "application/json",
-                                "Connection": "Keep-Alive",
-                                "Keep-Alive": "timeout=5, max=1000",
-                                "Accept": "*/*",
-                            }
-
-                            # Your dictionary
-                            my_dict = final_article_data
-                            # Convert the dictionary to a JSON string
-                            body = json.dumps(my_dict)
-
-                            # Make the POST request
-                            response = requests.post(url, headers=headers, data=body)
-
-                            # Print the response
-                            print(response.json())
-                            exit(1)
-                        if json_two_articles:
-                            file_path = "/home/emin/Desktop/col_m9_jsons/" + f"{file_reference}.json"
-                            json_data = json.dumps(final_article_data, ensure_ascii=False, indent=4)
-                            with open(file_path, "w") as file:
-                                file.write(json_data)
-                            if i == 3:
-                                break
                         # Send data to Client API
-                        # TODO send cellpadding4 data
+                        tk_worker = TKServiceWorker()
+                        response = tk_worker.send_data(final_article_data)
+                        if isinstance(response, Exception):
+                            clear_directory(download_path)
+                            raise response
+
+                        i += 1  # Loop continues with the next article
                         clear_directory(download_path)
                     except Exception as e:
+                        i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
@@ -489,17 +462,13 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                     # Update the most recently scanned issue according to the journal type
                     update_scanned_issues(recent_volume, recent_issue,
                                           get_logs_path(parent_type, file_reference))
-                    time.sleep(15)
-                    return 599
-                    # return timeit.default_timer() - start_time
-            else:
+                    return 590 if is_test else timeit.default_timer() - start_time
+            else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
-                return 599
-                # return timeit.default_timer() - start_time
+                return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
 
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping cellpadding4 journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
-        # return timeit.default_timer() - start_time
-        return 599
+        return 590 if is_test else timeit.default_timer() - start_time

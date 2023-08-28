@@ -8,7 +8,9 @@ import random
 from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification, send_example_log
 from common.erorrs import GeneralError
+from common.services.tk_api.tk_service import TKServiceWorker
 
+is_test = True
 
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
@@ -550,21 +552,30 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                   encoding='utf-8') as f:
                             f.write(json.dumps(final_article_data, indent=4, ensure_ascii=False))
 
-                        print(json.dumps(azure_article_data, indent=4, ensure_ascii=False))
+                        # Send data to Client API
+                        tk_worker = TKServiceWorker()
+                        response = tk_worker.send_data(final_article_data)
+                        if isinstance(response, Exception):
+                            clear_directory(download_path)
+                            raise response
+
+                        i += 1  # Loop continues with the next article
                         clear_directory(download_path)
-                        create_logs(True, get_logs_path(parent_type, file_reference))
-                        i += 1
+
+            create_logs(True, get_logs_path(parent_type, file_reference))
         else:
             log_already_scanned(get_logs_path(parent_type, file_reference))
+            return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
+
         if random.random() < 0.2:  # In the long run sends 20% of the outputs as WP message
             send_example_log(final_article_data)
-        return timeit.default_timer() - start_time
+        return 590 if is_test else timeit.default_timer() - start_time
     except Exception as e:
         send_notification(
             GeneralError(f"An error encountered and cought by outer catch while scraping Dergipark journal"
                          f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
-        return timeit.default_timer() - start_time
+        return 590 if is_test else timeit.default_timer() - start_time
 
 
 if __name__ == "__main__":

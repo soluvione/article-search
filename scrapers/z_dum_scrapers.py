@@ -14,14 +14,13 @@ import timeit
 from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.z_dum_helper import format_bulk_data, get_article_titles, \
-    pair_authors, get_page_range
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned, tk_no_ref_is_scanned
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
 from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
+from common.services.tk_api.tk_service import TKServiceWorker
 from scrapers.dergipark_scraper import update_scanned_issues
 # 3rd Party libraries
 from selenium import webdriver
