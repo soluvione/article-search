@@ -1,53 +1,58 @@
 # import time
-#
-# from selenium import webdriver
 # import re
+# from selenium import webdriver
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.chrome.options import Options
+# from selenium.webdriver.chrome.service import Service as ChromeService
+# from webdriver_manager.chrome import ChromeDriverManager
+#
+# from scrapers.pkp_scraper import check_url
+#
+# options = Options()
+# options.page_load_strategy = 'eager'
+# download_path = "get_downloads_path(parent_type, file_reference)"
+# prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory": download_path}
+# options.add_experimental_option('prefs', prefs)
+# options.add_argument("--disable-notifications")
+# options.add_argument('--ignore-certificate-errors')
+# # options.add_argument("--headless")  # This line enables headless mode
+# service = ChromeService(executable_path=ChromeDriverManager().install())
 #
 # # Your URLs string
 # #urls_string iku bu olacak http://journals.iku.edu.tr/sybd/index.php/sybd
-# urls_string = ('https://actamedica.org/index.php/actamedica, '
-#  'https://beslenmevediyetdergisi.org/index.php/bdd, https://eurjther.com/index.php/home, '
-#  'https://experimentalbiomedicalresearch.com/ojs/index.php/ebr, https://medicaljournal.gazi.edu.tr/index.php/GMJ, '
-#  'https://ijcmbs.com/index.php/ijcmbs, https://jointdrs.org/current-issue, https://www.jabsonline.org/index.php/jabs/issue/archive, '
-#  'https://www.jsoah.com/index.php/jsoah/issue/archive, https://www.medscidiscovery.com/index.php/msd/issue/archive, '
-#  'https://natprobiotech.com/index.php/natprobiotech,'
-#  'http://journals.iku.edu.tr/sybd/index.php/sybd/issue/archive, http://www.cityhealthj.org/index.php/cityhealthj/issue/archive, '
-#  'https://injectormedicaljournal.com/index.php/theinjector/issue/archive, https://www.ulutasmedicaljournal.com/index.php?sec=archive, '
-#  'https://www.derleme.gen.tr/index.php/derleme, http://saglikokuryazarligidergisi.com/index.php/soyd/issue/archive')
+# urls_string = ('https://jarengteah.org/jvi.aspx?pdir=respircase&plng=tur&list=pub, https://shydergisi.org/jvi.aspx?pdir=shyd&plng=tur&list=pub,'
+# 'https://medicaljournal-ias.org/jvi.aspx?pdir=ias&plng=eng&list=pub, https://tjn.org.tr/jvi.aspx?pdir=tjn&plng=eng&list=pub')
 #
 # # Use a regex to extract the URLs from the string
 # urls = re.findall(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', urls_string)
 #
+# urls = [check_url(url) for url in urls]
 # # Initialize the Chrome driver
-# driver = webdriver.Chrome()
+# with webdriver.Chrome(service=service, options=options) as driver:
 #
-# # Open the first URL
-# driver.get(urls[0])
+#     # Open the first URL
+#     driver.get(check_url(urls[0]))
 #
-# # For remaining URLs, open each in a new tab
-# for url in urls[1:]:
-#     # Open a new tab
-#     driver.execute_script("window.open('');")
+#     # For remaining URLs, open each in a new tab
+#     for url in urls[1:]:
+#         # Open a new tab
+#         driver.execute_script("window.open('');")
 #
-#     # Switch to the new tab
-#     driver.switch_to.window(driver.window_handles[-1])
+#         # Switch to the new tab
+#         driver.switch_to.window(driver.window_handles[-1])
 #
-#     # Open URL in new tab
-#     driver.get(url)
+#         # Open URL in new tab
+#         driver.get(url)
 #
-# # After opening all tabs, switch to the first tab
-# driver.switch_to.window(driver.window_handles[0])
-# time.sleep(6000)
+#     # After opening all tabs, switch to the first tab
+#     driver.switch_to.window(driver.window_handles[0])
+#     time.sleep(6000)
 import pandas as pd
 import re
 from urllib.parse import urlparse
 
 # Your URLs string
-urls_string = ('https://norosirurji.dergisi.org/archive.php, https://agridergisi.com/, '
- 'https://cts.tgcd.org.tr/, http://www.cshd.org.tr/, http://www.jcritintensivecare.org/, https://jrespharm.com/archive.php, '
- 'https://vetdergikafkas.org/archive.php, https://medicaljournal-ias.org/jvi.aspx?pdir=ias&plng=eng&list=pub, '
- 'https://www.turkishjournalpediatrics.org/, http://geriatri.dergisi.org/archive.php, http://onkder.org/archive.php, '
- 'https://www.ftrdergisi.com/archive.php, http://turkishneurosurgery.org.tr/archive.php')
+urls_string = "http://jeurmeds.org"
 
 # Use a regex to extract the URLs from the string
 urls = re.findall(r'https?://(?:[-\w.]|(?:%[\da-fA-F]{2}))+', urls_string)
@@ -63,7 +68,7 @@ urls_df.to_excel('urls.xlsx', index=False)
 
 # Assuming that the original Excel file is 'original.xlsx' and
 # the first column contains the journal names and the second column contains the URLs.
-original_df = pd.read_excel('all_journals_n_links.xlsx', header=None, names=['Names', 'URLs'])
+original_df = pd.read_excel(r'..\..\..\ProjectFiles\all_journals_n_links.xlsx', header=None, names=['Names', 'URLs'])
 
 # Extract root domain from each URL
 original_df['URLs'] = original_df['URLs'].apply(lambda url: urlparse(url).netloc)
@@ -72,4 +77,4 @@ original_df['URLs'] = original_df['URLs'].apply(lambda url: urlparse(url).netloc
 merged_df = pd.merge(original_df, urls_df, how='inner', on='URLs')
 
 # Write the merged DataFrame to a new Excel file
-merged_df.to_excel('col_md12.xlsx', index=False)
+merged_df.to_excel('crossed.xlsx', index=False)
