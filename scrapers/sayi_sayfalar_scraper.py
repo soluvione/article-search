@@ -31,8 +31,8 @@ from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
 
-json_two_articles = False
 is_test = True
+json_two_articles = True if is_test else False
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
@@ -167,7 +167,6 @@ def populate_with_azure_data(final_article_data, azure_article_data):
 
 
 def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -179,8 +178,10 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
     options.add_argument('--ignore-certificate-errors')
     # options.add_argument("--headless")  # This line enables headless mode
     service = ChromeService(executable_path=ChromeDriverManager().install())
+
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with (webdriver.Chrome(service=service, options=options) as driver):
@@ -217,7 +218,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                 recent_issue = int(re.findall(pattern, child_element.text)[-1][-1])
                 article_year = numbers[1]
             except Exception as e:
-                raise e
+                raise GeneralError(f"An error occured while retrieving the vol-issue-year data of sayi_sayfalar journal"
+                                   f" {journal_name}. Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
@@ -228,20 +230,17 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                 except:
                     pass
                 article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
-                hrefs = list()
                 hrefs = [item.get_attribute('href') for item in article_list.find_elements(By.TAG_NAME, 'a')
                          if ("Makale" in item.text or "Abstract" in item.text)]
 
                 if not hrefs:
-                    send_notification(
-                        GeneralError(f'No URLs scraped from sayi_sayfalar journal with name: {journal_name}'))
-                    raise GeneralError("Error!")
+                    raise GeneralError(f'No URLs scraped from sayi_sayfalar journal with name: {journal_name}')
 
-                for url in hrefs:
+                for article_url in hrefs:
                     with_adobe, with_azure = True, True
-                    if "showabs" in url:
+                    if "showabs" in article_url:
                         continue
-                    driver.get(url)
+                    driver.get(article_url)
                     try:  # Salak Behçet Uz dergisinde pop-up çıkıyor her sayfada
                         driver.find_element(By.CSS_SELECTOR, 'button[class="confirm"]').click()
                     except:
@@ -296,8 +295,10 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             article_doi = abbv_doi_element.text.split("DOI:")[-1].strip()
                             abbreviation = article_code
                         except Exception as e:
+                            abbreviation = ""
                             send_notification(GeneralError(
-                                f"Error while getting sayi_sayfalar abbreviation and DOI of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar abbreviation and DOI of the article: {journal_name}"
+                                f" with article num {i}. Error encountered was: {e}"))
 
                         # Page range
                         try:
@@ -307,7 +308,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                                                                 '|')].split('-')]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting sayi_sayfalar page range data of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar page range data of the article: {journal_name}"
+                                f" with article num {i}. Error encountered was: {e}"))
 
                         # Language Order
                         # Here we are designating the order in which abstracts etc. are listed
@@ -318,7 +320,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                 'content')
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting sayi_sayfalar language order of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar language order of the article: {journal_name}"
+                                f" with article num {i}. Error encountered was: {e}"))
 
                         # Authors
                         try:
@@ -340,7 +343,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             affiliations = [str(affiliation).strip() for affiliation in soup.stripped_strings]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting sayi_sayfalar article authors' data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar article authors' data of journal: {journal_name}"
+                                f" with article num {i}. Error encountered was: {e}"))
                             raise e
 
                         # Construct Authors List
@@ -363,7 +367,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                          article_data_body.find_elements(By.TAG_NAME, "p")]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting sayi_sayfalar article abstracts data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar article abstracts data of journal: {journal_name}"
+                                f" with article num {i}. Error encountered was: {e}"))
                             raise e
 
 
@@ -397,7 +402,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                 keywords_last_element = [keyword.strip() for keyword in keywords_text.split(',')]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting sayi_sayfalar article keywords data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting sayi_sayfalar article keywords data of journal: {journal_name}"
+                                f" with article num {i}. Error encountered was: {e}"))
 
                         # Distribute the acquired data in accordance with the number and order of the languages in the
                         # article page
@@ -435,13 +441,16 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
 
                         # Article Type
                         article_type = "OLGU SUNUMU" if (
-                                    "case" in journal_name.lower() or "case" in article_title_eng.lower() or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower() or "bulgu" in article_title_tr.lower()) else "ORİJİNAL ARAŞTIRMA"
+                                    "case" in journal_name.lower() or "case" in article_title_eng.lower()
+                                    or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower()
+                                    or "bulgu" in article_title_tr.lower()) else "ORİJİNAL ARAŞTIRMA"
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -452,21 +461,28 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                                  "ENG": abstract_eng},
                             "articleKeywords": {"TR": keywords_tr,
                                                 "ENG": keywords_eng},
-                            "articleAuthors": Author.author_to_dict(author_list) if author_list else [],
-                            "articleReferences": references if references else []}
+                            "articleAuthors": Author.author_to_dict(author_list) if author_list else None,
+                            "articleReferences": references if references else None,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
@@ -476,15 +492,14 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
-                    create_logs(True, get_logs_path(parent_type, file_reference))
-                    # Update the most recently scanned issue according to the journal type
-                    update_scanned_issues(recent_volume, recent_issue,
-                                          get_logs_path(parent_type, file_reference))
-                    return 590 if is_test else timeit.default_timer() - start_time
+                # Successfully completed the operations
+                create_logs(True, get_logs_path(parent_type, file_reference))
+                update_scanned_issues(recent_volume, recent_issue,
+                                      get_logs_path(parent_type, file_reference))
+                return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping sayi_sayfalar journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))

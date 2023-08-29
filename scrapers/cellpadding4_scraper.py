@@ -12,8 +12,6 @@ from classes.author import Author
 from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
@@ -34,7 +32,7 @@ from fuzzywuzzy import fuzz
 # These modern looking pages have slightly different DOM for the volume and issue data
 modern_cellpadding_journals = ["anatoljcardiol.com", "jer-nursing.org", "khd.tkd.org.tr", "archivestsc.com"]
 is_test = True
-json_two_articles = False
+json_two_articles = True if is_test else False
 
 
 def check_url(url):
@@ -166,11 +164,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = azure_article_data.get("article_authors", "ORİJİNAL ARAŞTIRMA")
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -180,15 +179,15 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
-    options.add_argument("--headless")  # This line enables headless mode
+    options.add_argument("--headless")
     service = ChromeService(executable_path=ChromeDriverManager().install())
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
-            i += 1
             driver.get(check_url(start_page_url))
             time.sleep(3)
             try:
@@ -205,7 +204,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                     except:
                         vol_issue_text = driver.find_element(By.CLASS_NAME, "ListArticleIssue").text
                     numbers = re.findall(r'\d+', vol_issue_text)
-                    numbers = [int(i) for i in numbers]
+                    numbers = [int(n) for n in numbers]
                     recent_volume, recent_issue = numbers[:2]
                 else:
                     vol_issue = driver.find_element(By.CSS_SELECTOR, '.badge.badge-danger').text.split('/')
@@ -215,27 +214,34 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
                 # rows = article_list.find_elements(By.CSS_SELECTOR, ".td_pubtype")
             except Exception as e:
-                raise e
+                raise GeneralError(f"Volume, issue, year data or articles of aves journal {journal_name} is absent! "
+                                   f"Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
                 article_urls = list()
-                rows = article_list.find_elements(By.CLASS_NAME, 'ListArticleTitle')
+                try:
+                    rows = article_list.find_elements(By.CLASS_NAME, 'ListArticleTitle')
+                except Exception as e:
+                    raise GeneralError(
+                        f"Could not retrieve article URLs of cellpadding4 journal {journal_name}! Error encountered: {e}")
                 for row in rows:
                     try:
                         link = row.get_attribute('href')
                         if not link.startswith("https://jag"):
                             article_urls.append(link)
-                    except Exception:
-                        pass
+                    except Exception as e:
+                        if len(article_urls) < 3:
+                            raise e
+
                 if not article_urls:
-                    send_notification(
-                        GeneralError(f'No URLs scraped from cellpadding4 journal with name: {journal_name}'))
-                    raise GeneralError("Error!")
-                for url in article_urls:
+                    raise GeneralError(f"No article URLs retrieved for cellpadding4 journal {journal_name}!")
+
+                for article_url in article_urls:
                     with_adobe, with_azure = True, True
-                    driver.get(url)
+                    driver.get(article_url)
+                    time.sleep(3)
                     try:
                         article_data_body = driver.find_element(By.CSS_SELECTOR,
                                                                 '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
@@ -252,7 +258,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
-                                file_name = get_recently_downloaded_file_name(download_path)
+                                file_name = get_recently_downloaded_file_name(download_path)  # Full Path
                                 # Send PDF to Azure and format response
                                 if with_azure:
                                     first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
@@ -274,8 +280,10 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             article_doi = abbv_doi_element.split(":")[-1].strip()
                             abbreviation = abbv_doi_element[:abbv_doi_element.index(".")].strip()
                         except Exception as e:
+                            abbreviation = ""
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 abbreviationg and DOI of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting cellpadding4 abbreviationg and DOI of the article: {journal_name} "
+                                f"with article num {i}. Error encountered was: {e}"))
 
                         # Page range
                         try:
@@ -287,8 +295,10 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
                             article_page_range = [first_page, last_page]
                         except Exception as e:
+                            article_page_range = [0, 1]
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 page range data of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting cellpadding4 page range data of the article: {journal_name} "
+                                f"with article num {i}. Error encountered was: {e}"))
 
                         # Language Order
                         # Here we are designating the order in which abstracts etc. are listed
@@ -301,7 +311,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                     break
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 language order of the article: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting cellpadding4 language order of the article: {journal_name} "
+                                f"with article num {i}. Error encountered was: {e}"))
 
                         # Authors
                         try:
@@ -322,9 +333,9 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             # separate affiliations by <br> tags and get the text of each affiliation
                             affiliations = [str(affiliation).strip() for affiliation in soup.stripped_strings]
                         except Exception as e:
-                            send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article authors' data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
-                            raise e
+                            raise GeneralError(
+                                f"Error while getting cellpadding4 article authors' data of journal: {journal_name} "
+                                f"with article num {i}. Error encountered was: {e}")
 
                         # Construct Authors List
                         author_list = list()
@@ -345,10 +356,9 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             abstracts = [element.text.strip() for element in
                                          article_data_body.find_elements(By.TAG_NAME, "p")]
                         except Exception as e:
-                            send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article abstracts data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
-                            raise e
-
+                            raise GeneralError(
+                                f"Error while getting cellpadding4 article abstracts data of journal: {journal_name} "
+                                f"with article num {i}. Error encountered was: {e}")
 
                         # Get Azure Data
                         if download_link and file_name:
@@ -380,7 +390,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 keywords_last_element = [keyword.strip() for keyword in keywords_text.split(',')]
                         except Exception as e:
                             send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article keywords data of journal: {journal_name} with article num {i}. Error encountered was: {e}"))
+                                f"Error while getting cellpadding4 article keywords data of journal: {journal_name} "
+                                f"with article num {i}. Error encountered was: {e}"))
 
                         # Distribute the acquired data in accordance with the number and order of the languages in the
                         # article page
@@ -418,13 +429,16 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
                         # Article Type
                         article_type = "OLGU SUNUMU" if (
-                                    "case" in journal_name.lower() or "case" in article_title_eng.lower() or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower() or "bulgu" in article_title_tr.lower()) else "ORİJİNAL ARAŞTIRMA"
+                                    "case" in journal_name.lower() or "case" in article_title_eng.lower()
+                                    or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower()
+                                    or "bulgu" in article_title_tr.lower()) else "ORİJİNAL ARAŞTIRMA"
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": datetime.now().year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -435,38 +449,45 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                                  "ENG": abstract_eng},
                             "articleKeywords": {"TR": keywords_tr,
                                                 "ENG": keywords_eng},
-                            "articleAuthors": Author.author_to_dict(author_list) if author_list else [],
-                            "articleReferences": references if references else []}
+                            "articleAuthors": Author.author_to_dict(author_list) if author_list else None,
+                            "articleReferences": references if references else None,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of cellpadding4 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of cellpadding4 journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
-                    create_logs(True, get_logs_path(parent_type, file_reference))
-                    # Update the most recently scanned issue according to the journal type
-                    update_scanned_issues(recent_volume, recent_issue,
-                                          get_logs_path(parent_type, file_reference))
-                    return 590 if is_test else timeit.default_timer() - start_time
+                # Successfully completed the operations
+                create_logs(True, get_logs_path(parent_type, file_reference))
+                update_scanned_issues(recent_volume, recent_issue,
+                                      get_logs_path(parent_type, file_reference))
+                return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping cellpadding4 journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))

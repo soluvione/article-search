@@ -13,12 +13,10 @@ from classes.author import Author
 from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
+from common.helpers.methods.pdf_cropper import crop_pages
 from common.services.azure.azure_helper import AzureHelper
-from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
 from common.services.tk_api.tk_service import TKServiceWorker
@@ -30,8 +28,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-with_azure = True
-with_adobe = True
 is_test = True
 json_two_articles = True if is_test else False
 
@@ -164,11 +160,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -183,9 +180,10 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
-        with webdriver.Chrome(service=service, options=options) as driver:
+        with (webdriver.Chrome(service=service, options=options) as driver):
             if not "fusabil" in start_page_url:
                 driver.get(check_url(start_page_url))
             else:
@@ -218,35 +216,39 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                 recent_volume = regex[1]
                 recent_issue = regex[2]
             except Exception as e:
-                raise GeneralError(f"Volume, issue or year data of firat journal is absent! Error encountered was: {e}")
+                raise GeneralError(f"Volume, issue or year data of firat journal {journal_name} is absent! Error encountered was: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
                 try:
-                    issue_url = driver.find_element(By.XPATH,
-                                              '/html/body/center/table[2]/tbody/tr/td[1]/table/tbody/tr[2]/td/table/tbody/tr[1]/td[3]/a').get_attribute('href')
-                    driver.get(issue_url)
-                    time.sleep(1)
-                except Exception as e:
                     try:
                         issue_url = driver.find_element(By.XPATH,
-                                                  '/html/body/center/table[2]/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/a').get_attribute('href')
+                                                  '/html/body/center/table[2]/tbody/tr/td[1]/table/tbody/tr[2]/td/table/tbody/tr[1]/td[3]/a').get_attribute('href')
                         driver.get(issue_url)
                         time.sleep(1)
-                    except:
+                    except Exception as e:
                         try:
                             issue_url = driver.find_element(By.XPATH,
-                                                            '/html/body/center/table[2]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td[2]/a').get_attribute(
-                                'href')
+                                                      '/html/body/center/table[2]/tbody/tr/td[2]/table/tbody/tr/td/table/tbody/tr[1]/td[3]/a').get_attribute('href')
                             driver.get(issue_url)
                             time.sleep(1)
                         except:
-                            issue_url = driver.find_element(By.XPATH,
-                                                            '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/a').get_attribute(
-                                'href')
-                            driver.get(issue_url)
-                            time.sleep(1)
+                            try:
+                                issue_url = driver.find_element(By.XPATH,
+                                                                '/html/body/center/table[2]/tbody/tr[1]/td[1]/table/tbody/tr[1]/td[2]/a').get_attribute(
+                                    'href')
+                                driver.get(issue_url)
+                                time.sleep(1)
+                            except:
+                                issue_url = driver.find_element(By.XPATH,
+                                                                '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/a').get_attribute(
+                                    'href')
+                                driver.get(issue_url)
+                                time.sleep(1)
+                except Exception as e:
+                    raise GeneralError(
+                        f"Error while getting issue URL of firat journal {journal_name}. Error encountered was: {e}")
 
                 article_urls = list()
                 try:
@@ -256,23 +258,29 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         article_urls.append(el.find_element(By.CSS_SELECTOR, 'a[class="blue"]').get_attribute('href'))
                 except Exception as e:
                     send_notification(GeneralError(
-                        f"Error while getting firat article urls of Fırat journal. Error encountered was: {e}"))
+                        f"Error while getting firat article URLs of Fırat journal. Error encountered was: {e}"))
+                    raise e
 
-                for url in article_urls:
+                if not article_urls:
+                    raise GeneralError(
+                        GeneralError(f'No URLs scraped from firat journal with name: {journal_name}'))
+
+                for article_url in article_urls:
                     with_adobe, with_azure = False, False
-                    driver.get(url)
+                    driver.get(article_url)
                     time.sleep(2)
                     try:
                         main_body_element = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody')
                         main_text = main_body_element.text
                     except Exception:
                         raise GeneralError(
-                            f"No main body element of the article of Fırat journal found! Error encountered was: {e}")
+                            f"No main body element of the article of Fırat journal {journal_name} with number {i}"
+                            f"found! Error encountered was: {e}")
 
                     try:
                         try:
                             # Download Link
-                            download_link = url.replace("text", "pdf")
+                            download_link = article_url.replace("text", "pdf")
                         except Exception:
                             download_link = None
 
@@ -280,7 +288,8 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         article_title_tr = main_body_element.find_element(By.CSS_SELECTOR, 'font[class="head"]').text.strip()
 
                         # Article Type
-                        if "case" in article_title_tr.lower() or "report" in article_title_tr.lower() or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower():
+                        if "case" in article_title_tr.lower() or "report" in article_title_tr.lower() \
+                            or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower():
                             article_type = "OLGU SUNUMU"
                         else:
                             article_type = "ORİJİNAL ARAŞTIRMA"
@@ -300,8 +309,11 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         else:
                             abbreviation = "F.U. Med.J.Health.Sci."
 
-                        page_range_text = main_text[main_text.index('Sayfa(lar)') + 10:main_text.index('Sayfa(lar)') + 18]
-                        article_page_range = [int(number.strip()) for number in page_range_text.split('-')]
+                        try:
+                            page_range_text = main_text[main_text.index('Sayfa(lar)') + 10:main_text.index('Sayfa(lar)') + 18]
+                            article_page_range = [int(number.strip()) for number in page_range_text.split('-')]
+                        except:
+                            article_page_range = [0, 1]
 
                         # Authors
                         author_names = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[5]').text.strip().split(',')
@@ -329,7 +341,8 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         try:
                             references = main_text[main_text.index("Kaynaklar\n1)"): main_text.index("[ Başa")]
                             references = references[references.index("1)"): references.rfind('.') + 1].split('\n')
-                            references = [reference_formatter(reference, True, count) for count, reference in enumerate(references, start=1)]
+                            references = [reference_formatter(reference, True, count) for count, reference in
+                                          enumerate(references, start=1)]
                         except Exception:
                             references = None
 
@@ -345,7 +358,7 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                                         first_pages_cropped_pdf,
                                         is_tk=False)  # Location header is the response address of Azure API
                             else:
-                                with_azure, with_adobe = False, False
+                                with_azure = False
 
                         # Get Azure Data
                         if download_link and file_name and with_azure:
@@ -360,7 +373,8 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -372,43 +386,47 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             "articleKeywords": {"TR": keywords_tr,
                                                 "ENG": None},
                             "articleAuthors": Author.author_to_dict(author_objects) if author_objects else [],
-                            "articleReferences": references}
+                            "articleReferences": references,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of firat journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of firat journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
+                # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
-                # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
-        tb_str = traceback.format_exc()
-        print(tb_str)
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping firat journal "
-                                       f"{journal_name} with article number {i}. Error encountered was: {e}. "
-                                       f"Traceback: {tb_str}"))
+                                       f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time
 

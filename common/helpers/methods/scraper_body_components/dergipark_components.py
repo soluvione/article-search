@@ -103,7 +103,7 @@ def download_article_pdf(driver, pdf_scrape_type):
         if pdf_scrape_type != "A_DRG":
             pass
         else:
-            send_notification(e)
+            raise e
 
 
 def define_article_type(driver):
@@ -114,12 +114,15 @@ def define_article_type(driver):
 
 
 def get_page_range(driver):
-    article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
-    for element in article_subtitle_elements:
-        if element.text:
-            article_page_range = element.text.split(',')[-2].strip().split('-')
-            article_page_range = [int(page_num) for page_num in article_page_range]
+    try:
+        article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
+        for element in article_subtitle_elements:
+            if element.text:
+                article_page_range = element.text.split(',')[-2].strip().split('-')
+                article_page_range = [int(page_num) for page_num in article_page_range]
             return article_page_range
+    except Exception as e:
+        raise e
 
 
 def get_language_tabs(driver):

@@ -13,12 +13,8 @@ from classes.author import Author
 from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
-from common.services.azure.azure_helper import AzureHelper
-from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
 from common.services.tk_api.tk_service import TKServiceWorker
@@ -29,7 +25,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
 
 json_two_articles = False
@@ -164,11 +159,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = azure_article_data.get("article_authors", "ORİJİNAL ARAŞTIRMA")
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -180,8 +176,10 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
     options.add_argument('--ignore-certificate-errors')
     options.add_argument("--headless")  # This line enables headless mode
     service = ChromeService(executable_path=ChromeDriverManager().install())
+
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with (webdriver.Chrome(service=service, options=options) as driver):
@@ -202,10 +200,12 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                 recent_volume = numbers[1]
                 recent_issue = numbers[2]
             except Exception as e:
-                raise e
+                raise GeneralError(
+                    f"Volume, issue or year data of wolters_kluwer journal is absent! Error encountered was: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
+
             if not is_issue_scanned:
                 # Get to the latest issue page
                 driver.get(start_page_url.replace("default", "currenttoc"))
@@ -222,16 +222,16 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             By.TAG_NAME, 'h4'):
                         article_urls.append(item.find_element(By.TAG_NAME, 'a').get_attribute('href'))
                 except Exception as e:
-                    raise e
+                    raise GeneralError(
+                        f"Error while getting wolters_kluwer article URLs of unq_tk journal. Error encountered was: {e}")
 
                 if not article_urls:
-                    send_notification(
+                    raise GeneralError(
                         GeneralError(f'No URLs scraped from wolters_kluwer journal with name: {journal_name}'))
-                    raise GeneralError("Error!")
 
-                for url in article_urls:
+                for article_url in article_urls:
                     try:
-                        driver.get(url)
+                        driver.get(article_url)
                         try:  # Pop-up
                             time.sleep(3)
                             driver.find_element(By.CSS_SELECTOR, 'button[id="onetrust-reject-all-handler"]').click()
@@ -325,8 +325,6 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                                             author_to_add.all_speciality = affiliations[0]
                                         author_to_add.name = re.sub(r'\d', '', author_to_add.name)
                                     except Exception as e:
-                                        print(e)
-                                        print("random vurdu")
                                         author_to_add.all_speciality = random.choice(affiliations)
                                 if author_to_add.is_correspondence:
                                     author_to_add.mail = correspondence_email
@@ -336,13 +334,12 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
 
                         try:
                             driver.execute_script("window.scrollBy(0, 10000)")
-                            button = driver.find_element(By.CSS_SELECTOR, 'button[class="article-references__button"]')
+                            button = driver.find_element(By.CSS_SELECTOR, 'button[class="article-referenreferences__button"]')
                             driver.execute_script("arguments[0].click();", button)
                             time.sleep(3)
                         except Exception as e:
                             raise e
 
-                        keywords_eng = None
                         references = list()
                         try:
                             references_element = driver.find_element(By.CSS_SELECTOR, 'section[id="article-references"]')
@@ -362,7 +359,8 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": None,
+                            "articleCode": journal_name + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -374,36 +372,40 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             "articleKeywords": {"TR": None,
                                                 "ENG": keywords_eng},
                             "articleAuthors": Author.author_to_dict(author_objects) if author_objects else [],
-                            "articleReferences": references if references else []}
+                            "articleReferences": references if references else [],
+                            "articleURL": article_url,
+                            "base64PDF": None}
 
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of wolters_kluwer journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of wolters_kluwer journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
-
-                    create_logs(True, get_logs_path(parent_type, file_reference))
-                    # Update the most recently scanned issue according to the journal type
-                    update_scanned_issues(recent_volume, recent_issue,
-                                          get_logs_path(parent_type, file_reference))
-                    return 590 if is_test else timeit.default_timer() - start_time
+                # Successfully completed the operations
+                create_logs(True, get_logs_path(parent_type, file_reference))
+                update_scanned_issues(recent_volume, recent_issue,
+                                      get_logs_path(parent_type, file_reference))
+                return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping wolters_kluwer journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))

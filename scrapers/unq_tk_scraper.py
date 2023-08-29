@@ -14,11 +14,9 @@ from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
+from common.helpers.methods.pdf_cropper import crop_pages
 from common.services.azure.azure_helper import AzureHelper
-from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
 from common.services.tk_api.tk_service import TKServiceWorker
@@ -30,10 +28,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-with_azure = True
-with_adobe = True
 is_test = True
 json_two_articles = True if is_test else False
+
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
@@ -164,11 +161,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)
     return final_article_data
 
 
 def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -183,14 +181,16 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
+    # Notlar
     # jpmrs VE tjrms ÇİFT DİLLİ, journalofoncology TEK DİLLİ İNGİLİZCE
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
             driver.get(check_url(start_page_url))
-            time.sleep(1)
+            time.sleep(1.5)
             try:
-                #Get Vol, Issue and Year from the home page
+                # Get Vol, Issue and Year from the home page
                 if not "journalofoncology" in start_page_url:
                     recent_issue_text = driver.find_element(By.CSS_SELECTOR,
                                                             'div[class^="issue-details col-md-4"]').text
@@ -204,7 +204,8 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 recent_issue = int(numbers[2])
 
             except Exception as e:
-                raise GeneralError(f"Volume, issue or year data of unq_tk journal is absent! Error encountered was: {e}")
+                raise GeneralError(
+                    f"Volume, issue or year data of unq_tk journal is absent! Error encountered was: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
@@ -215,13 +216,16 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                     article_urls = [element.find_element(By.TAG_NAME, 'a').get_attribute('href') for element in
                                     driver.find_elements(By.CSS_SELECTOR, 'span[class="article_name"]')]
                 except Exception as e:
-                    send_notification(GeneralError(
-                        f"Error while getting unq_tk article urls of unq_tk journal. Error encountered was: {e}"))
-                    raise e
+                    raise GeneralError(
+                        f"Error while getting unq_tk article URLs of unq_tk journal. Error encountered was: {e}")
 
-                for url in article_urls:
+                if not article_urls:
+                    raise GeneralError(
+                        GeneralError(f'No URLs scraped from unq_tk journal with name: {journal_name}'))
+
+                for article_url in article_urls:
                     with_adobe, with_azure = False, True  # UNQ TK journals have the references listed
-                    driver.get(url)
+                    driver.get(article_url)
                     time.sleep(2)
                     try:
                         main_element = driver.find_element(By.CSS_SELECTOR,
@@ -234,7 +238,8 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                     try:
                         # Article Type
                         article_type = main_element.find_element(By.CSS_SELECTOR,
-                                                                 'div[class="bold-medium blue-light-back"]').text if not "journalofoncology" in start_page_url else driver.find_element(
+                                                                 'div[class="bold-medium blue-light-back"]').text \
+                            if not "journalofoncology" in start_page_url else driver.find_element(
                             By.CSS_SELECTOR, 'div[class="category-panel-name"]').text.strip()
                         article_type = identify_article_type(article_type, 0)
 
@@ -242,14 +247,13 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         author_names = main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[
                             0].text.split(',')
                         author_affiliations_data = \
-                        main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[1].text
+                            main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[1].text
                         author_affiliations = list()
                         array = [author_affiliations_data.index(found) for found in
                                  re.findall('[a-z][A-Z]', author_affiliations_data)]
-                        for i in range(len(array)):
+                        for k in range(len(array)):
                             try:
-                                author_affiliations.append(author_affiliations_data[array[i]: array[i + 1]][1:])
-                                i += 1
+                                author_affiliations.append(author_affiliations_data[array[k]: array[k + 1]][1:])
                             except:
                                 author_affiliations.append(author_affiliations_data[array[-1]:][1:])
 
@@ -275,7 +279,7 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                     author.all_speciality = author_affiliations[0]
                                 author_objects.append(author)
                             except Exception:
-                                pass
+                                author_objects.append(author)
 
                         # DOI
                         article_doi = main_element.find_element(By.CSS_SELECTOR,
@@ -369,7 +373,8 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -381,43 +386,45 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             "articleKeywords": {"TR": keywords_tr,
                                                 "ENG": keywords_eng},
                             "articleAuthors": Author.author_to_dict(author_objects) if author_objects else [],
-                            "articleReferences": references}
+                            "articleReferences": references,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of wolters_kluwer journal {journal_name} with article number {i}. "
+                            f"Passed one article of unq_tk journal {journal_name} with article number {i}. "
                             f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
-
+                # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
-                # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
-        tb_str = traceback.format_exc()
-        print(tb_str)
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping unq_tk journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
-        # return timeit.default_timer() - start_time
-        return 599
+        return 590 if is_test else timeit.default_timer() - start_time

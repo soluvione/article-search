@@ -176,6 +176,8 @@ def populate_with_azure_data(final_article_data, azure_article_data):
             pass
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 

@@ -1,5 +1,6 @@
 import json
 import requests
+import base64
 from common.services.send_sms import send_notification
 
 
@@ -41,14 +42,31 @@ class TKServiceWorker:
 
             response = requests.post(url_endpoint, headers=headers, data=body)
             status = response.json()["success"]
-
+            print(status)
             print(response.json())
         except Exception as e:
             print(e)
 
+    def encode_base64(self, pdf_path:str) -> str:
+        """
+        The instance method for encoding and decoding the PDF afterwards
+        :param pdf_path: Full PATH of the original PDF
+        :return: Returns string representation of PDF
+        """
+        try:
+            with open(pdf_path, "rb") as file:
+                pdf_data = file.read()
+
+            pdf_base64 = base64.b64encode(pdf_data).decode()
+            return pdf_base64
+        except Exception as e:
+            return f"PDF Encoding hatası alındı. Lütfen sistem yetkiliniz ile görüşünüz! Hata kodu: {e}"
+
+
+
 # Integration Test
 if __name__ == "__main__":
     worker = TKServiceWorker()
-    with open (r"C:\Users\BT-EMIN\Desktop\Article-Search-20230818T053035Z-001\Article-Search\Ayşe Hanım\jsons\2_anestezidergisi.json", "r", encoding="utf-8") as file:
+    with open (r"C:\Users\BT-EMIN\Desktop\Article-Search-20230818T053035Z-001\Article-Search\Ayşe Hanım\jsons\4_experimentalbiomedicalresearch.json", "r", encoding="utf-8") as file:
         test_data = json.loads(file.read())
     worker.test_send_data(test_data)

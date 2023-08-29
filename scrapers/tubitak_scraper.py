@@ -13,11 +13,8 @@ from classes.author import Author
 from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
-from common.services.azure.azure_helper import AzureHelper
+from common.helpers.methods.pdf_cropper import split_in_half
 from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_sms import send_notification
 import common.helpers.methods.others
@@ -30,8 +27,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-with_azure = False
-with_adobe = True
 is_test = True
 json_two_articles = True if is_test else False
 
@@ -164,11 +159,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -183,6 +179,7 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
@@ -217,14 +214,19 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                     send_notification(GeneralError(
                         f"Error while getting tubitak article urls of tubitak journal. Error encountered was: {e}"))
 
-                for url in article_urls:
+                if not article_urls:
+                    raise GeneralError(
+                        GeneralError(f'No URLs scraped from tubitak journal with name: {journal_name}'))
+
+                for article_url in article_urls:
                     with_adobe, with_azure = True, False
-                    driver.get(url)
+                    driver.get(article_url)
                     time.sleep(2)
 
                     try:
                         keywords_eng = driver.find_element(By.ID, "keywords").text.strip().split('\n')[-1]
                     except:
+                        i += 1
                         continue
 
                     try:
@@ -256,7 +258,6 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                             By.TAG_NAME, 'a').get_attribute('href')
 
                         references = None
-                        file_name = None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path, is_long=True):
@@ -270,16 +271,14 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                                         adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                         adobe_references = AdobeHelper.get_analysis_results(adobe_response)
                                         references = adobe_references
-                            else:
-                                with_azure, with_adobe = False, False
 
                         keywords_tr, abstract_tr, article_title_tr = None, None, None
-
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": "ORİJİNAL ARAŞTIRMA",
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -291,18 +290,25 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                             "articleKeywords": {"TR": keywords_tr,
                                                 "ENG": keywords_eng},
                             "articleAuthors": Author.author_to_dict(author_objects) if author_objects else [],
-                            "articleReferences": references}
-                        pprint.pprint(final_article_data)
+                            "articleReferences": references,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
@@ -311,19 +317,15 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                             f"Passed one article of tubitak journal {journal_name} with article number {i}. "
                             f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
-
+                # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
-                # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
-        tb_str = traceback.format_exc()
-        print(tb_str)
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping tubitak journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)

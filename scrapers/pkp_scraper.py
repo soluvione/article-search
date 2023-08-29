@@ -172,11 +172,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
             pass
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -191,6 +192,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
@@ -222,13 +224,15 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             if "press" not in article_issues_element.find_element(By.CLASS_NAME, "title").text else None
 
                 numbers = re.findall(r'\d+', recent_vol_issue_text)
-                numbers = [int(i) for i in numbers]
+                numbers = [int(n) for n in numbers]
                 recent_volume, recent_issue = numbers[:2]
 
                 if not volume_link:
                     raise GeneralError(f"No volume_link found for the journal {journal_name}")
             except Exception as e:
-                raise e
+                raise GeneralError(f"An error occured while retrieving the vol-issue data of PKP journal {journal_name}."
+                                   f"Error encountered: {e}")
+
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
@@ -252,11 +256,13 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             article_types.append(
                                 identify_article_type(article_section.find_element(By.TAG_NAME, "h2").text, 0))
                 except Exception as e:
-                    raise e
-                for url in article_urls:
+                    raise GeneralError(f"An error occured while getting article URLs of PKP journal {journal_name}. Error"
+                                       f"encountered: {e}")
+
+                for article_url in article_urls:
                     with_adobe, with_azure = True, True
                     try:
-                        driver.get(url)
+                        driver.get(article_url)
                         time.sleep(3)
                         article_element = driver.find_element(By.CLASS_NAME, "obj_article_details")
                         try:
@@ -450,12 +456,12 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                 selected_author.mail = azure_article_data["emails"][0]
                                 selected_author.is_correspondence = True
 
-                        abbreviation = ""
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": article_types[i - 1],
                             "articleDOI": doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": journal_name + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": datetime.now().year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -466,41 +472,47 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                                  "ENG": abstract_eng},
                             "articleKeywords": {"TR": keywords_tr,
                                                 "ENG": keywords_eng},
-                            "articleAuthors": Author.author_to_dict(authors) if authors else [],
-                            "articleReferences": references if references else []}
+                            "articleAuthors": Author.author_to_dict(authors) if authors else None,
+                            "articleReferences": references if references else None,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of pkp journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of PKP journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
-                    create_logs(True, get_logs_path(parent_type, file_reference))
-                    # Update the most recently scanned issue according to the journal type
-                    update_scanned_issues(recent_volume, recent_issue,
-                                          get_logs_path(parent_type, file_reference))
-                    return 590 if is_test else timeit.default_timer() - start_time
+                # Successfully completed the operations
+                create_logs(True, get_logs_path(parent_type, file_reference))
+                update_scanned_issues(recent_volume, recent_issue,
+                                      get_logs_path(parent_type, file_reference))
+                return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping pkp journal "
+        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping PKP journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time
-

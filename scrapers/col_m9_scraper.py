@@ -29,8 +29,9 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-json_two_articles = False
 is_test = True
+json_two_articles = True if is_test else False
+
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
@@ -161,11 +162,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -175,11 +177,12 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
-    options.add_argument("--headless")  # This line enables headless mode
+    options.add_argument("--headless")
     service = ChromeService(executable_path=ChromeDriverManager().install())
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
@@ -189,7 +192,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 close_button = driver.find_element(By.XPATH, '//*[@id="dvPopupModal"]/button')
                 close_button.click()
                 time.sleep(2)
-            except Exception as e:
+            except Exception:
                 pass
 
             try:
@@ -202,7 +205,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 col_m9_element = driver.find_element(By.CLASS_NAME, "col-md-9")
                 document_detail_items = col_m9_element.find_elements(By.CLASS_NAME, "document-detail")
             except Exception as e:
-                raise e
+                raise GeneralError(f"Error while getting recent volume or issue data or retrieving article elements of "
+                                   f"col_m9 journal with name {journal_name}. Error encountered is {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
@@ -218,17 +222,20 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             article_urls.append(url_item.get_attribute("href"))
                     except Exception as e:
                         send_notification(GeneralError(
-                            f"Error while getting col_m9 article urls of journal: {journal_name}. Error encountered was: {e}"))
+                            f"Error while getting col_m9 article urls of journal: {journal_name}. "
+                            f"Error encountered was: {e}"))
 
-                for url in article_urls:
+                for article_url in article_urls:
                     with_adobe, with_azure = True, True
-                    driver.get(url)
+                    driver.get(article_url)
+                    time.sleep(3)
                     try:
                         column_bar = driver.find_element(By.CLASS_NAME, "col-md-3")
                         try:
                             download_link = column_bar.find_element(By.ID, 'ctl09_ArticleTools_aPdf').get_attribute('href')
-                        except Exception:
+                        except Exception as e:
                             download_link = None
+                            send_notification(GeneralError(f"No download link found for col_m9 journal with name {journal_name}."))
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
@@ -242,12 +249,19 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             else:
                                 with_adobe, with_azure = False, False
 
-                        article_data_element = driver.find_element(By.CSS_SELECTOR,
+                        try:
+                            article_data_element = driver.find_element(By.CSS_SELECTOR,
                                                                    ".document-detail.about.search-detail")
+                        except Exception as e:
+                            raise GeneralError(f"No main article data element found for col_m9 journal {journal_name},"
+                                               f"with number {i}.")
 
                         # Type
-                        article_type = identify_article_type(
+                        try:
+                            article_type = identify_article_type(
                             article_data_element.find_element(By.TAG_NAME, "h3").text.strip(), 0)
+                        except Exception:
+                            article_type = "ORİJİNAL ARAŞTIRMA"
 
                         # Title
                         article_title = article_data_element.find_element(By.CSS_SELECTOR,
@@ -259,12 +273,15 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         # Abbreviation
                         full_abbreviation = article_data_element.find_element(By.CLASS_NAME,
                                                                               "date-detail-txt").text.strip()
-                        abbreviation = ''.join([i for i in full_abbreviation if i.isalpha() or i.isspace()])
+                        abbreviation = ''.join([_x for _x in full_abbreviation if _x.isalpha() or _x.isspace()])
                         abbreviation = abbreviation.strip()
 
                         # Page range
-                        article_page_range = [int(full_abbreviation.split(':')[-1].split('-')[0]),
-                                              int(full_abbreviation.split(':')[-1].split('-')[1])]
+                        try:
+                            article_page_range = [int(full_abbreviation.split(':')[-1].split('-')[0]),
+                                                  int(full_abbreviation.split(':')[-1].split('-')[1])]
+                        except:
+                            article_page_range = [0, 1]
 
                         # Authors
                         author_elements = article_data_element.find_element(By.CLASS_NAME, "mb-20")
@@ -282,7 +299,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 authors.append(author)
                             except Exception as e:
                                 send_notification(GeneralError(
-                                    f"Error while getting col_m9 article authors' data of journal: {journal_name}. Error encountered was: {e}"))
+                                    f"Error while getting col_m9 article authors' data of journal: {journal_name}. "
+                                    f"Error encountered was: {e}"))
 
                         navigation_bar = article_data_element.find_element(By.CSS_SELECTOR, ".nav.nav-tabs")
                         navigation_bar.find_elements(By.TAG_NAME, "li")[0].click()
@@ -322,7 +340,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 references = adobe_references
 
                         # Get Azure Data
-                        if download_link and file_name:
+                        if download_link and file_name and with_azure:
                             azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                             azure_data = azure_response_dictionary["Data"]
                             azure_article_data = AzureHelper.format_general_azure_data(azure_data)
@@ -346,49 +364,57 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": datetime.now().year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
                             "articlePageRange": article_page_range,
-                            "articleTitle": {"TR": article_title if page_language == "tr" else "",
-                                             "ENG": article_title if page_language == "en" else ""},
-                            "articleAbstracts": {"TR": abstract if page_language == "tr" else "",
-                                                 "ENG": abstract if page_language == "en" else ""},
-                            "articleKeywords": {"TR": keywords if page_language == "tr" else [],
-                                                "ENG": keywords if page_language == "en" else []},
-                            "articleAuthors": Author.author_to_dict(authors) if authors else [],
-                            "articleReferences": references if references else []}
+                            "articleTitle": {"TR": article_title if page_language == "tr" else None,
+                                             "ENG": article_title if page_language == "en" else None},
+                            "articleAbstracts": {"TR": abstract if page_language == "tr" else None,
+                                                 "ENG": abstract if page_language == "en" else None},
+                            "articleKeywords": {"TR": keywords if page_language == "tr" else None,
+                                                "ENG": keywords if page_language == "en" else None},
+                            "articleAuthors": Author.author_to_dict(authors) if authors else None,
+                            "articleReferences": references if references else None,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of col_m9 journal {journal_name} with article number {i}. Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of col_m9 journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
+                # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
-                # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_m9 journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))

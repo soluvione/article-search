@@ -13,8 +13,7 @@ from common.erorrs import GeneralError
 from classes.author import Author
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
@@ -34,8 +33,8 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests
 
-json_two_articles = False
 is_test = True
+json_two_articles = True if is_test else False
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
@@ -174,11 +173,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
             pass
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -188,19 +188,20 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
-    options.add_argument("--headless")  # This line enables headless mode
+    options.add_argument("--headless")
     service = ChromeService(executable_path=ChromeDriverManager().install())
 
     # Set start time
     start_time = timeit.default_timer()
     i = 0  # Will be used to distinguish article numbers
+
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
             try:
-                # ARCHIEVE PAGE TO THE LATEST ISSUE
+                # ARCHIVE PAGE TO THE LATEST ISSUE
                 driver.get(start_page_url)
                 driver.maximize_window()
-                time.sleep(1)
+                time.sleep(3)
                 # The archive page has either two styles, list or boxes
                 try:
                     col_lg_element = driver.find_element(By.CSS_SELECTOR, ".col-lg-6.col-md-6.col-sm-6.col-xs-12")
@@ -208,10 +209,10 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                     col_lg_element = None
 
                 if col_lg_element:
-                    year = int(col_lg_element.find_element(By.CLASS_NAME, "panel-heading").text)
+                    article_year = int(col_lg_element.find_element(By.CLASS_NAME, "panel-heading").text)
                     vol_issue_text = col_lg_element.find_element(By.CLASS_NAME, "list-group-item-archive").text
                     numbers = re.findall(r'\d+', vol_issue_text)
-                    numbers = [int(i) for i in numbers]
+                    numbers = [int(n) for n in numbers]
                     recent_volume, recent_issue = numbers
                     issue_link = col_lg_element.find_element(By.CLASS_NAME, "list-group-item-archive").find_element(
                         By.TAG_NAME, "a") \
@@ -245,20 +246,20 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
 
                     # Identify issue number and issue link
                     recent_issue, issue_link = None, None
-                    for i in range(len(first_six_a_tags_with_text)):
-                        current_issue = re.findall(r'\d+', first_six_a_tags_with_text[i].text)
-                        next_issue = re.findall(r'\d+', first_six_a_tags_with_text[i + 1].text) if i + 1 < len(
+                    for k in range(len(first_six_a_tags_with_text)):
+                        current_issue = re.findall(r'\d+', first_six_a_tags_with_text[k].text)
+                        next_issue = re.findall(r'\d+', first_six_a_tags_with_text[k + 1].text) if k + 1 < len(
                             first_six_a_tags_with_text) else None
                         if int(current_issue[0]) == 2022 or int(next_issue[0]) == 2022:
                             break
                         if current_issue and next_issue and int(current_issue[0]) > int(next_issue[0]):
                             recent_issue = int(current_issue[0])
-                            issue_link = urljoin(start_page_url, first_six_a_tags_with_text[i]['href'])
+                            issue_link = urljoin(start_page_url, first_six_a_tags_with_text[k]['href'])
                             break
 
-                        elif current_issue and i + 1 == len(first_six_a_tags_with_text):
+                        elif current_issue and k + 1 == len(first_six_a_tags_with_text):
                             recent_issue = int(current_issue[0])
-                            issue_link = urljoin(start_page_url, first_six_a_tags_with_text[i]['href'])
+                            issue_link = urljoin(start_page_url, first_six_a_tags_with_text[k]['href'])
                             break
 
                     # Extract year
@@ -315,10 +316,14 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                     for element in elements:
                         element_text = re.sub(r"[^A-Za-z\s]", "", element.get_text(strip=True))
                         number_of_times = re.findall(r"\d+", element.get_text(strip=True))[0]
-                        for i in range(int(number_of_times)):
+                        for x in range(int(number_of_times)):
                             article_types.append(element_text.strip())
                 except Exception as e:
                     raise e
+
+                if not article_urls:
+                    raise GeneralError(
+                        GeneralError(f'No URLs scraped from col_md12 journal with name: {journal_name}'))
 
                 for article_url in article_urls:
                     with_adobe, with_azure = True, True
@@ -327,11 +332,6 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         time.sleep(3)
                         main_element = driver.find_element(By.ID, "icerik-alani")
                         soup = BeautifulSoup(main_element.get_attribute("outerHTML"), 'html.parser')
-
-                        try:
-                            authors_element = driver.find_element(By.ID, "authors_div").text.split(',')
-                        except Exception:
-                            pass
 
                         def has_sup_with_text(element):
                             return element.name == 'span' and element.find('sup') is not None
@@ -356,7 +356,8 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         # Abstract
                         try:
                             abstract = soup.get_text()[
-                                   soup.get_text().index("DOI") + 20: soup.get_text().index("Keywords")].replace("\n", "")
+                                       soup.get_text().index("DOI") + 20: soup.get_text().index("Keywords")].replace(
+                                "\n", "")
                         except Exception:
                             abstract = soup.get_text()[
                                        soup.get_text().index("Türkiye") + 20: soup.get_text().index("Anahtar")].replace(
@@ -382,7 +383,8 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             # Author Objects
                             for author_name in authors_names:
                                 try:
-                                    new_author = Author(name=author_name[:-1], all_speciality=specialities[int(author_name.strip()[-1])])
+                                    new_author = Author(name=author_name[:-1],
+                                                        all_speciality=specialities[int(author_name.strip()[-1])])
                                     authors.append(new_author)
                                 except Exception:
                                     pass
@@ -442,37 +444,73 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                                 selected_author.is_correspondence = True
 
                         article_lang = "tr" if "ü" in journal_name or "ğ" in journal_name else "en"
-                        abbreviation = ""
+
+                        if "norosir" in start_page_url:
+                            abbreviation = "Türk Nöroşir Derg"
+                        elif "turkishneurosurgery" in start_page_url:
+                            abbreviation = "Turk Neurosurg"
+                        elif "ftrdergisi" in start_page_url:
+                            abbreviation = "Turk J Phys Med Rehab"
+                        elif "onkder" in start_page_url:
+                            abbreviation = "Turk J Oncol"
+                        elif "geriatri" in start_page_url:
+                            abbreviation = None
+                        elif "turkishjournalpediatrics" in start_page_url:
+                            abbreviation = "Turk J Pediatr"
+                        elif "vetdergikafkas" in start_page_url:
+                            abbreviation = "Kafkas Univ Vet Fak Derg"
+                        elif "jrespharm" in start_page_url:
+                            abbreviation = "J Res Pharm"
+                        elif "jcritintensivecare" in start_page_url:
+                            abbreviation = "J Crit Intensive Care"
+                        elif "cshd" in start_page_url:
+                            abbreviation = None
+                        else:
+                            abbreviation = None
+
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": identify_article_type(article_types[i - 1], 0),
                             "articleDOI": doi,
-                            "articleCode": abbreviation if abbreviation else None,
-                            "articleYear": datetime.now().year,
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): {0}-{0}",
+                            "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
                             "articlePageRange": None,
-                            "articleTitle": {"TR": re.sub(r'[\t\n]', '', titles_text[i-1]).strip() if article_lang == "tr" else None,
-                                             "ENG": re.sub(r'[\t\n]', '', titles_text[i-1]).strip() if article_lang == "en" else None},
-                            "articleAbstracts": {"TR": re.sub(r'[\t\n]', '', abstract).strip() if article_lang == "tr" else None,
-                                                 "ENG": re.sub(r'[\t\n]', '', abstract).strip() if article_lang == "en" else None},
-                            "articleKeywords": {"TR": re.sub(r'[\t\n]', '', keywords) if article_lang == "tr" else None,
-                                                "ENG": re.sub(r'[\t\n]', '', keywords) if article_lang == "en" else None},
-                            "articleAuthors": Author.author_to_dict(authors) if authors else [],
-                            "articleReferences": references}
+                            "articleTitle": {"TR": re.sub(r'[\t\n]', '', titles_text[i - 1]).strip()
+                            if article_lang == "tr" else None,
+                                             "ENG": re.sub(r'[\t\n]', '', titles_text[i - 1]).strip()
+                                             if article_lang == "en" else None},
+                            "articleAbstracts": {"TR": re.sub(r'[\t\n]', '', abstract).strip()
+                            if article_lang == "tr" else None,
+                                                 "ENG": re.sub(r'[\t\n]', '', abstract).strip()
+                                                 if article_lang == "en" else None},
+                            "articleKeywords": {"TR": re.sub(r'[\t\n]', '', keywords)
+                            if article_lang == "tr" else None,
+                                                "ENG": re.sub(r'[\t\n]', '',
+                                                              keywords) if article_lang == "en" else None},
+                            "articleAuthors": Author.author_to_dict(authors) if authors else None,
+                            "articleReferences": references,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
@@ -482,17 +520,16 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             f"Error encountered was: {e}. Traceback: {tb_str}"))
                         continue
 
+                # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
-                # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_md12 journal "
-                                       f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_md12 journal"
+                                       f" {journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time

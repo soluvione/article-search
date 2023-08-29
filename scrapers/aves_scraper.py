@@ -12,8 +12,7 @@ import timeit
 from common.erorrs import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
@@ -30,8 +29,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from webdriver_manager.chrome import ChromeDriverManager
 
-with_azure = True
-with_adobe = True
 is_test = True
 json_two_articles = True if is_test else False
 
@@ -164,11 +161,12 @@ def populate_with_azure_data(final_article_data, azure_article_data):
         final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
+    if not final_article_data["articleDOI"]:
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
     return final_article_data
 
 
 def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
-    i = 0
     # Webdriver options
     # Eager option shortens the load time. Driver also always downloads the pdfs and does not display them
     options = Options()
@@ -178,11 +176,12 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
-    options.add_argument("--headless")  # This line enables headless mode
+    options.add_argument("--headless")
     service = ChromeService(executable_path=ChromeDriverManager().install())
 
     # Set start time
     start_time = timeit.default_timer()
+    i = 0  # Will be used to distinguish article numbers
 
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
@@ -205,7 +204,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
 
                 recent_volume, recent_issue, article_year = numbers[0], numbers[1], numbers[2]
             except Exception as e:
-                raise GeneralError("Volume, issue or year data of aves journal is absent!")
+                raise GeneralError(f"Volume, issue or year data of aves journal is absent! Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
@@ -215,12 +214,18 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                     for item in driver.find_elements(By.CSS_SELECTOR, "[class='article']"):
                         article_urls.append(item.find_element(By.TAG_NAME, 'a').get_attribute('href'))
                 except Exception as e:
-                    send_notification(GeneralError(
-                        f"Error while getting aves article urls of journal: {journal_name}. Error encountered was: {e}"))
+                    if len(article_urls) < 3:
+                        raise e
+                    else:
+                        pass
 
-                for url in article_urls:
+                if not article_urls:
+                    raise GeneralError(
+                        GeneralError(f'No URLs scraped from aves journal with name: {journal_name}'))
+
+                for article_url in article_urls:
                     with_adobe, with_azure = True, True
-                    driver.get(url)
+                    driver.get(article_url)
                     time.sleep(5)
                     try:
                         # You need to click on collapsed arrow head to expand the affiliations
@@ -235,9 +240,12 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         except Exception:
                             download_link = None
 
-                        # Article Type
-                        article_type = identify_article_type(
-                            driver.find_element(By.CSS_SELECTOR, "[class^='article_type_hea']").text.strip(), 0)
+                        try:
+                            # Article Type
+                            article_type = identify_article_type(
+                                driver.find_element(By.CSS_SELECTOR, "[class^='article_type_hea']").text.strip(), 0)
+                        except Exception:
+                            article_type = "ORİJİNAL ARAŞTIRMA"
 
                         # Article Title - Only English Available for Aves Journals
                         article_title = driver.find_element(By.CLASS_NAME, 'article_content').text.strip()
@@ -245,15 +253,26 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         # Abstract - Only English Available for Aves Journals
                         abstract = driver.find_element(By.CSS_SELECTOR, '.content').text.split("Cite this")[0].strip()
 
-                        # Keywords - Only English Available for Aves Journals
-                        keywords = driver.find_element(By.CSS_SELECTOR, '.keyword').text.split(':')[-1].strip().split(
-                            ',')
-                        keywords = [keyword.strip() for keyword in keywords]
+                        try:
+                            # Keywords - Only English Available for Aves Journals
+                            keywords = driver.find_element(By.CSS_SELECTOR, '.keyword').text.split(':')[-1].strip().split(
+                                ',')
+                            keywords = [keyword.strip() for keyword in keywords]
+                        except Exception:
+                            i += 1
+                            continue
 
                         # Abbreviation and Page Range
                         bulk_text = driver.find_element(By.CSS_SELECTOR, 'div.journal').text
-                        abbreviation = re.sub(r'\d+|[:.;-]+', '', bulk_text).strip()
-                        article_page_range = [int(number) for number in bulk_text.split()[-1].split('-')]
+                        try:
+                            abbreviation = re.sub(r'\d+|[:.;-]+', '', bulk_text).strip()
+                        except Exception:
+                            abbreviation = ""
+                        try:
+                            article_page_range = [int(number) for number in bulk_text.split()[-1].split('-')]
+                        except:
+                            article_page_range = [0, 1]
+
 
                         # Authors
                         authors_element = driver.find_element(By.CLASS_NAME, 'article-author')
@@ -277,18 +296,20 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                 author.is_correspondence = True if authors_list.index(author_name) == 0 else False
                                 authors.append(author)
                             except Exception as e:
-                                send_notification(GeneralError(
-                                    f"Error while getting aves article authors' data of journal: {journal_name}. Error encountered was: {e}"))
+                                pass
 
-                        # DOI
-                        article_doi = driver.find_element(By.CSS_SELECTOR, '.doi').text.split(':')[-1].strip()
+                        try:
+                            # DOI
+                            article_doi = driver.find_element(By.CSS_SELECTOR, '.doi').text.split(':')[-1].strip()
+                        except:
+                            article_doi = None
 
                         references = None  # Aves Journals never have references
                         file_name = None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path, is_long=True):
-                                file_name = get_recently_downloaded_file_name(download_path)
+                                file_name = get_recently_downloaded_file_name(download_path)  # Full Path
                                 # Send PDF to Azure and format response
                                 if with_azure:
                                     first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
@@ -320,7 +341,8 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                             "journalName": f"{journal_name}",
                             "articleType": article_type,
                             "articleDOI": article_doi,
-                            "articleCode": abbreviation if abbreviation else "",
+                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                          f"{article_page_range[0]}-{article_page_range[1]}",
                             "articleYear": article_year,
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
@@ -331,21 +353,28 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                                  "ENG": abstract},
                             "articleKeywords": {"TR": None,
                                                 "ENG": keywords},
-                            "articleAuthors": Author.author_to_dict(authors) if authors else [],
-                            "articleReferences": references}
+                            "articleAuthors": Author.author_to_dict(authors) if authors else None,
+                            "articleReferences": references,
+                            "articleURL": article_url,
+                            "base64PDF": ""}
+
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        pprint.pprint(final_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
+                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
-                            clear_directory(download_path)
                             raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
+
+                        if is_test and i >= 2:
+                            return 590
                     except Exception as e:
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
@@ -355,15 +384,14 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         i += 1
                         continue
 
+                # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
-                # Update the most recently scanned issue according to the journal type
                 update_scanned_issues(recent_volume, recent_issue,
                                       get_logs_path(parent_type, file_reference))
                 return 590 if is_test else timeit.default_timer() - start_time
             else:  # Already scanned the issue
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
-
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping aves journal "
                                        f"{journal_name} with article number {i}. Error encountered was: {e}."))

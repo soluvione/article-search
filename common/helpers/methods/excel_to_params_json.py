@@ -5,7 +5,7 @@ import json
 
 def excel_to_params_json():
     # Read Excel data
-    df = pd.read_excel(r'C:\Users\emine\PycharmProjects\Article-Search\col_md12.xlsx', header=None)
+    df = pd.read_excel(r"C:\Users\BT-EMIN\Desktop\Article-Search-20230818T053035Z-001\Article-Search\excels\dispatcher_excels\wolters_kluwer.xlsx", header=None)
 
     # Initialize empty list to store the data
     data_list = []
@@ -27,10 +27,10 @@ def excel_to_params_json():
         last_element = str(index + 1) + str_f + "".join(objects_list)
 
         # Append to the main list
-        data_list.append([data1.strip(), data2, "col_md12", 1, "thursday_1-11_col_md12", last_element])
+        data_list.append([data1.strip(), data2, "wolters_kluwer", 1, "sunday_1-4_wolters_kluwer", last_element])
 
     # Convert list to JSON and write it to a file
-    with open('../../../dispatchers/col_md12/col_md12_1-11/1-11_col_md12_params.json', 'w', encoding='utf-8') as f:
+    with open('../../../dispatchers/wolters_kluwer/wolters_kluwer_1-4/wolters_kluwer_1-4_params.json', 'w', encoding='utf-8') as f:
         json.dump(data_list, f, indent=4, ensure_ascii=False)
 
 
