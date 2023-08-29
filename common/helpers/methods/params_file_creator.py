@@ -7,14 +7,14 @@ import os
 
 def create_files_from_params():
     with open(
-            r'C:\Users\emine\PycharmProjects\Article-Search\dispatchers\col_md12\col_md12_1-11\1-11_col_md12_params.json',
+            r'C:\Users\BT-EMIN\PycharmProjects\article-search\dispatchers\wolters_kluwer\wolters_kluwer_1-4\wolters_kluwer_1-4_params.json',
             'r', encoding='utf-8') as f:
         params_data = json.load(f)
     # journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference
     for param_item in params_data:
         first_level = param_item[4]
         second_level = param_item[-1]
-        prefix_path = r'C:\Users\emine\PycharmProjects\Article-Search\downloads_n_logs\col_md12_manual\thursday_1-11_col_md12'
+        prefix_path = r'C:\Users\BT-EMIN\PycharmProjects\article-search\downloads_n_logs\wolters_kluwer_manual\sunday_1-4_wolters_kluwer'
         abs_path = os.path.join(prefix_path, second_level)
         os.makedirs(os.path.join(abs_path, 'logs'))
         os.makedirs(os.path.join(abs_path, 'downloads'))
