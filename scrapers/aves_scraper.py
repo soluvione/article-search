@@ -383,7 +383,6 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         clear_directory(download_path)
                         i += 1
                         continue
-
                 # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))
                 update_scanned_issues(recent_volume, recent_issue,
