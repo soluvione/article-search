@@ -6,8 +6,12 @@ from common.services.send_sms import send_notification
 
 class TKServiceWorker:
     def __init__(self):
-        with open("tk_api_config.json", "r") as config_file:
-            config_content = json.load(config_file)
+        try:
+            with open("./tk_api_config.json", "r") as config_file:
+                config_content = json.load(config_file)
+        except:
+            with open("/home/ubuntu/article-search/common/services/tk_api/tk_api_config.json", "r") as config_file:
+                config_content = json.load(config_file)
 
         self.__url_endpoint = config_content["URL"]
         self.__headers = config_content["HEADERS"]
