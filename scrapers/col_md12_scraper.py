@@ -189,7 +189,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
     options.add_argument("--headless")
-    service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
+    service = ChromeService(executable_path=ChromeDriverManager().install())
 
     # Set start time
     start_time = timeit.default_timer()
@@ -393,7 +393,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
 
                         # Download Link
                         try:
-                            download_link = urljoin(start_page_url, article_url).replace("abtract", "pdf")
+                            download_link = urljoin(start_page_url, article_url).replace("abstract", "pdf")
                         except Exception:
                             download_link = None
 
