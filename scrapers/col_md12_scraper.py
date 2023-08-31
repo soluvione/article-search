@@ -454,7 +454,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         elif "onkder" in start_page_url:
                             abbreviation = "Turk J Oncol"
                         elif "geriatri" in start_page_url:
-                            abbreviation = None
+                            abbreviation = ""
                         elif "turkishjournalpediatrics" in start_page_url:
                             abbreviation = "Turk J Pediatr"
                         elif "vetdergikafkas" in start_page_url:
@@ -464,9 +464,9 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         elif "jcritintensivecare" in start_page_url:
                             abbreviation = "J Crit Intensive Care"
                         elif "cshd" in start_page_url:
-                            abbreviation = None
+                            abbreviation = ""
                         else:
-                            abbreviation = None
+                            abbreviation = ""
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
