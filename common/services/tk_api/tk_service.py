@@ -30,9 +30,6 @@ class TKServiceWorker:
 
             response = requests.post(url_endpoint, headers=headers, data=body)
             status: bool = response.json()["success"]
-            print("JSON:", response.json())
-            print("Response:", response)
-            print("Status:", status)
             return 1  # TODO can return the response value of the real response
         except Exception as e:
             send_notification(
@@ -48,8 +45,9 @@ class TKServiceWorker:
 
             response = requests.post(url_endpoint, headers=headers, data=body)
             status = response.json()["success"]
-            print(status)
-            print(response.json())
+            print("JSON:", response.json())
+            print("Response:", response)
+            print("Status:", status)
         except Exception as e:
             print(e)
 

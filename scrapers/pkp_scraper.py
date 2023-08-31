@@ -485,13 +485,18 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
                         final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
-                        response = tk_worker.send_data(final_article_data)
-                        if isinstance(response, Exception):
-                            raise response
+                        if is_test:
+                            response = tk_worker.test_send_data(final_article_data)
+                            if isinstance(response, Exception):
+                                raise response
+                        else:
+                            response = tk_worker.send_data(final_article_data)
+                            if isinstance(response, Exception):
+                                raise response
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
-
+                        exit(1)
                         if is_test and i >= 2:
                             return 590
                     except Exception as e:
