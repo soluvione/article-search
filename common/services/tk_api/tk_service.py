@@ -30,6 +30,7 @@ class TKServiceWorker:
 
             response = requests.post(url_endpoint, headers=headers, data=body)
             status: bool = response.json()["success"]
+            print("JSON:", response.json())
             print("Response:", response)
             print("Status:", status)
             return 1  # TODO can return the response value of the real response
