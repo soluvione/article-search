@@ -13,7 +13,7 @@ options = Options()
 # options.page_load_strategy = 'eager'
 options.add_argument("--disable-notifications")
 options.add_argument('--ignore-certificate-errors')
-service = ChromeService(executable_path=ChromeDriverManager().install())
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 
 # Open the webpage

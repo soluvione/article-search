@@ -145,7 +145,7 @@ def z_dum_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
         options.add_argument("--disable-notifications")
         options.add_argument('--ignore-certificate-errors')
         options.add_argument("--headless")  # This line enables headless mode
-        service = ChromeService(executable_path=ChromeDriverManager().install())
+        service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
 
         # Set start time
         start_time = timeit.default_timer()

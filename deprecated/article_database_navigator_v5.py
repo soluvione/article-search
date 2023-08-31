@@ -20,7 +20,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 options = Options()
 options.page_load_strategy = 'eager'
-service = ChromeService(executable_path=ChromeDriverManager().install())
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 url_list_final = []
 driver.get("https://www.atifdizini.com/login")

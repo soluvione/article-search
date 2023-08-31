@@ -176,7 +176,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
     options.add_argument("--headless")
-    service = ChromeService(executable_path=ChromeDriverManager().install())
+    service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
 
     # Set start time
     start_time = timeit.default_timer()

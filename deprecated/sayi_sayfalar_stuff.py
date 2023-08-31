@@ -48,7 +48,7 @@ options.add_experimental_option('prefs', prefs)
 options.add_argument("--disable-notifications")
 options.add_argument('--ignore-certificate-errors')
 options.add_argument("--headless")  # This line enables headless mode
-service = ChromeService(executable_path=ChromeDriverManager().install())
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
 
 # Set start time
 start_time = timeit.default_timer()
