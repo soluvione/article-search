@@ -7,7 +7,6 @@ import json
 import os
 import sys
 
-
 with open(os.path.join(sys.path[0], "namespace"), "r", encoding='utf-8') as f:
     dict1 = json.loads(f.read())
 
