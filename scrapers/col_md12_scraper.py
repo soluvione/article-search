@@ -497,6 +497,8 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
 
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
+                        if is_test:
+                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
@@ -504,10 +506,8 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
                             raise response
-
                         if is_test:
-                            print("Response:", response, '\n')
-                            pprint.pprint(final_article_data)
+                            print(response)
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
