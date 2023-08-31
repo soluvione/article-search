@@ -218,6 +218,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         By.TAG_NAME, "a") \
                         .get_attribute("href")
                 else:
+                    article_year = datetime.now().year
                     try:
                         driver.find_element(By.CSS_SELECTOR, "[data-toggle='collapse']").click()
                     except Exception:
@@ -477,27 +478,25 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             "articleVolume": recent_volume,
                             "articleIssue": recent_issue,
                             "articlePageRange": None,
-                            "articleTitle": {"TR": re.sub(r'[\t\n]', '', titles_text[i - 1]).strip()
+                            "articleTitle": {"TR": re.sub(r'[\t\n\s]{2,}', '', titles_text[i - 1]).strip()
                             if article_lang == "tr" else None,
-                                             "ENG": re.sub(r'[\t\n]', '', titles_text[i - 1]).strip()
+                                             "ENG": re.sub(r'[\t\n\s]{2,}', '', titles_text[i - 1]).strip()
                                              if article_lang == "en" else None},
-                            "articleAbstracts": {"TR": re.sub(r'[\t\n]', '', abstract).strip()
+                            "articleAbstracts": {"TR": re.sub(r'[\t\n\s]{2,}', '', abstract).strip()
                             if article_lang == "tr" else None,
-                                                 "ENG": re.sub(r'[\t\n]', '', abstract).strip()
+                                                 "ENG": re.sub(r'[\t\n\s]{2,}', '', abstract).strip()
                                                  if article_lang == "en" else None},
-                            "articleKeywords": {"TR": re.sub(r'[\t\n]', '', keywords)
+                            "articleKeywords": {"TR": re.sub(r'[\t\n\s]{2,}', '', keywords)
                             if article_lang == "tr" else None,
-                                                "ENG": re.sub(r'[\t\n]', '',
+                                                "ENG": re.sub(r'[\t\n\s]{2,}', '',
                                                               keywords) if article_lang == "en" else None},
                             "articleAuthors": Author.author_to_dict(authors) if authors else None,
                             "articleReferences": references,
-                            "articleURL": article_url,
+                            "articleURL": urljoin(start_page_url, article_url),
                             "base64PDF": ""}
 
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
-                        if is_test:
-                            pprint.pprint(final_article_data)
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
@@ -505,6 +504,10 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         response = tk_worker.send_data(final_article_data)
                         if isinstance(response, Exception):
                             raise response
+
+                        if is_test:
+                            print("Response:", response, '\n')
+                            pprint.pprint(final_article_data)
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
