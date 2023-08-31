@@ -5,10 +5,13 @@ Cron job for the script:
 """
 import time
 import json
+import sys
 
 from common.erorrs import GeneralError
 from common.services.send_sms import send_notification
 from scrapers.pkp_scraper import pkp_scraper
+
+sys.path.append("/home/ubuntu/article-search")
 
 with open('pkp_1-20_params.json', 'r', encoding='utf-8') as f:
     params_data = json.load(f)
