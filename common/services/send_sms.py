@@ -7,14 +7,17 @@ import json
 from common.erorrs import GeneralError
 from common.constants import account_sid, auth_token
 from twilio.rest import Client
-def send_notification(error, real=False):
+
+
+def send_notification(error, is_real=True):
     """
 
+    :param is_real: bool - Will the function work on test mode or production mode?
     :param error: An error object, could be unique errors or generic errors
     :return: Does not return anything
     """
     # Do stuff depending on the error type here.
-    if real:
+    if is_real:
         client = Client(account_sid, auth_token)
 
         message = client.messages.create(

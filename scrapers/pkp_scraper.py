@@ -28,7 +28,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from fuzzywuzzy import fuzz
 
 is_test = True
@@ -260,7 +259,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                        f"encountered: {e}")
 
                 for article_url in article_urls:
-                    with_adobe, with_azure = True, True
+                    with_adobe, with_azure = False, False
                     try:
                         driver.get(article_url)
                         time.sleep(3)
@@ -496,9 +495,9 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
 
                         i += 1  # Loop continues with the next article
                         clear_directory(download_path)
-                        exit(1)
-                        if is_test and i >= 2:
-                            return 590
+
+                        # if is_test and i >= 2:
+                        #     return 590
                     except Exception as e:
                         i += 1
                         clear_directory(download_path)
