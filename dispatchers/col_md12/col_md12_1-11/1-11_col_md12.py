@@ -5,10 +5,12 @@ Cron job for the script:
 """
 import time
 import json
+import sys
+sys.path.append("/home/ubuntu/article-search")
 
-from ....common.erorrs import GeneralError
-from ....common.services.send_sms import send_notification
-from ....scrapers.col_md12_scraper import col_md12_scraper
+from common.erorrs import GeneralError
+from common.services.send_sms import send_notification
+from scrapers.col_md12_scraper import col_md12_scraper
 
 with open('1-11_col_md12_params.json', 'r', encoding='utf-8') as f:
     params_data = json.load(f)
