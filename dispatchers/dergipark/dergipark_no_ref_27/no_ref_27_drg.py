@@ -5,7 +5,7 @@ Cron job for the script:
 """
 import time
 import json
-from common.services.send_sms import send_notifications
+from common.services.send_notification import send_notifications
 from scrapers.dergipark_scraper import dergipark_scraper
 
 with open('no_ref27_params.json', 'r', encoding='utf-8') as f:

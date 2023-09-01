@@ -6,11 +6,11 @@ import requests
 import base64
 import json
 from common.enums import AzureResponse
-from common.erorrs import GeneralError
+from common.errors import GeneralError
 from common.services.azure.azure_response_extractor import ApiResponseExtractor
 from common.constants import azure_analyse_pdf_url, azure_tk_analyse_pdf_url, subscription_key
 from common.helpers.methods.author_data_mapper import associate_authors_data
-from common.services.send_sms import send_notification
+from common.services.send_notification import send_notification
 
 
 class AzureHelper:

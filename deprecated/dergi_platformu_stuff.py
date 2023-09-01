@@ -9,7 +9,7 @@ import pprint
 import timeit
 import re
 # Local imports
-from common.erorrs import GeneralError
+from common.errors import GeneralError
 from classes.author import Author
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
@@ -19,7 +19,7 @@ from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
 from common.services.adobe.adobe_helper import AdobeHelper
-from common.services.send_sms import send_notification
+from common.services.send_notification import send_notification
 import common.helpers.methods.others
 from scrapers.dergipark_scraper import update_scanned_issues
 # 3rd Party libraries

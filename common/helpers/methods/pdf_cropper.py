@@ -3,7 +3,7 @@ This module includes the functions related to splitting PDFs
 """
 from pathlib import Path
 import os
-from common.services.send_sms import send_notification
+from common.services.send_notification import send_notification
 from pypdf import PdfWriter, PdfReader
 
 def crop_pages(pdf_path: str, num_pages=1) -> str:

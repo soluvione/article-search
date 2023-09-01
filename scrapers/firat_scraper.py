@@ -10,14 +10,14 @@ import timeit
 
 from classes.author import Author
 # Local imports
-from common.erorrs import GeneralError
+from common.errors import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.pdf_cropper import crop_pages
 from common.services.azure.azure_helper import AzureHelper
-from common.services.send_sms import send_notification
+from common.services.send_notification import send_notification
 import common.helpers.methods.others
 from common.services.tk_api.tk_service import TKServiceWorker
 from scrapers.dergipark_scraper import update_scanned_issues

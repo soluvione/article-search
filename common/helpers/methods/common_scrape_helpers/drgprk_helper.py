@@ -1,8 +1,8 @@
 import re
 import os
 from classes.author import Author
-from common.erorrs import GeneralError
-from common.services.send_sms import send_notification
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 
 
 def capitalize_first_occurrence(s):

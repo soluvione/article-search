@@ -1,2 +1,3 @@
 common/services/tk_api/tk_api_config.json
 .idea/
+common/services/gmail/*.json

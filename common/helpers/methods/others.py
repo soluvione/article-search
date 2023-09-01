@@ -1,7 +1,7 @@
 import random
 import string
-from common.erorrs import GeneralError
-from common.services.send_sms import send_notification
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 from fuzzywuzzy import fuzz
 
 

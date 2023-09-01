@@ -5,8 +5,8 @@ import json
 import logging
 import os
 import zipfile
-from common.erorrs import GeneralError
-from common.services.send_sms import send_notification
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
 # 3rd Party imports
 from adobe.pdfservices.operation.auth.credentials import Credentials

@@ -9,8 +9,8 @@ import sys
 # Needed to append this path for the packages to work as expected
 sys.path.append("/home/ubuntu/article-search")
 
-from common.erorrs import GeneralError
-from common.services.send_sms import send_notification
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 from scrapers.dergi_platformu_scraper import dergi_platformu_scraper
 
 with open('dergi_platformu_1-5_params.json', 'r', encoding='utf-8') as f:

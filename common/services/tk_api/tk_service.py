@@ -1,7 +1,9 @@
 import json
 import requests
 import base64
-from common.services.send_sms import send_notification
+
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 
 
 class TKServiceWorker:
@@ -32,9 +34,9 @@ class TKServiceWorker:
             status: bool = response.json()["success"]
             return 1  # TODO can return the response value of the real response
         except Exception as e:
-            send_notification(
+            send_notification(GeneralError(
                 f"An error occured while sending the formatted data to TK backend (send_data, tk_service.py). "
-                f"Error encountered was: {e}")
+                f"Error encountered was: {e}"))
             return e
 
     def test_send_data(self, article_data: dict):

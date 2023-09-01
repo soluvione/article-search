@@ -8,7 +8,7 @@ import os
 import re
 # Local imports
 from classes.author import Author
-from common.erorrs import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
+from common.errors import ScrapePathError, DownloadError, ParseError, GeneralError, DataPostError, DownServerError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.scan_check_append.update_scanned_issues import update_scanned_issues
@@ -19,7 +19,7 @@ from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_co
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
     abstract_formatter
 from common.services.post_json import post_json
-from common.services.send_sms import send_notification
+from common.services.send_notification import send_notification
 # 3rd Party libraries
 import requests
 from selenium import webdriver

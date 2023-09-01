@@ -5,8 +5,8 @@ It does the cleaning part so that the Azure Data Formatter methods will be worki
 import json
 import re
 
-from common.erorrs import GeneralError
-from common.services.send_sms import send_notification
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 
 
 def _extract_keywords_from_string(keyword_string):
