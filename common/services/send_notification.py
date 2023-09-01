@@ -4,9 +4,10 @@ There is a need to implement a wait time to ensure the notification is indeed se
 May halt the code execution for a limited time, eg: 10 seconds.
 """
 import sys
-from ...common.errors import GeneralError
-from ...common.services.gmail.gmail_api import send_mail
 sys.path.append("/home/ubuntu/article-search")
+from common.errors import GeneralError
+from common.services.gmail.gmail_api import send_mail
+
 
 
 def send_notification(error, is_real=True):
