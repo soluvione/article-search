@@ -215,7 +215,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
     options.add_argument("--headless")
-    service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
+    service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 
     # Set start time
     start_time = timeit.default_timer()

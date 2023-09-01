@@ -53,7 +53,7 @@ prefs = {"plugins.always_open_pdf_externally": True, "download.default_directory
 options.add_experimental_option('prefs', prefs)
 options.add_argument("--disable-notifications")
 #options.add_argument("--headless")  # This line enables headless mode
-service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 
 urls = [
     'https://norosirurji.dergisi.org/archive.php',

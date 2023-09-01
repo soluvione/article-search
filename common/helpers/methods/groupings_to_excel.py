@@ -16,7 +16,7 @@
 # options.add_argument("--disable-notifications")
 # options.add_argument('--ignore-certificate-errors')
 # # options.add_argument("--headless")  # This line enables headless mode
-# service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
+# service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 #
 # # Your URLs string
 # #urls_string iku bu olacak http://journals.iku.edu.tr/sybd/index.php/sybd

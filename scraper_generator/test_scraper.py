@@ -11,7 +11,7 @@ options = Options()
 # options.page_load_strategy = 'eager'
 options.add_argument("--disable-notifications")
 options.add_argument('--ignore-certificate-errors')
-service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 
 driver.get('https://northclinist.com/jvi.aspx?pdir=nci&plng=eng&list=pub')

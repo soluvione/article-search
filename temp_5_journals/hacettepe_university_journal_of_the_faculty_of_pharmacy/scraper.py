@@ -16,7 +16,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 options = Options()
 options.page_load_strategy = 'eager'
 options.add_experimental_option('prefs', {"plugins.always_open_pdf_externally": True})
-service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 
 scrape_type = "A_DRG"

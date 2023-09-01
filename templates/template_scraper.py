@@ -36,7 +36,7 @@ download_path = os.path.dirname(os.path.abspath(__file__)) + r'\downloads'
 options.add_experimental_option('prefs', {"plugins.always_open_pdf_externally": True})
 options.add_experimental_option('prefs', {"download.default_directory": download_path})
 options.add_argument("--disable-notifications")
-service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver")
+service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 driver = webdriver.Chrome(service=service, options=options)
 
 # Metadata about the journal
