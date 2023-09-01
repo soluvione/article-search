@@ -89,3 +89,6 @@ def send_mail(text_body):
 
     # Send the email
     send_message(service, "me", message)
+
+if __name__ == "__main__":
+    send_mail("Merhaba")
