@@ -17,18 +17,18 @@ def get_service():
     # The file token.json stores the user's access and refresh tokens, and is
     # created automatically when the authorization flow completes for the first
     # time.
-    if os.path.exists(r'gmail\token.json'):
-        creds = Credentials.from_authorized_user_file(r'gmail\token.json', SCOPES)
+    if os.path.exists(r'gmail/token.json'):
+        creds = Credentials.from_authorized_user_file(r'gmail/token.json', SCOPES)
     # If there are no (valid) credentials available, let the user log in.
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
             flow = InstalledAppFlow.from_client_secrets_file(
-                r'gmail\credentials.json', SCOPES)
+                r'gmail/credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
-        with open(r'gmail\token.json', 'w') as token:
+        with open(r'gmail/token.json', 'w') as token:
             token.write(creds.to_json())
 
     # Build the Gmail API service
