@@ -139,16 +139,19 @@ def identify_article_type(string, num_of_references) -> str:
         return "ORİJİNAL GÖRÜNTÜ"
 
     # Diğer
-    if string == "DIĞER" and num_of_references == 0:
-        return "Diğer"
-    if string == "EDITORYAL":
-        return "Editoryal"
-    if string == "DÜZELTME" and num_of_references > 0:
+    if string.strip() == "DIĞER" and num_of_references == 0:
+        return "Tanımsız"
+    if string.strip() == "EDITORYAL":
+        return "EDİTÖRDEN"
+    if ("editöre" in string.strip().lower() or "letter to" in string.strip().lower()
+            or "to editor" in string.strip().lower()):
+        return "EDİTÖRE MEKTUP"
+    if string.strip() == "DÜZELTME" and num_of_references > 0:
         return "ORİJİNAL ARAŞTIRMA"
     if "article" in string.strip().lower():
         return "ORİJİNAL ARAŞTIRMA"
     else:
-        return "Diğer"
+        return "Tanımsız"
 
 
 def reference_formatter(reference: str, is_first: bool, count: int) -> str:
