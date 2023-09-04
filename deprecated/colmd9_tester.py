@@ -17,9 +17,6 @@ from common.helpers.methods.common_scrape_helpers.clear_directory import clear_d
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
 from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
-from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
-from common.services.azure.azure_helper import AzureHelper
-from common.services.adobe.adobe_helper import AdobeHelper
 from common.services.send_notification import send_notification
 import common.helpers.methods.others
 from scrapers.dergipark_scraper import update_scanned_issues
@@ -28,7 +25,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support import expected_conditions as EC
 
 with_azure = False
@@ -60,15 +56,23 @@ def get_downloads_path(parent_type: str, file_reference: str) -> str:
     return downloads_path
 
 
-def get_recently_downloaded_file_name(download_path):
+def get_recently_downloaded_file_name(download_path, journal_name, article_url):
     """
+    Give the full PATH of the most recently downloaded file
+    :param journal_name: Name of the journal
+    :param article_url: URL of the article page
     :param download_path: PATH of the download folder
     :return: Returns the name of the most recently downloaded file
     """
-    list_of_files = glob.glob(download_path + '/*')
-    latest_file = max(list_of_files, key=os.path.getctime)
-    return latest_file
-
+    time.sleep(2)
+    try:
+        list_of_files = glob.glob(download_path + '/*')
+        latest_file = max(list_of_files, key=os.path.getctime)
+        return latest_file
+    except Exception as e:
+        send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
+                                       f"article_url: {article_url}. Error: {e}"))
+        return False
 
 def update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail):
     """

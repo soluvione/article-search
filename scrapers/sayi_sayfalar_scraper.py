@@ -13,7 +13,6 @@ from common.errors import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
-from common.helpers.methods.common_scrape_helpers.other_helpers import check_article_type_pass
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
@@ -58,15 +57,23 @@ def get_downloads_path(parent_type: str, file_reference: str) -> str:
     return downloads_path
 
 
-def get_recently_downloaded_file_name(download_path):
+def get_recently_downloaded_file_name(download_path, journal_name, article_url):
     """
+    Give the full PATH of the most recently downloaded file
+    :param journal_name: Name of the journal
+    :param article_url: URL of the article page
     :param download_path: PATH of the download folder
     :return: Returns the name of the most recently downloaded file
     """
-    list_of_files = glob.glob(download_path + '/*')
-    latest_file = max(list_of_files, key=os.path.getctime)
-    return latest_file
-
+    time.sleep(2)
+    try:
+        list_of_files = glob.glob(download_path + '/*')
+        latest_file = max(list_of_files, key=os.path.getctime)
+        return latest_file
+    except Exception as e:
+        send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
+                                       f"article_url: {article_url}. Error: {e}"))
+        return False
 
 def update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail):
     """
@@ -271,7 +278,9 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
-                                file_name = get_recently_downloaded_file_name(download_path)
+                                file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
+                            if not file_name:
+                                with_adobe, with_azure = False, False
                                 # Send PDF to Azure and format response
                                 if with_azure:
                                     first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
