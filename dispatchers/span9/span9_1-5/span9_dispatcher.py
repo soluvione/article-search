@@ -30,7 +30,7 @@ with open('span9_1-5_params.json', 'r', encoding='utf-8') as f:
 for dergi_params in params_data:
     try:
         time_spent = span9_scraper(*dergi_params)
-        if time_spent <= 600:
+        if time_spent <= 300:
             time.sleep(1)
         else:
             time.sleep(5)

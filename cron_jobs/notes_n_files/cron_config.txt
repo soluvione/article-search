@@ -1,0 +1,55 @@
+# CRON Tasks for ARSER - 2023-09-05
+
+# Run a .sh fileevery Monday at 01:00
+0 1 * * 1 /home/ubuntu/article-search/cron_jobs/dergipark_1-80.sh
+
+# Run a .sh file every Monday at 11:00
+0 11 * * 1 /home/ubuntu/article-search/cron_jobs/aves.sh
+
+# Run a .sh file every Monday at 14:00
+0 14 * * 1 /home/ubuntu/article-search/cron_jobs/cellpadding4.sh
+
+# Run a .sh file every Tuesday at 01:00
+0 1 * * 2 /home/ubuntu/article-search/cron_jobs/dergipark_81-172.sh
+
+# Run a .sh file every Tuesday at 12:00
+0 12 * * 2 /home/ubuntu/article-search/cron_jobs/col_m9.sh
+
+# Run a .sh file every Tuesday at 18:00
+0 18 * * 2 /home/ubuntu/article-search/cron_jobs/col_md12.sh
+
+# Run a .sh file every Tuesday at 21:00
+0 21 * * 2 /home/ubuntu/article-search/cron_jobs/dergi_platformu.sh
+
+# Run a .sh file every Wednesday at 01:00
+0 1 * * 3 /home/ubuntu/article-search/cron_jobs/dergipark_no_ref_27.sh
+
+# Run a .sh file every Wednesday at 06:00
+0 6 * * 3 /home/ubuntu/article-search/cron_jobs/firat.sh
+
+# Run a .sh file every Wednesday at 09:00
+0 9 * * 3 /home/ubuntu/article-search/cron_jobs/karep.sh
+
+# Run a .sh file every Wednesday at 12:00
+0 12 * * 3 /home/ubuntu/article-search/cron_jobs/pkp.sh
+
+# Run a .sh file every Wednesday at 16:00
+0 16 * * 3 /home/ubuntu/article-search/cron_jobs/sayi_sayfalar.sh
+
+# Run a .sh file every Wednesday at 20:00
+0 20 * * 3 /home/ubuntu/article-search/cron_jobs/span9.sh
+
+# Run a .sh file every Wednesday at 23:00
+0 23 * * 3 /home/ubuntu/article-search/cron_jobs/tk_no_ref_1-97.sh
+
+# Run a .sh file every Thursday at 09:00
+0 9 * * 4 /home/ubuntu/article-search/cron_jobs/tubitak.sh
+
+# Run a .sh file every Thursday at 12:00
+0 12 * * 4 /home/ubuntu/article-search/cron_jobs/unq_tk.sh
+
+# Run a .sh file every Thursday at 16:00
+0 16 * * 4 /home/ubuntu/article-search/cron_jobs/wolters_kluwer.sh
+
+# Run a .sh file every Friday at 01:00
+0 1 * * 5 /home/ubuntu/article-search/cron_jobs/tk_ref_98-118.sh
