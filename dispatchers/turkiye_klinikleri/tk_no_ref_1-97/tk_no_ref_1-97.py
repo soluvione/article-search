@@ -35,5 +35,5 @@ for dergi_params in params_data:
         else:
             time.sleep(5)
     except Exception as e:
-        send_notification(GeneralError("An error occured whilt the operations of TK scraper with journal name: {}".format(dergi_params[0])))
+        send_notification(GeneralError("An error occurred whilst the operations of TK scraper with journal name: {}".format(dergi_params[0])))
         pass

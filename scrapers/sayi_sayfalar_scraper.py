@@ -225,7 +225,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                 recent_issue = int(re.findall(pattern, child_element.text)[-1][-1])
                 article_year = numbers[1]
             except Exception as e:
-                raise GeneralError(f"An error occured while retrieving the vol-issue-year data of sayi_sayfalar journal"
+                raise GeneralError(f"An error occurred while retrieving the vol-issue-year data of sayi_sayfalar journal"
                                    f" {journal_name}. Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),

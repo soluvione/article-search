@@ -237,7 +237,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                 if not volume_link:
                     raise GeneralError(f"No volume_link found for the journal {journal_name}")
             except Exception as e:
-                raise GeneralError(f"An error occured while retrieving the vol-issue data of PKP journal {journal_name}."
+                raise GeneralError(f"An error occurred while retrieving the vol-issue data of PKP journal {journal_name}."
                                    f"Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
@@ -263,7 +263,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             article_types.append(
                                 identify_article_type(article_section.find_element(By.TAG_NAME, "h2").text, 0))
                 except Exception as e:
-                    raise GeneralError(f"An error occured while getting article URLs of PKP journal {journal_name}. Error"
+                    raise GeneralError(f"An error occurred while getting article URLs of PKP journal {journal_name}. Error"
                                        f"encountered: {e}")
 
                 for article_url in article_urls:
