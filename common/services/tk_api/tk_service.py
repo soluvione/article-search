@@ -3,6 +3,8 @@ import json
 import os.path
 import requests
 import base64
+import sys
+sys.path.append("/home/ubuntu/article-search")
 
 from common.errors import GeneralError
 from common.services.send_notification import send_notification
@@ -116,7 +118,8 @@ if __name__ == "__main__":
     worker.test_send_data(test_data)
     """
     # Test logs methods
-    """
+    
     worker.log_errors(GeneralError("An error happened while sending the request!!"))
+    """
     worker.send_data({"Corrupted Data Key": "Corrupted Data Value"})
     """
