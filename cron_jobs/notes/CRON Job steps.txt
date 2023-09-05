@@ -1,0 +1,37 @@
+# Creating Shell Scripts
+1- Create a txt file and populate the file with the following template:
+
+#!/bin/bash
+
+# Activate the virtual environment
+source /home/ubuntu/article-search/venv/bin/activate
+
+# Change to the directory of Aves dispatcher
+cd /home/ubuntu/article-search/dispatchers/aves/aves_1-16
+
+# Run the Python script
+python 1-16_aves.py
+
+2- Check PATHs and save as .sh file
+
+3- Relocate file to the cron_jobs folder
+
+4- Push changes made
+
+5- On the VM pull the changes
+
+6- Make the script executable on VM via the following template:
+chmod +x /path/to/shell/script.sh
+
+7- Test the script via executing it via the following template:
+/path/to/shell/script.sh
+
+
+# Scheduling Scripts
+1- Open crontab config
+crontab -e
+
+2- Add the CRON job via the following template:
+30 15 * * 1 /path/to/shell/script.sh
+
+3- Save and exit
