@@ -216,6 +216,9 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
+                if is_test:
+                    update_scanned_issues(recent_volume, recent_issue,
+                                          get_logs_path(parent_type, file_reference))
                 article_urls = list()
                 try:
                     for item in driver.find_elements(By.CSS_SELECTOR, "[class='article']"):

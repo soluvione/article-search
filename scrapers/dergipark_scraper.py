@@ -240,6 +240,9 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
 
             # START DOWNLOADS IF ISSUE IS NOT SCANNED
             if not is_issue_scanned:
+                if is_test:
+                    update_scanned_issues(recent_volume, recent_issue,
+                                          get_logs_path(parent_type, file_reference))
                 article_urls = list()
                 dergipark_components.go_to_issue_page(driver, latest_publication_element, journal_name, recent_volume,
                                                       recent_issue)

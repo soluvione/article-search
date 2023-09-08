@@ -219,6 +219,9 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
+                if is_test:
+                    update_scanned_issues(recent_volume, recent_issue,
+                                          get_logs_path(parent_type, file_reference))
                 article_urls = list()
                 for item in document_detail_items:
                     item_article_type = item.find_element(By.TAG_NAME, "h3").text.strip()

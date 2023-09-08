@@ -214,6 +214,9 @@ def span9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
 
             if not is_issue_scanned:
+                if is_test:
+                    update_scanned_issues(recent_volume, recent_issue,
+                                          get_logs_path(parent_type, file_reference))
                 try:
                     main_articles_element = driver.find_element(By.CSS_SELECTOR,
                                                                 'div[class="span9"]') if not "jsurg" in start_page_url else driver.find_element(

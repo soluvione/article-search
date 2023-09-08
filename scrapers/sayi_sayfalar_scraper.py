@@ -231,6 +231,9 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
+                if is_test:
+                    update_scanned_issues(recent_volume, recent_issue,
+                                          get_logs_path(parent_type, file_reference))
                 driver.get(issue_link)
                 try:  # Salak Behçet Uz dergisinde pop-up çıkıyor her sayfada
                     driver.find_element(By.CSS_SELECTOR, 'button[class="confirm"]').click()

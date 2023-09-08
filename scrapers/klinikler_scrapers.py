@@ -178,6 +178,9 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=volume_no, issue=issue_no, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
+                if is_test:
+                    update_scanned_issues(volume_no, issue_no,
+                                          get_logs_path(parent_type, file_reference))
                 issue_link = latest_issue.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
                 if pdf_scrape_type == "A_KLNK":
                     login_button_xpath = driver.find_element(By.XPATH,
