@@ -319,7 +319,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                             article_doi = None
 
                         references = None  # Aves Journals never have references
-                        file_name = None
+                        file_name, location_header = None, None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path, is_long=True):
@@ -334,6 +334,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                             else:
                                 with_azure, with_adobe = False, False
 
+                        # Get Adobe Data
                         if download_link and file_name:
                             # Send PDF to Adobe and format response
                             if with_adobe:
@@ -344,7 +345,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                 references = adobe_references
 
                         # Get Azure Data
-                        if download_link and file_name:
+                        if download_link and file_name and location_header:
                             azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                             azure_data = azure_response_dictionary["Data"]
                             azure_article_data = AzureHelper.format_general_azure_data(azure_data)

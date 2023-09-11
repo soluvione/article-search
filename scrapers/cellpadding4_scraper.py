@@ -263,7 +263,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         except Exception:
                             download_link = None
 
-                        file_name = None
+                        file_name, location_header = None, None
                         references = None
                         if download_link:
                             driver.get(download_link)
@@ -372,7 +372,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 f"with article num {i}. Error encountered was: {e}")
 
                         # Get Azure Data
-                        if download_link and file_name:
+                        if download_link and file_name and location_header:
                             azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                             azure_data = azure_response_dictionary["Data"]
                             azure_article_data = AzureHelper.format_general_azure_data(azure_data)
