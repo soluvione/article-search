@@ -5,6 +5,10 @@ Cron job for the script:
 """
 import time
 import json
+import sys
+# Needed to append this path for the packages to work as expected
+sys.path.append("/home/ubuntu/article-search")
+
 from common.services.send_notification import send_notifications
 from scrapers.dergipark_scraper import dergipark_scraper
 
