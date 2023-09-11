@@ -269,8 +269,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             driver.get(download_link)
                             if check_download_finish(download_path):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
-                            if not file_name:
-                                with_adobe, with_azure = False, False  # Full Path
+                            if file_name:
                                 # Send PDF to Azure and format response
                                 if with_azure:
                                     first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
