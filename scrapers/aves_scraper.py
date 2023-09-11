@@ -238,9 +238,13 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                     driver.get(article_url)
                     time.sleep(5)
                     try:
-                        # You need to click on collapsed arrow head to expand the affiliations
-                        driver.find_element(By.CSS_SELECTOR, '.reference.collapsed').click()
-                        time.sleep(5)
+                        try:
+                            # You need to click on collapsed arrow head to expand the affiliations
+                            driver.find_element(By.CSS_SELECTOR, '.reference.collapsed').click()
+                            time.sleep(5)
+                        except Exception as e:
+                            send_notification(GeneralError(f"No expand affiliations button found for the aves journal "
+                                                           f"'{journal_name}', with article link: {article_url}"))
 
                         try:
                             # Download Link
@@ -320,8 +324,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                             driver.get(download_link)
                             if check_download_finish(download_path, is_long=True):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
-                            if not file_name:
-                                with_adobe, with_azure = False, False  # Full Path
+                            if file_name:
                                 # Send PDF to Azure and format response
                                 if with_azure:
                                     first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
