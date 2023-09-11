@@ -58,7 +58,7 @@ class TKServiceWorker:
             print("Response:", response)
             print("Status:", status)
         except Exception as e:
-            print(e)
+            return e
 
     def encode_base64(self, pdf_path: str) -> str:
         """

@@ -27,7 +27,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 # Scraper body chunks
 from common.helpers.methods.scraper_body_components import dergipark_components
 
@@ -232,8 +231,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                 recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip())
                 recent_issue = int(temp_txt.split()[-1])
             except Exception as e:
-                raise GeneralError(f"A problem encountered while retrieving the volume or issiue data of Dergipark journal."
-                                   f" Error encountered was: {e}")
+                raise GeneralError(f"A problem encountered while retrieving the volume or issue data of Dergipark "
+                                   f"journal named {journal_name}. Error encountered was: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
@@ -298,7 +297,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         language_tabs = dergipark_components.get_language_tabs(driver)
                         article_lang_num = len(language_tabs)
 
-                        adobe_references = None
+                        adobe_references, location_header = None, None
                         if check_download_finish(download_path):
                             # Formatted name will be saved to the variable and the PDF name is already formatted
                             formatted_name = format_file_name(download_path,
@@ -311,6 +310,8 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                                 first_pages_cropped_pdf = crop_pages(formatted_name, pages_to_send)
                                 location_header = AzureHelper.analyse_pdf(
                                     first_pages_cropped_pdf)  # Location header is the response address of Azure API
+                                if not location_header:
+                                    with_azure = False
                             if with_adobe and pdf_scrape_type.strip() != "A_DRG & R":
                                 adobe_pdf_path = split_in_half(formatted_name)
                                 adobe_zip_path = AdobeHelper.analyse_pdf(adobe_pdf_path, download_path)
@@ -452,7 +453,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
 
                         # GET RESPONSE BODY OF THE AZURE RESPONSE
                         azure_article_data = None
-                        if with_azure:
+                        if with_azure and location_header:
                             azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                             azure_data = azure_response_dictionary["Data"]
                             # Format Azure Response and get a dict
@@ -532,7 +533,7 @@ def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_ty
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
                             f"Passed one article of Dergipark journal {journal_name} with article number {i}."
-                            f" Error encountered was: {e}. Traceback: {tb_str}"))
+                            f" Error encountered was: {e}. Article URL is: {article_url}. Traceback: {tb_str}"))
                         continue
 
                 # Successfully completed the operations

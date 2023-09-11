@@ -35,7 +35,8 @@ def clear_directory(path_: str) -> bool:
             with open(os.path.join(path_, '.gitkeep'), 'w'):   # Create .gitkeep
                 pass
         except Exception as e:
-            send_notification(GeneralError(f"Error while creating gitkeep file at downloads directory. Error encountered: {e}"))
+            send_notification(GeneralError(f"Error while creating gitkeep file at downloads directory. "
+                                           f"Error encountered was: {e}"))
             return False
 
         return True
