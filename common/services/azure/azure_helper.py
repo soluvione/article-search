@@ -26,6 +26,7 @@ class AzureHelper:
         :return: Returns the operation-header that will be used for fetching the results later
         """
         try:
+            send_pdf_response = None
             with open(pdf_path, "rb") as pdf_file:
                 encoded_string = base64.b64encode(pdf_file.read()).decode("utf-8")
 
@@ -51,8 +52,14 @@ class AzureHelper:
             try:
                 return send_pdf_response.headers['Operation-Location']
             except Exception as e:
-                send_notification(GeneralError(f"Did not receive operation header in the first azure query ("
-                                               f"analyse_pdf, azure_helper.py). Error encountered: {e}"))
+                if send_pdf_response:
+                    send_notification(GeneralError(f"Did not receive operation header in the first azure query ("
+                                                   f"analyse_pdf, azure_helper.py). Error encountered: {e}. The body of "
+                                                   f"response: {send_pdf_response.json()}"))
+                else:
+                    send_notification(GeneralError(f"Did not receive operation header in the first azure query ("
+                                                   f"analyse_pdf, azure_helper.py). Error encountered: {e}."))
+
                 return ""
         except Exception as e:
             send_notification(GeneralError(f"General error in the first Azure API query ("
@@ -74,6 +81,7 @@ class AzureHelper:
         get_results_header = {
             'Ocp-Apim-Subscription-Key': f'{subscription_key}',
         }
+        get_results_response = None
         try:
             get_results_response = requests.get(operation_location, headers=get_results_header)
 
@@ -93,8 +101,14 @@ class AzureHelper:
 
             return response_dictionary
         except Exception as e:
-            send_notification(GeneralError(f"General error in the second Azure API query ("
-                                           f"get_analysis_results, azure_helper.py). Error encountered: {e}"))
+            if get_results_response:
+                send_notification(GeneralError(f"General error in the second Azure API query ("
+                                               f"get_analysis_results, azure_helper.py). Error encountered: {e}. The body"
+                                               f"of the response: {get_results_response.json()}"))
+            else:
+                send_notification(GeneralError(f"General error in the second Azure API query ("
+                                               f"get_analysis_results, azure_helper.py). Error encountered: {e}"))
+
             response_dictionary["Result"] = AzureResponse.FAILURE.value
             return response_dictionary
 
