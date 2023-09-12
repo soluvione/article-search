@@ -228,8 +228,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 latest_publication_element = dergipark_components.get_latest_data(driver, journal_name)
 
                 temp_txt = latest_publication_element.text
-                recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip())
-                recent_issue = int(temp_txt.split()[-1])
+
+                recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip()) \
+                    if not "igusabder" in start_page_url \
+                    else int(temp_txt.split()[0])
+                try:
+                    recent_issue = int(temp_txt.split()[-1])
+                except:
+                    recent_issue = int(re.findall(r'\d+', temp_txt)[-1])
             except Exception as e:
                 raise GeneralError(f"A problem encountered while retrieving the volume or issue data of Dergipark "
                                    f"journal named {journal_name}. Error encountered was: {e}")
@@ -260,6 +266,8 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
                 for article_url in article_urls:
                     with_adobe, with_azure = True, True
+                    if article_url.endswith("/"):
+                        article_url = article_url[:-1]
                     driver.get(article_url)
                     time.sleep(3)
 
@@ -284,7 +292,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             if article_type == "Diğer" or article_type == "Editoryal":
                                 i += 1
                                 continue
-                        except Exception as e:
+                        except Exception:
                             article_type = "ORİJİNAL ARAŞTIRMA"
 
                         try:
@@ -292,8 +300,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         except Exception as e:
                             article_page_range = [0, 1]
                             send_notification(GeneralError(f"No page range found for Dergipark Journal {journal_name}"
-                                                           f"and article number {i}"))
-
+                                                           f"and article number {i}. Error encountered: {e}"))
                         language_tabs = dergipark_components.get_language_tabs(driver)
                         article_lang_num = len(language_tabs)
 
@@ -546,8 +553,8 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
     except Exception as e:
         send_notification(
-            GeneralError(f"An error encountered and cought by outer catch while scraping Dergipark journal"
-                         f"{journal_name} with article number {i}. Error encountered was: {e}."))
+            GeneralError(f"An error encountered and caught by outer catch while scraping Dergipark journal "
+                         f"'{journal_name}' with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time
 
