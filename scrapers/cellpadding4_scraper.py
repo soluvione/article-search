@@ -233,6 +233,9 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 article_urls = list()
                 try:
                     rows = article_list.find_elements(By.CLASS_NAME, 'ListArticleTitle')
+                    if not rows:
+                        rows = article_list.find_elements(By.CSS_SELECTOR,
+                                                          'a[style="text-decoration:none;hover:underline;color:#555555;"]')
                 except Exception as e:
                     raise GeneralError(
                         f"Could not retrieve article URLs of cellpadding4 journal {journal_name}! Error encountered: {e}")
