@@ -429,8 +429,8 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of unq_tk journal {journal_name} with article number {i}. "
-                            f"Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of - UQN_TK - journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Article URL: {article_url}.  Traceback: {tb_str}"))
                         continue
                 # Successfully completed the operations
                 create_logs(True, get_logs_path(parent_type, file_reference))

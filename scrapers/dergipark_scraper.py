@@ -539,7 +539,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of Dergipark journal {journal_name} with article number {i}."
+                            f"Passed one article of - DERGİPARK - journal {journal_name} with article number {i}."
                             f" Error encountered was: {e}. Article URL is: {article_url}. Traceback: {tb_str}"))
                         continue
 

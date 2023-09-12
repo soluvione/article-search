@@ -516,8 +516,8 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of PKP journal {journal_name} with article number {i}. "
-                            f"Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of - PKP - journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Article URL: {article_url}.  Traceback: {tb_str}"))
                         continue
 
                 # Successfully completed the operations

@@ -206,6 +206,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
             try:
                 if not start_page_url in modern_cellpadding_journals:
+                    time.sleep(5)
                     try:
                         vol_issue_text = driver.find_element(By.CLASS_NAME, "kapakYazi").text
                     except:
@@ -221,7 +222,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
                 # rows = article_list.find_elements(By.CSS_SELECTOR, ".td_pubtype")
             except Exception as e:
-                raise GeneralError(f"Volume, issue, year data or articles of aves journal {journal_name} is absent! "
+                raise GeneralError(f"Volume, issue, year data or articles of - Cellpadding4 - journal {journal_name} is absent! "
                                    f"Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
@@ -403,9 +404,9 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 keywords_text = keyword_element.find_next_sibling(string=True)
                                 keywords_last_element = [keyword.strip() for keyword in keywords_text.split(',')]
                         except Exception as e:
-                            send_notification(GeneralError(
-                                f"Error while getting cellpadding4 article keywords data of journal: {journal_name} "
-                                f"with article num {i}. Error encountered was: {e}"))
+                            clear_directory(download_path)
+                            i += 1
+                            continue
 
                         # Distribute the acquired data in accordance with the number and order of the languages in the
                         # article page
@@ -495,8 +496,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         clear_directory(download_path)
                         tb_str = traceback.format_exc()
                         send_notification(GeneralError(
-                            f"Passed one article of cellpadding4 journal {journal_name} with article number {i}. "
-                            f"Error encountered was: {e}. Traceback: {tb_str}"))
+                            f"Passed one article of - Cellpadding4 - journal {journal_name} with article number {i}. "
+                            f"Error encountered was: {e}. Article URL: {article_url}. Traceback: {tb_str}"))
                         continue
 
                 # Successfully completed the operations
