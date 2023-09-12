@@ -207,10 +207,13 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
             try:
                 if not start_page_url in modern_cellpadding_journals:
                     time.sleep(5)
-                    try:
-                        vol_issue_text = driver.find_element(By.CLASS_NAME, "kapakYazi").text
-                    except:
-                        vol_issue_text = driver.find_element(By.CLASS_NAME, "ListArticleIssue").text
+                    if "tjh.com" in start_page_url:
+                        vol_issue_text = driver.find_element(By.CSS_SELECTOR, 'td[class="td_topic"]').text
+                    else:
+                        try:
+                            vol_issue_text = driver.find_element(By.CLASS_NAME, "kapakYazi").text
+                        except:
+                            vol_issue_text = driver.find_element(By.CLASS_NAME, "ListArticleIssue").text
                     numbers = re.findall(r'\d+', vol_issue_text)
                     numbers = [int(n) for n in numbers]
                     recent_volume, recent_issue = numbers[:2]
@@ -259,7 +262,11 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                     driver.get(article_url)
                     time.sleep(3)
                     try:
-                        article_data_body = driver.find_element(By.CSS_SELECTOR,
+                        if "Ağrı" in journal_name or "tjh.com" in start_page_url:
+                            article_data_body = driver.find_element(By.XPATH, '//table[@width="100%" and '
+                                                                              '@border="0" and @cellpadding="0" and @cellspacing="0"]')
+                        else:
+                            article_data_body = driver.find_element(By.CSS_SELECTOR,
                                                                 '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
                         tools_bar_element = driver.find_element(By.CSS_SELECTOR, ".list-group.siteArticleShare")
                         try:
