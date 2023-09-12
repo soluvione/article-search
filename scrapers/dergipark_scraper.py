@@ -194,7 +194,7 @@ def create_logs(was_successful: bool, path_: str) -> None:
                                        'path = {path_}. Error encountered: {e}'.format(e=e, path_=path_)))
 
 
-def dergipark_scraper(journal_name, start_page_url, pages_to_send, pdf_scrape_type, parent_type, file_reference):
+def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, parent_type, file_reference):
     """
     :param journal_name: The name of the journal as listed in Atıf Dizini
     :param start_page_url: Dergipark startpage
