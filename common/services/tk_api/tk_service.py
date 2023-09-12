@@ -58,6 +58,10 @@ class TKServiceWorker:
             print("Response:", response)
             print("Status:", status)
         except Exception as e:
+            self.log_errors(e)
+            send_notification(GeneralError(
+                f"An error occurred while sending the formatted data to TK backend (test_send_data, tk_service.py). "
+                f"Error encountered was: {e}"))
             return e
 
     def encode_base64(self, pdf_path: str) -> str:

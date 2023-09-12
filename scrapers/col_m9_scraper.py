@@ -247,6 +247,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         except Exception as e:
                             download_link = None
                             send_notification(GeneralError(f"No download link found for col_m9 journal with name {journal_name}."))
+                        file_name, location_header = None, None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
@@ -267,7 +268,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                                                    ".document-detail.about.search-detail")
                         except Exception as e:
                             raise GeneralError(f"No main article data element found for col_m9 journal {journal_name},"
-                                               f"with number {i}.")
+                                               f"with number {i}. Error encountered was: {e}")
 
                         # Type
                         try:
@@ -344,7 +345,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 time.sleep(0.75)
                                 abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
 
-                        if not references and download_link:
+                        if not references and download_link and file_name:
                             # Send PDF to Adobe and format response
                             if with_adobe:
                                 adobe_cropped = split_in_half(file_name)
@@ -353,7 +354,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 references = adobe_references
 
                         # Get Azure Data
-                        if download_link and file_name and with_azure:
+                        if download_link and location_header and with_azure:
                             azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
                             azure_data = azure_response_dictionary["Data"]
                             azure_article_data = AzureHelper.format_general_azure_data(azure_data)
@@ -435,6 +436,6 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
     except Exception as e:
         send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping col_m9 journal "
-                                       f"{journal_name} with article number {i}. Error encountered was: {e}."))
+                                       f"'{journal_name}' with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time
