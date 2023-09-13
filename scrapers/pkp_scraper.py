@@ -205,8 +205,9 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
         with webdriver.Chrome(service=service, options=options) as driver:
             driver.get(check_url(start_page_url))
             time.sleep(3)
+            # Dergiler çok sorunlu ve birbirinden çok farklı arşiv sayfalarına sahip olduğu için bu kısım karışık
             try:
-                article_issues_element = driver.find_element(By.CLASS_NAME, "issues_archive")
+                article_issues_element = driver.find_element(By.CSS_SELECTOR, 'ul[class="issues_archive"]')
                 if "eurjther" in start_page_url:
                     elements = driver.find_element(By.CLASS_NAME, "issues_archive").find_elements(By.TAG_NAME, "li")
                     recent_vol_issue_text = elements[2].find_element(By.CLASS_NAME, "title").text
@@ -218,7 +219,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                 elif "jicah" in start_page_url:
                     recent_issue_element = article_issues_element.find_element(By.CLASS_NAME, 'obj_issue_summary')
                     volume_link = recent_issue_element.find_element(By.CLASS_NAME, 'title').get_attribute('href')
-                    recent_vol_issue_text = recent_issue_element.find_element(By.CLASS_NAME, 'title').text
+                    recent_vol_issue_text = recent_issue_element.find_element(By.CLASS_NAME, 'series').text
                 else:
                     if "beslenmevediyetdergisi" in start_page_url or "actamedica" in start_page_url:
                         recent_vol_issue_text = article_issues_element.find_element(By.TAG_NAME,
@@ -227,7 +228,10 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                                                           "h2").find_element(By.TAG_NAME, "a").get_attribute("href")
                     else:
                         recent_vol_issue_text = article_issues_element.find_element(By.CLASS_NAME, "series").text
-                        volume_link = article_issues_element.find_element(By.CLASS_NAME, "title").get_attribute("href")\
+                        if "injector" in start_page_url:
+                            volume_link = article_issues_element.find_element(By.CSS_SELECTOR, 'a[class="title"]').get_attribute("href")
+                        else:
+                            volume_link = article_issues_element.find_element(By.CLASS_NAME, "title").get_attribute("href")\
                             if "press" not in article_issues_element.find_element(By.CLASS_NAME, "title").text else None
 
                 numbers = re.findall(r'\d+', recent_vol_issue_text)
@@ -237,8 +241,23 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                 if not volume_link:
                     raise GeneralError(f"No volume_link found for the journal {journal_name}")
             except Exception as e:
-                raise GeneralError(f"An error occurred while retrieving the vol-issue data of PKP journal {journal_name}."
-                                   f"Error encountered: {e}")
+                try:
+                    article_issues_element = driver.find_element(By.CSS_SELECTOR, 'div[class="issues media-list"]')
+                    recent_vol_issue_text = article_issues_element.find_element(By.TAG_NAME,
+                                                                                "h2").text
+                    volume_link = article_issues_element.find_element(By.TAG_NAME,
+                                                                      "h2").find_element(By.TAG_NAME,
+                                                                                         "a").get_attribute("href")
+
+                    numbers = re.findall(r'\d+', recent_vol_issue_text)
+                    numbers = [int(n) for n in numbers]
+                    recent_volume, recent_issue = numbers[:2]
+
+                    if not volume_link:
+                        raise GeneralError(f"No volume_link found for the journal {journal_name}")
+                except:
+                    raise GeneralError(f"An error occurred while retrieving the vol-issue data of PKP journal {journal_name}."
+                                        f"Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
