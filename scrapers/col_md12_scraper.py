@@ -347,7 +347,14 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         def has_sup_with_text(element):
                             return element.name == 'span' and element.find('sup') is not None
 
-                        span_element = soup.find_all(has_sup_with_text)[0]
+                        try:
+                            span_element = soup.find_all(has_sup_with_text)[0]
+                        except Exception:
+                            i += 1
+                            send_notification(GeneralError("Passed one article of Colmd12. Check if the passed article"
+                                                           f"is indeed one that should be passed. If so delete this notification"
+                                                           f" clause. URL: {article_url}"))
+                            continue
 
                         # DOI
                         try:
