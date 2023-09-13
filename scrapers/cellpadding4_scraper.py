@@ -304,7 +304,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                             article_doi = abbv_doi_element.split(":")[-1].strip()
                             abbreviation = abbv_doi_element[:abbv_doi_element.index(".")].strip()
                         except Exception as e:
-                            abbreviation = ""
+                            abbreviation = journal_name
                             send_notification(GeneralError(
                                 f"Error while getting cellpadding4 abbreviationg and DOI of the article: {journal_name} "
                                 f"with article num {i}. Error encountered was: {e}"))

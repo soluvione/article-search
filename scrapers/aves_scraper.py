@@ -281,7 +281,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                         try:
                             abbreviation = re.sub(r'\d+|[:.;-]+', '', bulk_text).strip()
                         except Exception:
-                            abbreviation = ""
+                            abbreviation = journal_name
                         try:
                             article_page_range = [int(number) for number in bulk_text.split()[-1].split('-')]
                         except:

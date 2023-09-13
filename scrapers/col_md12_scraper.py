@@ -411,7 +411,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         # Download, crop and send to Azure Form Recognizer Endpoint
                         if download_link:
                             driver.get(download_link)
-                            if check_download_finish(download_path):
+                            if check_download_finish(download_path, is_long=True):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
@@ -467,7 +467,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         elif "onkder" in start_page_url:
                             abbreviation = "Turk J Oncol"
                         elif "geriatri" in start_page_url:
-                            abbreviation = ""
+                            abbreviation = journal_name
                         elif "turkishjournalpediatrics" in start_page_url:
                             abbreviation = "Turk J Pediatr"
                         elif "vetdergikafkas" in start_page_url:
@@ -477,9 +477,9 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         elif "jcritintensivecare" in start_page_url:
                             abbreviation = "J Crit Intensive Care"
                         elif "cshd" in start_page_url:
-                            abbreviation = ""
+                            abbreviation = journal_name
                         else:
-                            abbreviation = ""
+                            abbreviation = journal_name
 
                         final_article_data = {
                             "journalName": f"{journal_name}",

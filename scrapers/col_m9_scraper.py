@@ -285,10 +285,13 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         article_doi = article_data_element.find_elements(By.TAG_NAME, "p")[1].text.strip()
 
                         # Abbreviation
-                        full_abbreviation = article_data_element.find_element(By.CLASS_NAME,
-                                                                              "date-detail-txt").text.strip()
-                        abbreviation = ''.join([_x for _x in full_abbreviation if _x.isalpha() or _x.isspace()])
-                        abbreviation = abbreviation.strip()
+                        try:
+                            full_abbreviation = article_data_element.find_element(By.CLASS_NAME,
+                                                                                  "date-detail-txt").text.strip()
+                            abbreviation = ''.join([_x for _x in full_abbreviation if _x.isalpha() or _x.isspace()])
+                            abbreviation = abbreviation.strip()
+                        except Exception:
+                            abbreviation = journal_name
 
                         # Page range
                         try:

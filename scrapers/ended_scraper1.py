@@ -457,7 +457,7 @@ def ended_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                                 selected_author.mail = azure_article_data["emails"][0]
                                 selected_author.is_correspondence = True
                         article_lang = "tr" if "ü" in journal_name or "ğ" in journal_name else "en"
-                        abbreviation = ""
+                        abbreviation = journal_name
                         final_article_data = {
                             "journalName": f"{journal_name}",
                             "articleType": identify_article_type(article_types[i - 1], 0),

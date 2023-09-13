@@ -307,7 +307,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             article_doi = abbv_doi_element.text.split("DOI:")[-1].strip()
                             abbreviation = article_code
                         except Exception as e:
-                            abbreviation = ""
+                            abbreviation = journal_name
                             send_notification(GeneralError(
                                 f"Error while getting sayi_sayfalar abbreviation and DOI of the article: {journal_name}"
                                 f" with article num {i}. Error encountered was: {e}"))

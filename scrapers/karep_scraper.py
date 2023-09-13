@@ -253,11 +253,19 @@ def karep_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         abstract_eng = main_element.find_element(By.CLASS_NAME, 'article-abstract').text.strip()
                         abstract_tr = None
 
-                        # Keywords - Only English Available for karep Journals
-                        keywords_eng = main_element.find_element(By.CLASS_NAME, 'article-keywords').text
-                        keywords_eng = [keyword.strip() for keyword in
-                                        keywords_eng[keywords_eng.index(":") + 1:].split(',')]
-                        keywords_tr = None
+                        try:
+                            # Keywords - Only English Available for karep Journals
+                            keywords_eng = main_element.find_element(By.CLASS_NAME, 'article-keywords').text
+                            keywords_eng = [keyword.strip() for keyword in
+                                            keywords_eng[keywords_eng.index(":") + 1:].split(',')]
+                            keywords_tr = None
+                        except Exception:
+                            i += 1
+                            send_notification(GeneralError("Passed one article of Karep. Check if the passed article"
+                                                           f"is indeed one that should be passed. "
+                                                           f"If so, delete this notification"
+                                                           f" clause. URL: {article_url}"))
+                            continue
 
                         # DOI and Page Range
                         doi_n_pages_text = main_element.find_element(By.CLASS_NAME, 'article-doi-pages').text
@@ -329,7 +337,7 @@ def karep_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         elif "hepatol" in start_page_url:
                             abbreviation = "Hepatology Forum "
                         else:
-                            abbreviation = None
+                            abbreviation = journal_name
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
