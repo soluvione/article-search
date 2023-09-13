@@ -251,24 +251,38 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                                 driver.get(issue_url)
                                 time.sleep(1)
                             except:
-                                issue_url = driver.find_element(By.XPATH,
-                                                                '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/a').get_attribute(
-                                    'href')
-                                driver.get(issue_url)
-                                time.sleep(1)
+                                try:
+                                    issue_url = driver.find_element(By.XPATH,
+                                                                    '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/a').get_attribute(
+                                        'href')
+                                    driver.get(issue_url)
+                                    time.sleep(1)
+                                except:
+                                    issue_url = driver.find_element(By.XPATH, '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr[1]/td[1]/table[2]/tbody/tr[2]/td[2]/a').get_attribute('href')
+                                    driver.get(issue_url)
+                                    time.sleep(1)
+
                 except Exception as e:
                     raise GeneralError(
                         f"Error while getting issue URL of firat journal {journal_name}. Error encountered was: {e}")
 
                 article_urls = list()
                 try:
-                    article_elements = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody').find_elements(
-                        By.CSS_SELECTOR, 'font[class="blue"]')
-                    for el in article_elements:
-                        article_urls.append(el.find_element(By.CSS_SELECTOR, 'a[class="blue"]').get_attribute('href'))
+                    try:
+                        article_elements = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody').find_elements(
+                            By.CSS_SELECTOR, 'font[class="blue"]')
+                        for el in article_elements:
+                            article_urls.append(el.find_element(By.CSS_SELECTOR, 'a[class="blue"]').get_attribute('href'))
+                    except:
+                        article_elements = driver.find_element(By.XPATH,
+                                                               '/html/body/center/table/tbody/tr[2]/td[2]/table/tbody/tr[1]/td[2]/table/tbody/tr/td/table').find_elements(
+                            By.CSS_SELECTOR,
+                            'font[class="blue"]')
+                        for el in article_elements:
+                            article_urls.append(el.find_element(By.CSS_SELECTOR, 'a[class="blue"]').get_attribute('href'))
                 except Exception as e:
                     send_notification(GeneralError(
-                        f"Error while getting firat article URLs of Fırat journal. Error encountered was: {e}"))
+                        f"Error while getting article URLs of Fırat journal. Error encountered was: {e}"))
                     raise e
 
                 if not article_urls:
@@ -305,10 +319,14 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             article_type = "ORİJİNAL ARAŞTIRMA"
 
                         # Abstract - Only Turkish Available for firat Journals
-                        abstract_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[9]/td[1]').text.strip()
+                        abstract_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[9]/td[1]').text.strip() \
+                        if not "tmc.dergisi" in start_page_url \
+                            else driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[8]/td[1]/font').text.strip()
 
                         # Keywords - Only Turkish Available for firat Journals
-                        keywords_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[7]').text
+                        keywords_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[7]').text \
+                        if not "tmc.dergisi" in start_page_url \
+                            else driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[6]/td/font').text
                         keywords_tr = [keyword.strip() for keyword in keywords_tr.strip()[keywords_tr.index(":")+1:].split(',')]
 
                         # Abbreviation and Page Range
@@ -316,6 +334,10 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             abbreviation = "Firat Med J"
                         elif "veteriner" in start_page_url:
                             abbreviation = "F.U. Vet. J. Health Sci."
+                        elif "tmc.dergi" in start_page_url:
+                            abbreviation = "Turk Mikrobiyol Cemiy Derg"
+                        elif "turkjpath" in start_page_url:
+                            abbreviation = "Turkish Journal of Pathology"
                         else:
                             abbreviation = "F.U. Med.J.Health.Sci."
 
@@ -326,9 +348,13 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             article_page_range = [0, 1]
 
                         # Authors
-                        author_names = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[5]').text.strip().split(',')
+                        author_names = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[5]').text.strip().split(',') \
+                        if not "tmc.dergi" in start_page_url \
+                        else driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[4]/td').text.strip().split(',')
                         author_affiliations = driver.find_element(By.XPATH,
-                                                                  '/html/body/center/table[2]/tbody/tr[6]').text.split('\n')
+                                                                  '/html/body/center/table[2]/tbody/tr[6]').text.split('\n') \
+                        if not "tmc.dergi" in start_page_url \
+                        else driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[5]/td').text.split('\n')
 
                         author_objects = list()
                         for author_name in author_names:
@@ -348,13 +374,15 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         article_doi = None  # No DOI can be scraped directly from the article pages
 
                         # References
-                        try:
-                            references = main_text[main_text.index("Kaynaklar\n1)"): main_text.index("[ Başa")]
-                            references = references[references.index("1)"): references.rfind('.') + 1].split('\n')
-                            references = [reference_formatter(reference, True, count) for count, reference in
-                                          enumerate(references, start=1)]
-                        except Exception:
-                            references = None
+                        references = None
+                        if not "tmc.dergi" in start_page_url:
+                            try:
+                                references = main_text[main_text.index("Kaynaklar\n1)"): main_text.index("[ Başa")]
+                                references = references[references.index("1)"): references.rfind('.') + 1].split('\n')
+                                references = [reference_formatter(reference, True, count) for count, reference in
+                                              enumerate(references, start=1)]
+                            except Exception:
+                                pass
 
                         file_name = None
                         if download_link:
