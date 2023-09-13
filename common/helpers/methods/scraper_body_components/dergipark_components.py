@@ -117,10 +117,11 @@ def get_page_range(driver):
     try:
         article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
         for element in article_subtitle_elements:
+            article_page_range = []
             if element.text:
                 article_page_range = element.text.split(',')[-2].strip().split('-')
-                article_page_range = [int(page_num) for page_num in article_page_range]
-            return article_page_range
+                article_page_range = [int(page_num.strip()) for page_num in article_page_range]
+                return article_page_range
     except Exception as e:
         raise e
 

@@ -71,7 +71,7 @@ def format_results(json_data):
                 if to_check in keywords:
                     break
         except KeyError as e:
-            print(f"Error finding key in JSON: {e}")
+            raise e
 
         # Creating new list that has the elements from the keyword element to the end (remembering to reverse back)
         new_elements = list(reversed(reversed_elements[:idx]))
@@ -95,7 +95,8 @@ def format_results(json_data):
         return result
     except Exception as e:
         send_notification(GeneralError(
-            f"Error while formatting the Adobe API data (format_results, adobe_helper). Error encountered: {e}"))
+            f"Error while formatting the Adobe API data (format_results, adobe_helper). Error encountered: {e}. The data"
+            f"received: {json_data}"))
 
 
 class AdobeHelper:

@@ -284,8 +284,9 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         try:
                             pdf_to_download_available = dergipark_components.download_article_pdf(driver, pdf_scrape_type)
                         except Exception as e:
-                            send_notification(GeneralError(f"No downlaod link found for a Dergipark Journal with name "
-                                                           f"{journal_name} and with article number {i}."))
+                            send_notification(GeneralError(f"No download link found for a Dergipark Journal "
+                                                           f"'{journal_name}' and with article number {i}. Article URL:"
+                                                           f"{article_url}. Error encountered: {e}"))
 
                         try:
                             article_type = dergipark_components.define_article_type(driver)
@@ -299,8 +300,9 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             article_page_range = dergipark_components.get_page_range(driver)
                         except Exception as e:
                             article_page_range = [0, 1]
-                            send_notification(GeneralError(f"No page range found for Dergipark Journal {journal_name}"
-                                                           f"and article number {i}. Error encountered: {e}"))
+                            send_notification(GeneralError(f"No page range found for Dergipark Journal '{journal_name}'"
+                                                           f" and article number {i}. Article URL: {article_url}."
+                                                           f" Error encountered: {e}"))
                         language_tabs = dergipark_components.get_language_tabs(driver)
                         article_lang_num = len(language_tabs)
 
@@ -329,7 +331,10 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         # Afterwards the pdf is sent for analysis. In the later stages of the code the response will be fetched.
 
                         if article_lang_num == 1:
-                            article_lang = dergipark_components.define_article_language(driver)
+                            if not "bingolsaglik" in start_page_url:
+                                article_lang = dergipark_components.define_article_language(driver)
+                            else:
+                                article_lang = "TR"
 
                             article_title_elements, keywords_elements, abstract_elements, button = \
                                 dergipark_components.get_single_lang_article_elements(driver)
@@ -352,6 +357,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                         ref_count += 1
 
                             if article_lang == "TR":
+                                article_title_eng, abstract_eng, keywords_eng = "", "", ""
                                 for element in article_title_elements:
                                     if element.text:
                                         article_title_tr = element.text.strip()
@@ -365,6 +371,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                             if keyword.strip() and keyword.strip() not in keywords_tr:
                                                 keywords_tr.append(keyword.strip())
                             else:
+                                article_title_tr, abstract_tr, keywords_tr = "", "", ""
                                 for element in article_title_elements:
                                     if element.text:
                                         article_title_eng = element.text.strip()
@@ -394,7 +401,8 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 keywords_tr[-1] = re.sub(r'\.', '', keywords_tr[-1])
                             except Exception as e:
                                 send_notification(ParseError(
-                                    f"Could not scrape keywords of journal {journal_name} with article num {i}."))
+                                    f"Could not scrape keywords of journal {journal_name} with article num {i}."
+                                    f"Article URL: {article_url}. Error encountered: {e}"))
                                 raise e
 
                             # GO TO THE ENGLISH TAB
@@ -416,8 +424,11 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                     keywords_eng.append(keyword.strip())
                             keywords_eng[-1] = re.sub(r'\.', '', keywords_eng[-1])
 
-                            button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
-                            button.click()
+                            try:
+                                button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
+                                button.click()
+                            except:
+                                pass
                             time.sleep(0.5)
                             reference_list_elements = dergipark_components.get_multiple_lang_article_refs(
                                 eng_article_element)
@@ -448,7 +459,8 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             article_doi = None
                             send_notification(GeneralError(f" {journal_name, recent_volume, recent_issue}"
                                                            f" with article num {i} was not successful. "
-                                                           f"DOI error was encountered. The problem encountered was: {e}"))
+                                                           f"DOI error was encountered. Article URL: {article_url}. "
+                                                           f"The problem encountered was: {e}"))
 
 
                         if pdf_to_download_available:
