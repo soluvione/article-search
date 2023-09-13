@@ -9,7 +9,8 @@ import sys
 # Needed to append this path for the packages to work as expected
 sys.path.append("/home/ubuntu/article-search")
 
-from common.services.send_notification import send_notifications
+from common.errors import GeneralError
+from common.services.send_notification import send_notification
 from scrapers.dergipark_scraper import dergipark_scraper
 
 with open('dergipark_81-172_params.json', 'r', encoding='utf-8') as f:
@@ -34,5 +35,6 @@ for dergi_params in params_data:
         else:
             time.sleep(5)
     except Exception as e:
-        send_notifications("x")
+        send_notification(GeneralError("""An error occurred whilst the operations of Dergipark scraper with journal name: {}, Error:{}.
+        **************************************************""".format(dergi_params[0], e)))
         pass
