@@ -29,36 +29,40 @@ class TKServiceWorker:
         :param article_data: The formatted article data that has its final form
         :return: Returns 1 if successful else returns an error object
         """
+        article_url = "Default Dummy Data for the Article URL"
         try:
             url_endpoint = self.__url_endpoint
             headers = self.__headers
             body = json.dumps(article_data)
 
+            article_url = article_data["articleURL"]
             response = requests.post(url_endpoint, headers=headers, data=body)
             status: bool = response.json()["success"]
             if not status:
                 self.log_errors(response.json())
             return 1  # TODO can return the response value of the real response
         except Exception as e:
-            self.log_errors(e)
+            self.log_errors(e, article_url)
             send_notification(GeneralError(
                 f"An error occurred while sending the formatted data to TK backend (send_data, tk_service.py). "
                 f"Error encountered was: {e}"))
             return e
 
     def test_send_data(self, article_data: dict):
+        article_url = "Default Dummy Data for the Article URL"
         try:
             url_endpoint = self.__url_endpoint
             headers = self.__headers
             body = json.dumps(article_data)
 
+            article_url = article_data["articleURL"]
             response = requests.post(url_endpoint, headers=headers, data=body)
             status = response.json()["success"]
             print("JSON:", response.json())
             print("Response:", response)
             print("Status:", status)
         except Exception as e:
-            self.log_errors(e)
+            self.log_errors(e, article_url)
             send_notification(GeneralError(
                 f"An error occurred while sending the formatted data to TK backend (test_send_data, tk_service.py). "
                 f"Error encountered was: {e}"))
@@ -79,22 +83,25 @@ class TKServiceWorker:
         except Exception as e:
             return f"PDF Encoding hatası alındı. Lütfen sistem yetkiliniz ile görüşünüz! Hata kodu: {e}"
 
-    def log_errors(self, returned_data):
+    def log_errors(self, returned_data, sent_url):
         """
         If encounter an API error log it onto the local JSON file
         :returned_data: Either an Exception class object or JSON body
+        :sent_url: Article URL of the scanned data
         :return: Return nothing
         """
         try:
             file_path = os.path.join(os.path.dirname(__file__), "api_error_logs.json")
             if isinstance(returned_data, Exception):
                 data = {"Type": "Error",
+                        "ArticleURL": sent_url,
                         "Details":
                             {"Error Timestamp": datetime.datetime.now(),
                              "Error Type": str(type(returned_data)),
                              "Error Message": str(returned_data)}}
             else:
                 data = {"Type": "Failure",
+                        "ArticleURL": sent_url,
                         "Details":
                             {"Failure Timestamp": datetime.datetime.now(),
                              "JSON Body": returned_data}}
