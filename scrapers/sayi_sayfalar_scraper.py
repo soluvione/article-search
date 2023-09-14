@@ -183,7 +183,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
     options.add_experimental_option('prefs', prefs)
     options.add_argument("--disable-notifications")
     options.add_argument('--ignore-certificate-errors')
-    # options.add_argument("--headless")  # This line enables headless mode
+    options.add_argument("--headless")  # This line enables headless mode
     service = ChromeService(executable_path=r"/home/ubuntu/driver/chromedriver-linux64/chromedriver")
 
     # Set start time
