@@ -303,9 +303,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             abbv_doi_element = driver.find_element(By.CSS_SELECTOR, 'td.tool_j')
                             article_code = abbv_doi_element.text.strip().split('.')[0].strip()
                             if not article_code:
-                                article_code = None
+                                abbreviation = journal_name
                             article_doi = abbv_doi_element.text.split("DOI:")[-1].strip()
-                            abbreviation = article_code
                         except Exception as e:
                             abbreviation = journal_name
                             send_notification(GeneralError(
