@@ -49,10 +49,12 @@ def tk_no_ref_is_scanned(recent_text: str, path_: str) -> bool:
                 "lastEdited": ""
             }
             """
-            last_scanned_text = scanned_issue_dict['lastScannedText'].replace("(", "").replace(")", "")
+            if scanned_issue_dict['lastScannedText']:
+                last_scanned_text = scanned_issue_dict['lastScannedText'].replace("(", "").replace(")", "")
+            else:
+                last_scanned_text = recent_text.strip().replace("(", "").replace(")", "")
             scanned_month, scanned_year = int(last_scanned_text.split(".")[1]), \
                 int(last_scanned_text.split(".")[2])
-
             recent_text = recent_text.replace("(", "").replace(")", "")
             recent_month, recent_year = int((recent_text.split(".")[1])), \
                 int(recent_text.split(".")[2])

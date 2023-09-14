@@ -159,18 +159,20 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
             driver.get(start_page_url)
-            time.sleep(1.25)
+            time.sleep(2.5)
             try:
                 volume_items = driver.find_element(By.ID, 'volumeList')
                 latest_issue = volume_items.find_elements(By.CLASS_NAME, 'issue')[0]
                 # Issue no example for TK no ref journal: (23.03.2023)
                 # Issue no example for TK ref journal: 3
-                issue_no = latest_issue.find_element(By.CLASS_NAME, 'issueNo').text if pdf_scrape_type == "A_KLNK" \
-                    else int(latest_issue.find_element(By.CLASS_NAME, 'issueNo').text.split(' ')[-1])
+                issue_no = latest_issue.find_elements(By.CLASS_NAME, 'issueNo')[-1].text if pdf_scrape_type == "A_KLNK" \
+                    else int(latest_issue.find_elements(By.CLASS_NAME, 'issueNo')[-1].text.split(' ')[-1])
                 # TK no ref journals do not have volume or issue numbers
                 volume_no = int(volume_items.find_element(By.CLASS_NAME, 'header').text.split(' ')[-1]) \
                     if pdf_scrape_type.strip() == "A_KLNK & R" \
                     else None
+                if pdf_scrape_type == "A_KLNK":
+                    issue_no = issue_no.replace("/", ".")
             except Exception as e:
                 raise GeneralError(
                     f"Error encountered while retrieving vol-issue data of TK journal with name {journal_name}")
@@ -178,9 +180,6 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=volume_no, issue=issue_no, pdf_scrape_type=pdf_scrape_type)
             if not is_issue_scanned:
-                if is_test:
-                    update_scanned_issues(volume_no, issue_no,
-                                          get_logs_path(parent_type, file_reference))
                 issue_link = latest_issue.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
                 if pdf_scrape_type == "A_KLNK":
                     login_button_xpath = driver.find_element(By.XPATH,
@@ -218,7 +217,10 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         GeneralError(f'No URLs scraped from TK journal with name: {journal_name}'))
 
                 for article_url in article_urls:
-                    with_adobe, with_azure = True, True
+                    if pdf_scrape_type =="A_KLNK":
+                        with_adobe, with_azure = True, True
+                    else:
+                        with_adobe, with_azure = False, True
                     driver.get(article_url)
                     time.sleep(2)
                     try:
@@ -337,7 +339,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         # scraped or not available in the website or if any error is encountered while scraping.
                         final_article_data = {
                             "journalName": f"{journal_name}",
-                            "articleType": article_type,
+                            "articleType": article_type.strip(),
                             "articleTitle": {"TR": turkish_title, "ENG": english_title},
                             "articleAbstracts": {"TR": abstract_tr, "ENG": abstract_eng},
                             "articleKeywords": {"TR": keywords_tr, "ENG": keywords_eng},
