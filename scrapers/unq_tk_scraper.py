@@ -315,15 +315,19 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                                                          'div[class="article-title"]').text.strip()
                             article_title_eng = main_element.find_element(By.CSS_SELECTOR,
                                                                           'div[class="article-title-second"]').text.strip()
-                            keywords_tr = main_element.find_element(By.CSS_SELECTOR,
-                                                                    'div[class="article-keywords"]').text.strip()
-                            keywords_tr = [keyword.strip() for keyword in
-                                           keywords_tr[keywords_tr.index(":") + 1:].strip().split(";")]
+                            try:
+                                keywords_tr = main_element.find_element(By.CSS_SELECTOR,
+                                                                        'div[class="article-keywords"]').text.strip()
+                                keywords_tr = [keyword.strip() for keyword in
+                                               keywords_tr[keywords_tr.index(":") + 1:].strip().split(";")]
 
-                            keywords_eng = main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-keywords"]')[
-                                -1].text.strip()
-                            keywords_eng = [keyword.strip() for keyword in
-                                            keywords_eng[keywords_eng.index(":") + 1:].strip().split(";")]
+                                keywords_eng = main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-keywords"]')[
+                                    -1].text.strip()
+                                keywords_eng = [keyword.strip() for keyword in
+                                                keywords_eng[keywords_eng.index(":") + 1:].strip().split(";")]
+                            except Exception:
+                                i += 1
+                                continue
 
                             abstract_tr = main_element.find_element(By.CSS_SELECTOR,
                                                                     'div[class="article-abstract"]').text.strip()
@@ -334,12 +338,15 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             article_title_eng = main_element.find_element(By.CSS_SELECTOR,
                                                                           'div[class="article-title"]').text.strip()
                             article_title_tr = None
-
-                            keywords_eng = main_element.find_element(By.CSS_SELECTOR,
-                                                                     'div[class="article-keywords"]').text.strip()
-                            keywords_eng = [keyword.strip() for keyword in
-                                            keywords_eng[keywords_eng.index(":") + 1:].strip().split(";")]
-                            keywords_tr = None
+                            try:
+                                keywords_eng = main_element.find_element(By.CSS_SELECTOR,
+                                                                         'div[class="article-keywords"]').text.strip()
+                                keywords_eng = [keyword.strip() for keyword in
+                                                keywords_eng[keywords_eng.index(":") + 1:].strip().split(";")]
+                                keywords_tr = None
+                            except Exception:
+                                i += 1
+                                continue
 
                             abstract_eng = main_element.find_element(By.CSS_SELECTOR,
                                                                      'div[class="article-abstract"]').text.strip()
