@@ -304,6 +304,8 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                             article_code = abbv_doi_element.text.strip().split('.')[0].strip()
                             if not article_code:
                                 abbreviation = journal_name
+                            else:
+                                abbreviation = article_code
                             article_doi = abbv_doi_element.text.split("DOI:")[-1].strip()
                         except Exception as e:
                             abbreviation = journal_name
