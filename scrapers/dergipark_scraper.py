@@ -230,7 +230,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 temp_txt = latest_publication_element.text
 
                 recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip()) \
-                    if not "igusabder" in start_page_url \
+                    if not "igusabder" in start_page_url or not "pub/isad" in start_page_url \
                     else int(temp_txt.split()[0])
                 try:
                     recent_issue = int(temp_txt.split()[-1])
