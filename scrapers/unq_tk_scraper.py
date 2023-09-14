@@ -195,10 +195,10 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
     try:
         with webdriver.Chrome(service=service, options=options) as driver:
             driver.get(check_url(start_page_url))
-            time.sleep(1.5)
+            time.sleep(10)
             try:
                 # Get Vol, Issue and Year from the home page
-                if not "journalofoncology" in start_page_url:
+                if not "journalofoncology" in start_page_url or not "jcog" in start_page_url:
                     recent_issue_text = driver.find_element(By.CSS_SELECTOR,
                                                             'div[class^="issue-details col-md-4"]').text
                 else:
