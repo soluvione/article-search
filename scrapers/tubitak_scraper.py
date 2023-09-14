@@ -198,9 +198,9 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                 issue_page_main_element = driver.find_element(By.ID, 'alpha')
                 current_issue_text = issue_page_main_element.find_element(By.TAG_NAME, 'h1').text
                 numbers = re.findall('[0-9]+', current_issue_text)
-                article_year = int(numbers[0])
-                recent_volume = int(numbers[1])
-                recent_issue = int(numbers[2])
+                article_year = int(numbers[-1])
+                recent_volume = int(numbers[0])
+                recent_issue = int(numbers[1])
 
             except Exception as e:
                 raise GeneralError(f"Volume, issue or year data of tubitak journal is absent! Error encountered was: {e}")
