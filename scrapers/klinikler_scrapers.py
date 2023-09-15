@@ -240,7 +240,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         # Article Type
                         try:
                             article_type = article_element.find_element(By.CLASS_NAME, 'header').text.strip()
-                            article_type = ''.join([char for char in article_type if char.isalpha() or char.isspace()])
+                            article_type = ''.join([char for char in article_type if char.isalpha() or char.isspace()]).strip()
                         except Exception:
                             if pdf_scrape_type == "A_KLNK":
                                 article_type = "BÖLÜMLER"
@@ -344,7 +344,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         # scraped or not available in the website or if any error is encountered while scraping.
                         final_article_data = {
                             "journalName": f"{journal_name}",
-                            "articleType": article_type.strip(),
+                            "articleType": article_type,
                             "articleTitle": {"TR": turkish_title, "ENG": english_title},
                             "articleAbstracts": {"TR": abstract_tr, "ENG": abstract_eng},
                             "articleKeywords": {"TR": keywords_tr, "ENG": keywords_eng},
