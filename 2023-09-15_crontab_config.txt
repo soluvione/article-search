@@ -1,0 +1,58 @@
+# CRON Tasks for ARSER - 2023-09-05
+
+# Run a .sh fileevery Monday at 01:00
+0 1 * * 1 /home/ubuntu/article-search/cron_jobs/dergipark_1-80.sh >> /home/ubuntu/article-search/cron_logs/dergipark_1-80.log 2>&1
+
+# Run a .sh file every Monday at 11:00
+0 11 * * 1 /home/ubuntu/article-search/cron_jobs/aves.sh >> /home/ubuntu/article-search/cron_logs/aves.log 2>&1
+
+# Run a .sh file every Monday at 14:00
+0 14 * * 1 /home/ubuntu/article-search/cron_jobs/cellpadding4.sh >> /home/ubuntu/article-search/cron_logs/cellpadding4.log 2>&1
+
+# Run a .sh file every Tuesday at 01:00
+0 1 * * 2 /home/ubuntu/article-search/cron_jobs/dergipark_81-172.sh >> /home/ubuntu/article-search/cron_logs/dergipark_81-172.log 2>&1
+
+# Run a .sh file every Tuesday at 12:00
+0 12 * * 2 /home/ubuntu/article-search/cron_jobs/col_m9.sh >> /home/ubuntu/article-search/cron_logs/col_m9.log 2>&1
+
+# Run a .sh file every Tuesday at 18:00
+0 18 * * 2 /home/ubuntu/article-search/cron_jobs/col_md12.sh >> /home/ubuntu/article-search/cron_logs/col_md12.log 2>&1
+
+# Run a .sh file every Tuesday at 21:00
+0 21 * * 2 /home/ubuntu/article-search/cron_jobs/dergi_platformu.sh >> /home/ubuntu/article-search/cron_logs/dergi_platformu.log 2>&1
+
+# Run a .sh file every Wednesday at 01:00
+0 1 * * 3 /home/ubuntu/article-search/cron_jobs/dergipark_no_ref_27.sh >> /home/ubuntu/article-search/cron_logs/dergipark_no_ref.log 2>&1
+
+# Run a .sh file every Wednesday at 06:00
+0 6 * * 3 /home/ubuntu/article-search/cron_jobs/firat.sh >> /home/ubuntu/article-search/cron_logs/firat.log 2>&1
+
+# Run a .sh file every Wednesday at 09:00
+0 9 * * 3 /home/ubuntu/article-search/cron_jobs/karep.sh >> /home/ubuntu/article-search/cron_logs/karep.log 2>&1
+
+# Run a .sh file every Wednesday at 12:00
+0 12 * * 3 /home/ubuntu/article-search/cron_jobs/pkp.sh >> /home/ubuntu/article-search/cron_logs/pkp.log 2>&1
+
+# Run a .sh file every Wednesday at 16:00
+0 16 * * 3 /home/ubuntu/article-search/cron_jobs/sayi_sayfalar.sh >> /home/ubuntu/article-search/cron_logs/sayi_sayfalar.log 2>&1
+
+# Run a .sh file every Wednesday at 20:00
+0 20 * * 3 /home/ubuntu/article-search/cron_jobs/span9.sh >> /home/ubuntu/article-search/cron_logs/span9.log 2>&1
+
+# Run a .sh file every Wednesday at 23:00
+0 23 * * 3 /home/ubuntu/article-search/cron_jobs/tk_no_ref_1-97.sh >> /home/ubuntu/article-search/cron_logs/tk_no_ref_1-97.log 2>&1
+
+# Run a .sh file every Thursday at 09:00
+0 9 * * 4 /home/ubuntu/article-search/cron_jobs/tubitak.sh >> /home/ubuntu/article-search/cron_logs/tubitak.log 2>&1
+
+# Run a .sh file every Thursday at 12:00
+0 12 * * 4 /home/ubuntu/article-search/cron_jobs/unq_tk.sh >> /home/ubuntu/article-search/cron_logs/unq_tk.log 2>&1
+
+# Run a .sh file every Thursday at 16:00
+0 16 * * 4 /home/ubuntu/article-search/cron_jobs/wolters_kluwer.sh >> /home/ubuntu/article-search/cron_logs/wolters_kluwer.log 2>&1
+
+# Run a .sh file every Friday at 01:00
+0 1 * * 5 /home/ubuntu/article-search/cron_jobs/tk_ref_98-118.sh >> /home/ubuntu/article-search/cron_logs/tk_ref_98-118.log 2>&1
+
+# MANUAL PIPELINE - Runs Every Friday at 23:00
+0 23 * * 5 /home/ubuntu/article-search/cron_jobs/git_manual_pipeline.sh >> /home/ubuntu/article-search/cron_logs/git_manual_pipeline.sh
