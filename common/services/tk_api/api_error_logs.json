@@ -6,5 +6,50 @@
             "Error Type": "<class 'requests.exceptions.JSONDecodeError'>",
             "Error Message": "[Errno Expecting value] <!DOCTYPE html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n<title>Error</title>\n</head>\n<body>\n<pre>PayloadTooLargeError: request entity too large<br> &nbsp; &nbsp;at readStream (/var/www/html/atifdizini-server/node_modules/raw-body/index.js:155:17)<br> &nbsp; &nbsp;at getRawBody (/var/www/html/atifdizini-server/node_modules/raw-body/index.js:108:12)<br> &nbsp; &nbsp;at read (/var/www/html/atifdizini-server/node_modules/body-parser/lib/read.js:77:3)<br> &nbsp; &nbsp;at jsonParser (/var/www/html/atifdizini-server/node_modules/body-parser/lib/types/json.js:135:5)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/www/html/atifdizini-server/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at trim_prefix (/var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:317:13)<br> &nbsp; &nbsp;at /var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:284:7<br> &nbsp; &nbsp;at Function.process_params (/var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:335:12)<br> &nbsp; &nbsp;at next (/var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:275:10)<br> &nbsp; &nbsp;at cors (/var/www/html/atifdizini-server/node_modules/cors/lib/index.js:188:7)<br> &nbsp; &nbsp;at /var/www/html/atifdizini-server/node_modules/cors/lib/index.js:224:17<br> &nbsp; &nbsp;at originCallback (/var/www/html/atifdizini-server/node_modules/cors/lib/index.js:214:15)<br> &nbsp; &nbsp;at /var/www/html/atifdizini-server/node_modules/cors/lib/index.js:219:13<br> &nbsp; &nbsp;at optionsCallback (/var/www/html/atifdizini-server/node_modules/cors/lib/index.js:199:9)<br> &nbsp; &nbsp;at corsMiddleware (/var/www/html/atifdizini-server/node_modules/cors/lib/index.js:204:7)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/www/html/atifdizini-server/node_modules/express/lib/router/layer.js:95:5)<br> &nbsp; &nbsp;at trim_prefix (/var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:317:13)<br> &nbsp; &nbsp;at /var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:284:7<br> &nbsp; &nbsp;at Function.process_params (/var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:335:12)<br> &nbsp; &nbsp;at next (/var/www/html/atifdizini-server/node_modules/express/lib/router/index.js:275:10)<br> &nbsp; &nbsp;at expressInit (/var/www/html/atifdizini-server/node_modules/express/lib/middleware/init.js:40:5)<br> &nbsp; &nbsp;at Layer.handle [as handle_request] (/var/www/html/atifdizini-server/node_modules/express/lib/router/layer.js:95:5)</pre>\n</body>\n</html>\n: 0"
         }
+    },
+    {
+        "Type": "Error",
+        "ArticleURL": "http://journal.acibadem.edu.tr/tr/pub/issue/77795/1168089",
+        "Details": {
+            "Error Timestamp": "2023-09-14 20:03:34.603173",
+            "Error Type": "<class 'requests.exceptions.ConnectionError'>",
+            "Error Message": "HTTPConnectionPool(host='178.62.217.122', port=8080): Max retries exceeded with url: /article/store (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f346af314e0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+        }
+    },
+    {
+        "Type": "Error",
+        "ArticleURL": "https://dergipark.org.tr/tr/pub/akd/issue/79604/1030089",
+        "Details": {
+            "Error Timestamp": "2023-09-14 20:18:10.987185",
+            "Error Type": "<class 'requests.exceptions.ConnectionError'>",
+            "Error Message": "HTTPConnectionPool(host='178.62.217.122', port=8080): Max retries exceeded with url: /article/store (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7f346adc8fd0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+        }
+    },
+    {
+        "Type": "Error",
+        "ArticleURL": "Default Dummy Data for the Article URL",
+        "Details": {
+            "Error Timestamp": "2023-09-15 09:23:44.603451",
+            "Error Type": "<class 'TypeError'>",
+            "Error Message": "Object of type Author is not JSON serializable"
+        }
+    },
+    {
+        "Type": "Error",
+        "ArticleURL": "Default Dummy Data for the Article URL",
+        "Details": {
+            "Error Timestamp": "2023-09-15 09:23:53.770083",
+            "Error Type": "<class 'TypeError'>",
+            "Error Message": "Object of type Author is not JSON serializable"
+        }
+    },
+    {
+        "Type": "Error",
+        "ArticleURL": "Default Dummy Data for the Article URL",
+        "Details": {
+            "Error Timestamp": "2023-09-15 09:24:01.730742",
+            "Error Type": "<class 'TypeError'>",
+            "Error Message": "Object of type Author is not JSON serializable"
+        }
     }
 ]
