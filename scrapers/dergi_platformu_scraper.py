@@ -28,7 +28,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 
 json_two_articles = False
-is_test = True
+is_test = False
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
@@ -319,23 +319,22 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                             driver.find_element(By.CSS_SELECTOR, 'a[class="btn btn-info"]').click()
                             # IMPORTANT!
                             # Dergi platformu journals do not download documents directly!
+                            file_name = None
                             if check_download_finish(download_path):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
-                                if with_adobe:
-                                    adobe_cropped = split_in_half(file_name)
-                                    adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
-                                    adobe_references = AdobeHelper.get_analysis_results(adobe_response)
-                                    references = adobe_references
-                            else:
-                                with_adobe, with_azure = False, False
+                            # Send PDF to Azure and format response
+                            if with_azure:
+                                first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
+                                location_header = AzureHelper.analyse_pdf(
+                                    first_pages_cropped_pdf,
+                                    is_tk=False)  # Location header is the response address of Azure API
+                            if with_adobe:
+                                adobe_cropped = split_in_half(file_name)
+                                adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
+                                adobe_references = AdobeHelper.get_analysis_results(adobe_response)
+                                references = adobe_references
 
                         # Get Azure Data
                         if with_azure and file_name:

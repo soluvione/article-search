@@ -28,7 +28,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 def check_url(url):

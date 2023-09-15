@@ -28,7 +28,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 
@@ -247,22 +247,20 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         except Exception as e:
                             download_link = None
                             send_notification(GeneralError(f"No download link found for col_m9 journal with name {journal_name}."))
+
                         file_name, location_header = None, None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
-                                if not file_name:
-                                    with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
-                            else:
+                            if not file_name:
                                 with_adobe, with_azure = False, False
-
+                            # Send PDF to Azure and format response
+                            if with_azure:
+                                first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
+                                location_header = AzureHelper.analyse_pdf(
+                                    first_pages_cropped_pdf,
+                                    is_tk=False)  # Location header is the response address of Azure API
                         try:
                             article_data_element = driver.find_element(By.CSS_SELECTOR,
                                                                    ".document-detail.about.search-detail")

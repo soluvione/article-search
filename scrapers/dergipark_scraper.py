@@ -30,7 +30,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 # Scraper body chunks
 from common.helpers.methods.scraper_body_components import dergipark_components
 
-is_test = True
+is_test = False
 
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)

@@ -30,7 +30,7 @@ from fuzzywuzzy import fuzz
 
 # These modern looking pages have slightly different DOM for the volume and issue data
 modern_cellpadding_journals = ["anatoljcardiol.com", "jer-nursing.org", "khd.tkd.org.tr", "archivestsc.com"]
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 

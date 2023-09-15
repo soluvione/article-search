@@ -30,7 +30,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 from fuzzywuzzy import fuzz
 
-is_test = True
+is_test = False
 json_two_articles = False
 
 
@@ -346,20 +346,19 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                             download_link = None
 
                         # Download, crop and send to Azure Form Recognizer Endpoint
+                        file_name = None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
-                            else:
-                                with_adobe, with_azure = False, False
+                            # Send PDF to Azure and format response
+                            if with_azure:
+                                first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
+                                location_header = AzureHelper.analyse_pdf(
+                                    first_pages_cropped_pdf,
+                                    is_tk=False)  # Location header is the response address of Azure API
 
                         if article_language_number == 1:
                             article_page_language = "en"

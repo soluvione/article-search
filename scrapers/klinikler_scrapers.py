@@ -28,7 +28,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 
@@ -305,6 +305,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             if pdf_scrape_type == "A_KLNK":
                                 raise e
 
+                        file_name = None
                         # Download PDF and send to Azure
                         if download_link:
                             driver.get(download_link)
@@ -312,25 +313,23 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name)
+                            # Send PDF to Azure and format response
+                            if with_azure:
+                                first_pages_cropped_pdf = crop_pages(file_name)
 
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=True)  # Location header is the response address of Azure API
-                                    time.sleep(10)
-                                    azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                                    azure_data = azure_response_dictionary
-                                    azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                location_header = AzureHelper.analyse_pdf(
+                                    first_pages_cropped_pdf,
+                                    is_tk=True)  # Location header is the response address of Azure API
+                                time.sleep(10)
+                                azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                                azure_data = azure_response_dictionary
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
 
-                                # Send PDF to Adobe and format response
-                                if with_adobe:
-                                    adobe_cropped = split_in_half(file_name)
-                                    adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
-                                    adobe_references = AdobeHelper.get_analysis_results(adobe_response)
-                            else:
-                                with_adobe, with_azure = False, False
+                            # Send PDF to Adobe and format response
+                            if with_adobe:
+                                adobe_cropped = split_in_half(file_name)
+                                adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
+                                adobe_references = AdobeHelper.get_analysis_results(adobe_response)
 
                         final_authors = paired_authors
                         if with_azure:

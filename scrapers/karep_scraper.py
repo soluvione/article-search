@@ -28,7 +28,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 def check_url(url):
@@ -305,14 +305,12 @@ def karep_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
-                            else:
-                                with_azure, with_adobe = False, False
+                            # Send PDF to Azure and format response
+                            if with_azure:
+                                first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
+                                location_header = AzureHelper.analyse_pdf(
+                                    first_pages_cropped_pdf,
+                                    is_tk=False)  # Location header is the response address of Azure API
 
                         if download_link and file_name:
                             # Send PDF to Adobe and format response

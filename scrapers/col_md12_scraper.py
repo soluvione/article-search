@@ -32,7 +32,7 @@ from urllib.parse import urljoin
 from bs4 import BeautifulSoup
 import requests
 
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 def check_url(url):
@@ -414,7 +414,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             download_link = urljoin(start_page_url, article_url).replace("abstract", "pdf")
                         except Exception:
                             download_link = None
-
+                        file_name = None
                         # Download, crop and send to Azure Form Recognizer Endpoint
                         if download_link:
                             driver.get(download_link)
@@ -422,14 +422,12 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
-                                if with_azure:
-                                    first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
-                            else:
-                                with_adobe, with_azure = False, False
+                            # Send PDF to Azure and format response
+                            if with_azure:
+                                first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
+                                location_header = AzureHelper.analyse_pdf(
+                                    first_pages_cropped_pdf,
+                                    is_tk=False)  # Location header is the response address of Azure API
 
                         references = []
                         # Send PDF to Adobe and format response

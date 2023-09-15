@@ -27,7 +27,7 @@ from selenium.webdriver.chrome.service import Service as ChromeService
 from fuzzywuzzy import fuzz
 
 json_two_articles = False
-is_test = True
+is_test = False
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):

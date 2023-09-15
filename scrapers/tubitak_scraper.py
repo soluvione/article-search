@@ -26,7 +26,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
 
-is_test = True
+is_test = False
 json_two_articles = True if is_test else False
 
 def check_url(url):
@@ -267,7 +267,7 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                                                             'div[class="aside download-button"]').find_element(
                             By.TAG_NAME, 'a').get_attribute('href')
 
-                        references = None
+                        references, file_name = None, None
                         if download_link:
                             driver.get(download_link)
                             if check_download_finish(download_path, is_long=True):
@@ -275,14 +275,14 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                             if not file_name:
                                 with_adobe, with_azure = False, False
                                 # Send PDF to Azure and format response
-                                if download_link and file_name:
-                                    # Send PDF to Adobe and format response
-                                    if with_adobe:
-                                        adobe_cropped = split_in_half(file_name)
-                                        time.sleep(1)
-                                        adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
-                                        adobe_references = AdobeHelper.get_analysis_results(adobe_response)
-                                        references = adobe_references
+                            if download_link and file_name:
+                                # Send PDF to Adobe and format response
+                                if with_adobe:
+                                    adobe_cropped = split_in_half(file_name)
+                                    time.sleep(1)
+                                    adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
+                                    adobe_references = AdobeHelper.get_analysis_results(adobe_response)
+                                    references = adobe_references
 
                         keywords_tr, abstract_tr, article_title_tr = None, None, None
                         final_article_data = {

@@ -35,7 +35,7 @@ import requests
 with_azure = False
 with_adobe = False
 json_two_articles = False
-is_test = True
+is_test = False
 
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
