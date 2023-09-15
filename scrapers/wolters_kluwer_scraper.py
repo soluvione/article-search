@@ -344,7 +344,7 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
 
                         try:
                             driver.execute_script("window.scrollBy(0, 10000)")
-                            button = driver.find_element(By.CSS_SELECTOR, 'button[class="article-referenreferences__button"]')
+                            button = driver.find_element(By.CSS_SELECTOR, 'button[class="article-references__button"]')
                             driver.execute_script("arguments[0].click();", button)
                             time.sleep(3)
                         except Exception as e:

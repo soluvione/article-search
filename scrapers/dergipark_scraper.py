@@ -230,7 +230,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 temp_txt = latest_publication_element.text
 
                 recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip()) \
-                    if not "igusabder" in start_page_url or not "pub/isad" in start_page_url \
+                    if not "igusabder" in start_page_url or not "pub/isad" in start_page_url or not "pub/aeskd" in start_page_url\
                     else int(temp_txt.split()[0])
                 try:
                     recent_issue = int(temp_txt.split()[-1])
@@ -457,11 +457,6 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             article_doi = article_doi[article_doi.index("org/") + 4:]
                         except Exception as e:
                             article_doi = None
-                            send_notification(GeneralError(f" {journal_name, recent_volume, recent_issue}"
-                                                           f" with article num {i} was not successful. "
-                                                           f"DOI error was encountered. Article URL: {article_url}. "
-                                                           f"The problem encountered was: {e}"))
-
 
                         if pdf_to_download_available:
                             # CHECK IF THE DOWNLOAD HAS BEEN FINISHED
@@ -524,7 +519,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 final_article_data["articleAuthors"] = azure_article_data["article_authors"]
                             if not final_article_data["articleDOI"] and with_azure:
                                 if azure_article_data.get("doi", None):
-                                    final_article_data["articleDOI"] = azure_article_data["doi"]
+                                    final_article_data["articleDOI"] = azure_article_data["doi"].strip()
 
                         if is_test:
                             pprint.pprint(final_article_data)
