@@ -338,7 +338,8 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                             article_title_elements, keywords_elements, abstract_elements, button = \
                                 dergipark_components.get_single_lang_article_elements(driver)
-                            button.click()
+                            if not isinstance(button, int):
+                                button.click()
                             time.sleep(0.5)
                             reference_list_elements = dergipark_components.get_reference_elements(driver)
 
@@ -393,12 +394,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             try:
                                 keywords_element = dergipark_components.get_multiple_lang_article_keywords(
                                     tr_article_element)
-
-                                for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
-                                        'innerText').strip().split(','):
-                                    if keyword.strip() and keyword.strip() not in keywords_tr:
-                                        keywords_tr.append(keyword.strip())
-                                keywords_tr[-1] = re.sub(r'\.', '', keywords_tr[-1])
+                                if not isinstance(keywords_element, str):
+                                    for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
+                                            'innerText').strip().split(','):
+                                        if keyword.strip() and keyword.strip() not in keywords_tr:
+                                            keywords_tr.append(keyword.strip())
+                                    keywords_tr[-1] = re.sub(r'\.', '', keywords_tr[-1])
+                                else:
+                                    keywords_tr = []
                             except Exception as e:
                                 send_notification(ParseError(
                                     f"Could not scrape keywords of journal {journal_name} with article num {i}."
@@ -418,11 +421,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             keywords_element = dergipark_components.get_multiple_lang_article_keywords(
                                 eng_article_element)
 
-                            for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
-                                    'innerText').strip().split(','):
-                                if keyword.strip():
-                                    keywords_eng.append(keyword.strip())
-                            keywords_eng[-1] = re.sub(r'\.', '', keywords_eng[-1])
+                            if not isinstance(keywords_element, str):
+                                for keyword in keywords_element.find_element(By.TAG_NAME, 'p').get_attribute(
+                                        'innerText').strip().split(','):
+                                    if keyword.strip():
+                                        keywords_eng.append(keyword.strip())
+                                keywords_eng[-1] = re.sub(r'\.', '', keywords_eng[-1])
+                            else:
+                                keywords_eng = []
 
                             try:
                                 button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')

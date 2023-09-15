@@ -146,7 +146,12 @@ def get_single_lang_article_elements(driver):
     article_title_elements = driver.find_elements(By.CSS_SELECTOR, 'h3.article-title')
     keywords_elements = driver.find_elements(By.CSS_SELECTOR, 'div.article-keywords.data-section')
     abstract_elements = driver.find_elements(By.CSS_SELECTOR, 'div.article-abstract.data-section')
-    button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
+    try:
+        button = driver.find_element(By.XPATH, '//*[@id="show-reference"]')
+    except:
+        # Will check the type of the button in the returned data and if is an integer will deduce that
+        # the button element could not be found
+        button = 1
     return article_title_elements, keywords_elements, abstract_elements, button
 
 
@@ -188,7 +193,10 @@ def get_english_data(driver):
 
 
 def get_multiple_lang_article_keywords(article_element):
-    return article_element.find_element(By.CSS_SELECTOR, 'div.article-keywords.data-section')
+    try:
+        return article_element.find_element(By.CSS_SELECTOR, 'div.article-keywords.data-section')
+    except:
+        return ""
 
 
 def get_multiple_lang_article_refs(eng_article_element):
