@@ -169,7 +169,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 issue_no = latest_issue.find_elements(By.CLASS_NAME, 'issueNo')[-1].text if pdf_scrape_type == "A_KLNK" \
                     else int(latest_issue.find_element(By.CLASS_NAME, 'issueNo').text.split(' ')[-1].strip())
                 # TK no ref journals do not have volume or issue numbers
-                volume_no = int(volume_items.find_element(By.CLASS_NAME, 'header').text.split(' ')[-1]) \
+                volume_no = int(volume_items.find_element(By.CLASS_NAME, 'header').text.split(' ')[-1].strip()) \
                     if pdf_scrape_type.strip() == "A_KLNK & R" \
                     else None
                 if pdf_scrape_type == "A_KLNK":
