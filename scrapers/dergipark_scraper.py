@@ -32,6 +32,7 @@ from common.helpers.methods.scraper_body_components import dergipark_components
 
 is_test = False
 
+
 def get_downloads_path(parent_type: str, file_reference: str) -> str:
     current_file_path = os.path.realpath(__file__)
     parent_directory_path = os.path.dirname(os.path.dirname(current_file_path))
@@ -230,7 +231,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 temp_txt = latest_publication_element.text
 
                 recent_volume = int(temp_txt[temp_txt.index(":") + 1:temp_txt.index("Sayı")].strip()) \
-                    if not "igusabder" in start_page_url or not "pub/isad" in start_page_url or not "pub/aeskd" in start_page_url\
+                    if not "igusabder" in start_page_url or not "pub/isad" in start_page_url or not "pub/aeskd" in start_page_url \
                     else int(temp_txt.split()[0])
                 try:
                     recent_issue = int(temp_txt.split()[-1])
@@ -281,12 +282,21 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         article_issue = recent_issue
                         article_year = issue_year
 
+                        # DOWNLOAD ARTICLE PDF
                         try:
-                            pdf_to_download_available = dergipark_components.download_article_pdf(driver, pdf_scrape_type)
+                            # PDF LINK THAT WHEN DRIVER GETS THERE THE DOWNLOAD STARTS
+                            driver.get(driver.find_element
+                                       (By.CSS_SELECTOR,
+                                        'a.btn.btn-sm.float-left.article-tool.pdf.d-flex.align-items-center')
+                                       .get_attribute('href'))
+                            pdf_to_download_available = True
                         except Exception as e:
-                            send_notification(GeneralError(f"No download link found for a Dergipark Journal "
-                                                           f"'{journal_name}' and with article number {i}. Article URL:"
-                                                           f"{article_url}. Error encountered: {e}"))
+                            pdf_to_download_available = False
+                            if pdf_scrape_type == "A_DRG & R":
+                                pass
+                            else:
+                                raise GeneralError(f"Download error with {journal_name}, article number {i}, "
+                                                   f"article URL: {article_url}. Error encountered was: {e}")
 
                         try:
                             article_type = dergipark_components.define_article_type(driver)
@@ -570,4 +580,3 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                          f"'{journal_name}' with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time
-
