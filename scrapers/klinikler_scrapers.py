@@ -166,7 +166,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                 # Issue no example for TK no ref journal: (23.03.2023)
                 # Issue no example for TK ref journal: 3
                 issue_no = latest_issue.find_elements(By.CLASS_NAME, 'issueNo')[-1].text if pdf_scrape_type == "A_KLNK" \
-                    else int(latest_issue.find_elements(By.CLASS_NAME, 'issueNo')[-1].text.split(' ')[-1])
+                    else int(latest_issue.find_element(By.CLASS_NAME, 'issueNo').text.split(' ')[-1].strip())
                 # TK no ref journals do not have volume or issue numbers
                 volume_no = int(volume_items.find_element(By.CLASS_NAME, 'header').text.split(' ')[-1]) \
                     if pdf_scrape_type.strip() == "A_KLNK & R" \
@@ -179,6 +179,10 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=volume_no, issue=issue_no, pdf_scrape_type=pdf_scrape_type)
+            if is_test:
+                update_scanned_issues(volume_no, issue_no,
+                                      get_logs_path(parent_type, file_reference))
+
             if not is_issue_scanned:
                 issue_link = latest_issue.find_element(By.CSS_SELECTOR, 'a').get_attribute('href')
                 if pdf_scrape_type == "A_KLNK":
@@ -197,7 +201,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                     time.sleep(7)
                 # Get to the not scanned issue page
                 driver.get(issue_link)
-                time.sleep(7)
+                time.sleep(5)
 
                 # Scrape URLs
                 article_urls = []
@@ -355,8 +359,6 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             "articleURL": article_url,
                             "base64PDF": ""}
 
-                        if is_test:
-                            pprint.pprint(final_article_data)
                         if is_test:
                             pprint.pprint(final_article_data)
 
