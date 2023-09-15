@@ -21,6 +21,7 @@ from common.services.send_notification import send_notification
 import common.helpers.methods.others
 from common.services.tk_api.tk_service import TKServiceWorker
 from scrapers.dergipark_scraper import update_scanned_issues
+from classes.author import Author
 # 3rd Party libraries
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -354,7 +355,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             "articleVolume": article_volume,
                             "articleIssue": article_issue,
                             "articlePageRange": page_range,
-                            "articleAuthors": final_authors,
+                            "articleAuthors": Author.author_to_dict(final_authors),
                             "articleReferences": adobe_references if with_adobe else None,
                             "articleURL": article_url,
                             "base64PDF": ""}
