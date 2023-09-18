@@ -339,6 +339,9 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                         except Exception:
                             pass
 
+                        if not references:
+                            with_adobe = True
+
                         # DOI
                         try:
                             doi = article_element.find_element(By.CSS_SELECTOR, ".item.doi").find_element(By.CLASS_NAME,
