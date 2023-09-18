@@ -274,9 +274,12 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                 download_link = driver.find_element(By.XPATH,
                                                                 '//*[@id="table10"]/tbody/tr/td/table/tbody/tr[3]/td[2]/table/tbody/tr[2]/td/a[1]').get_attribute('href')
                             except:
-                                download_link = None
-
-
+                                try:
+                                    download_link = driver.find_element(By.XPATH,
+                                                                        '//*[@id="ContentPlaceHolder1_lblContent"]/table/tbody/tr[3]/td[2]/table[1]/tbody/tr[2]/td/a[1]').get_attribute(
+                                        'href')
+                                except:
+                                    download_link = None
                         references, file_name = None, None
                         if download_link:
                             driver.get(download_link)

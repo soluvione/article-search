@@ -270,7 +270,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                     if article_url.endswith("/"):
                         article_url = article_url[:-1]
                     driver.get(article_url)
-                    time.sleep(3)
+                    time.sleep(5)
 
                     try:
                         dergipark_references = []
@@ -326,7 +326,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                                               + str(recent_issue)
                                                               + str(i))
                             if with_azure:
-                                first_pages_cropped_pdf = crop_pages(formatted_name, pages_to_send)
+                                first_pages_cropped_pdf = crop_pages(formatted_name, 2)
                                 location_header = AzureHelper.analyse_pdf(
                                     first_pages_cropped_pdf)  # Location header is the response address of Azure API
                                 if not location_header:
@@ -525,10 +525,10 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                         if azure_article_data:
                             if azure_article_data.get("article_keywords", None):
-                                if azure_article_data["article_keywords"].get("tr", None):
+                                if azure_article_data["article_keywords"].get("tr", None) and not final_article_data["articleKeyword000s"]["TR"]:
                                     final_article_data["articleKeywords"]["TR"] = \
                                         azure_article_data["article_keywords"]["tr"]
-                                if azure_article_data["article_keywords"].get("eng", None):
+                                if azure_article_data["article_keywords"].get("eng", None) and not final_article_data["articleKeyword000s"]["ENG"]:
                                     final_article_data["articleKeywords"]["ENG"] = \
                                         azure_article_data["article_keywords"]["eng"]
                             if azure_article_data.get("article_authors", None):

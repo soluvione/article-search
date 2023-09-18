@@ -11,6 +11,7 @@ import timeit
 from common.errors import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
 from common.helpers.methods.common_scrape_helpers.klinikler_helper import format_bulk_data, get_article_titles, \
     pair_authors, get_page_range
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned, tk_no_ref_is_scanned
@@ -316,7 +317,6 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             # Send PDF to Azure and format response
                             if with_azure:
                                 first_pages_cropped_pdf = crop_pages(file_name)
-
                                 location_header = AzureHelper.analyse_pdf(
                                     first_pages_cropped_pdf,
                                     is_tk=True)  # Location header is the response address of Azure API
@@ -330,6 +330,20 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 adobe_cropped = split_in_half(file_name)
                                 adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
                                 adobe_references = AdobeHelper.get_analysis_results(adobe_response)
+
+                        references = []
+                        if pdf_scrape_type == "A_KLNK & R":
+                            try:
+                                references_element = driver.find_element(By.CSS_SELECTOR, 'div[class="article-references"]'
+                                                                         ).find_element(By.TAG_NAME, 'ol')
+                                for element in references_element.find_elements(By.TAG_NAME, 'li'):
+                                    references.append(element.text.strip())
+                                references = [reference_formatter(reference, False, count) for count, reference in
+                                              enumerate(references, start=1)]
+                            except Exception:
+                                pass
+                        elif pdf_scrape_type == "A_KLK" and with_adobe and download_link:
+                            references = adobe_references
 
                         final_authors = paired_authors
                         if with_azure:
@@ -355,7 +369,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             "articleIssue": article_issue,
                             "articlePageRange": page_range,
                             "articleAuthors": Author.author_to_dict(final_authors),
-                            "articleReferences": adobe_references if with_adobe else None,
+                            "articleReferences": references,
                             "articleURL": article_url,
                             "base64PDF": ""}
 

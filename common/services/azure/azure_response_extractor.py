@@ -115,7 +115,7 @@ class ApiResponseExtractor:
                 try:
                     doi = doi[doi.index("10."):]
                 except ValueError:
-                    return "HATA"
+                    return doi
         else:
             if ("doi" in self.api_response["analyzeResult"]["documents"][0]["fields"]
                     and "valueString" in self.api_response["analyzeResult"]["documents"][0]["fields"][

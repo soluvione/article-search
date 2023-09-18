@@ -116,7 +116,7 @@ def define_article_type(driver):
 def get_page_range(driver):
     try:
         article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
-        for element in article_subtitle_elements:
+        for element in article_subtitle_elements.reverse():
             article_page_range = []
             if element.text:
                 article_page_range = element.text.split(',')[-2].strip().split('-')

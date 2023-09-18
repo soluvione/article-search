@@ -153,22 +153,34 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     """
     if not final_article_data["articleTitle"]["TR"]:
         final_article_data["articleTitle"]["TR"] = azure_article_data.get("article_titles", {}).get("tr", "")
+    elif len(final_article_data["articleTitle"]["TR"]) < 15:
+        final_article_data["articleTitle"]["TR"] = None
+
     if not final_article_data["articleTitle"]["ENG"]:
         final_article_data["articleTitle"]["ENG"] = azure_article_data.get("article_titles", {}).get("eng", "")
+    elif len(final_article_data["articleTitle"]["ENG"]) < 15:
+        final_article_data["articleTitle"]["ENG"] = None
+
     if not final_article_data["articleAbstracts"]["TR"]:
         tr_abstract = azure_article_data.get("article_abstracts", {}).get("tr#1", "")
         tr_abstract2 = azure_article_data.get("article_abstracts", {}).get("tr#2", "")
         final_article_data["articleAbstracts"]["TR"] = tr_abstract + " " + tr_abstract2
+    elif len(final_article_data["articleAbstracts"]["TR"]) < 50:
+        final_article_data["articleAbstracts"]["TR"] = None
+
     if not final_article_data["articleAbstracts"]["ENG"]:
         eng_abstract = azure_article_data.get("article_abstracts", {}).get("eng#1", "")
         eng_abstract2 = azure_article_data.get("article_abstracts", {}).get("eng#2", "")
         final_article_data["articleAbstracts"]["ENG"] = eng_abstract + " " + eng_abstract2
+    elif len(final_article_data["articleAbstracts"]["ENG"]) < 50:
+        final_article_data["articleAbstracts"]["ENG"] = None
+
     if not final_article_data["articleKeywords"]["TR"]:
         final_article_data["articleKeywords"]["TR"] = azure_article_data.get("article_keywords", {}).get("tr", "")
     if not final_article_data["articleKeywords"]["ENG"]:
         final_article_data["articleKeywords"]["ENG"] = azure_article_data.get("article_keywords", {}).get("eng", "")
     if not final_article_data["articleType"]:
-        final_article_data["articleType"] = azure_article_data.get("article_authors", "ORİJİNAL ARAŞTIRMA")
+        final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     if not final_article_data["articleDOI"]:
@@ -303,6 +315,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                                                           ".journalArticleinTitleDOI").text.strip()
                             article_doi = abbv_doi_element.split(":")[-1].strip()
                             abbreviation = abbv_doi_element[:abbv_doi_element.index(".")].strip()
+                            if len(abbreviation) < 5:
+                                abbreviation = journal_name
                         except Exception as e:
                             abbreviation = journal_name
                             send_notification(GeneralError(

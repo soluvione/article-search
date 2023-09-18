@@ -98,34 +98,32 @@ def identify_article_type(string, num_of_references) -> str:
     :param string: The scraped type text from Dergipark issue page
     :return: Returns a string that is selected from the dropdown menu of Atıf Dizini
     """
+
+    # Used to be "Klinik Araştırma" but "KLİNİK ARAŞTIRMA" was not an approved entry in the backend
+    # So, changed back to "ORİJİNAL ARAŞTIRMA"
+    if "clinic" in string.lower() or "klinik" in string.strip().replace("I", "ı").replace("İ", "i").lower():
+        return "ORİJİNAL ARAŞTIRMA"
+    if string.strip() == "KLINIK ARAŞTIRMA" or string.strip() == "Klinik Araştırma" or string.strip() == "KLİNİK ARAŞTIRMA":
+        return "ORİJİNAL ARAŞTIRMA"
+    if string.strip().lower() == "original investigation" or string.strip().lower() == "clinical investigation":
+        return "ORİJİNAL ARAŞTIRMA"
+
     # Orijinal Araştırma
-    if string.strip().lower() == "research article" or string.strip().lower() == "original article" or string.strip().lower() == "research" or string.strip().lower() == "original research" or string.strip().lower() == "original articles":
+    if (string.strip().lower() == "research article" or string.strip().lower() == "original article"
+            or string.strip().lower() == "research" or string.strip().lower() == "original research"
+            or string.strip().lower() == "original articles"
+            or "araştırma" in string.strip().replace("I", "ı").replace("İ", "i").lower()
+            or "research" in string.strip().replace("I", "ı").replace("İ", "i").lower()):
         return "ORİJİNAL ARAŞTIRMA"
     if string.strip().lower() == "articles":
         return "ORİJİNAL ARAŞTIRMA"
-    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesi":
-        return "ORİJİNAL ARAŞTIRMA"
-    if "araştırma makale" in string.strip().replace("I", "ı").replace("İ", "i").lower():
-        return "ORİJİNAL ARAŞTIRMA"
-    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "araştırma makalesı":
-        return "ORİJİNAL ARAŞTIRMA"
-    if string.strip().replace("I", "ı").replace("İ", "i").lower() == "özgün araştırma":
-        return "ORİJİNAL ARAŞTIRMA"
-
-    # Klinik Araştırma
-    if string.strip() == "KLINIK ARAŞTIRMA" or string.strip() == "Klinik Araştırma" or string.strip() == "KLİNİK ARAŞTIRMA":
-        return "KLİNİK ARAŞTIRMA"
-    if string.strip().lower() == "original investigation" or string.strip().lower() == "clinical investigation":
-        return "KLİNİK ARAŞTIRMA"
 
     # Derlemeler
     if string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme" or string.strip().replace("I", "ı").replace("İ", "i").lower() == "derleme makalesi":
         return "DERLEME"
     if string.strip().lower() == "review" or string.strip().lower() == "review article":
         return "DERLEME"
-    if "review" in string.strip().lower():
-        return "DERLEME"
-    if "derleme" in string.strip().lower():
+    if "review" in string.strip().lower() or "derleme" in string.strip().lower():
         return "DERLEME"
 
     # Olgu Sunumu
@@ -156,13 +154,9 @@ def identify_article_type(string, num_of_references) -> str:
 
 def reference_formatter(reference: str, is_first: bool, count: int) -> str:
     try:
-        if "reference" in reference.lower() or "referans" in reference.lower() or "kaynak" in reference.lower():
-            return ""
-        if is_first:
-            reference = re.sub(r"kaynakça|kaynakca|references", "", reference, flags=re.IGNORECASE)
         reference_head = reference[0:18]
         reference_tail = reference[18:]
-        reference_head = re.sub(r"referans|reference", "", reference_head, flags=re.IGNORECASE)
+        reference_head = re.sub(r"kaynakça|kaynakca|reference|references|referans", "", reference_head, flags=re.IGNORECASE)
 
         reference_temp = reference_head + reference_tail
         reference_head = reference_temp[:5]

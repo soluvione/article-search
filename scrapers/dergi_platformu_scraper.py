@@ -149,22 +149,34 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     """
     if not final_article_data["articleTitle"]["TR"]:
         final_article_data["articleTitle"]["TR"] = azure_article_data.get("article_titles", {}).get("tr", "")
+    elif len(final_article_data["articleTitle"]["TR"]) < 15:
+        final_article_data["articleTitle"]["TR"] = None
+
     if not final_article_data["articleTitle"]["ENG"]:
         final_article_data["articleTitle"]["ENG"] = azure_article_data.get("article_titles", {}).get("eng", "")
+    elif len(final_article_data["articleTitle"]["ENG"]) < 15:
+        final_article_data["articleTitle"]["ENG"] = None
+
     if not final_article_data["articleAbstracts"]["TR"]:
         tr_abstract = azure_article_data.get("article_abstracts", {}).get("tr#1", "")
         tr_abstract2 = azure_article_data.get("article_abstracts", {}).get("tr#2", "")
         final_article_data["articleAbstracts"]["TR"] = tr_abstract + " " + tr_abstract2
+    elif len(final_article_data["articleAbstracts"]["TR"]) < 50:
+        final_article_data["articleAbstracts"]["TR"] = None
+
     if not final_article_data["articleAbstracts"]["ENG"]:
         eng_abstract = azure_article_data.get("article_abstracts", {}).get("eng#1", "")
         eng_abstract2 = azure_article_data.get("article_abstracts", {}).get("eng#2", "")
         final_article_data["articleAbstracts"]["ENG"] = eng_abstract + " " + eng_abstract2
+    elif len(final_article_data["articleAbstracts"]["ENG"]) < 50:
+        final_article_data["articleAbstracts"]["ENG"] = None
+
     if not final_article_data["articleKeywords"]["TR"]:
         final_article_data["articleKeywords"]["TR"] = azure_article_data.get("article_keywords", {}).get("tr", "")
     if not final_article_data["articleKeywords"]["ENG"]:
         final_article_data["articleKeywords"]["ENG"] = azure_article_data.get("article_keywords", {}).get("eng", "")
     if not final_article_data["articleType"]:
-        final_article_data["articleType"] = azure_article_data.get("article_authors", "ORİJİNAL ARAŞTIRMA")
+        final_article_data["articleType"] = "ORİJİNAL ARAŞTIRMA"
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     if not final_article_data["articleDOI"]:
@@ -277,11 +289,15 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                         try:
                             download_link = download_links[index_of_journal]
                         except Exception:
+                            send_notification(GeneralError(
+                                f"No download link found for D. Platformu journal: {journal_name}"
+                                f" with article num {i}. Article URL: {article_url}. Error encountered was: {e}"))
                             download_link = None
 
                         # DOI
                         try:
                             article_doi = dois[index_of_journal]
+                            article_doi = article_doi[article_doi.index("/10."):]
                         except Exception as e:
                             send_notification(GeneralError(
                                 f"Error while getting dergi_platformu abbreviation and DOI of the article: {journal_name}"
@@ -315,7 +331,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
 
                         if download_link:
                             driver.get(download_link)
-                            time.sleep(2)
+                            time.sleep(5)
                             driver.find_element(By.CSS_SELECTOR, 'a[class="btn btn-info"]').click()
                             # IMPORTANT!
                             # Dergi platformu journals do not download documents directly!
@@ -324,6 +340,10 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
+                                send_notification(GeneralError(
+                                    f"No file name found for D. Platformu journal: {journal_name} "
+                                    f"with article num {i}. ULR: {article_url}. Error encountered was: {e}"))
+
                             # Send PDF to Azure and format response
                             if with_azure:
                                 first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)

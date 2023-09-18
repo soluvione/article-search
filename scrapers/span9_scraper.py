@@ -203,9 +203,14 @@ def span9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                 #Get Vol, Issue and Year from the current issue page
                 current_issue_element = driver.find_element(By.CSS_SELECTOR, 'div[class="page-header"]')
                 numbers = re.findall('[0-9]+', current_issue_element.text)
-                article_year = int(numbers[0])
-                recent_volume = int(numbers[1])
-                recent_issue = int(numbers[2])
+                if not int(numbers[0]) < 2020:  # Could be like "Volume 38 - Issue 2 - June 2023" or "2023, Volume 39, Issue 2"
+                    article_year = int(numbers[0])
+                    recent_volume = int(numbers[1])
+                    recent_issue = int(numbers[2])
+                else:
+                    article_year = int(numbers[2])
+                    recent_volume = int(numbers[0])
+                    recent_issue = int(numbers[1])
 
             except Exception as e:
                 raise GeneralError(f"Volume, issue or year data of span9 journal is absent! Error encountered was: {e}")
