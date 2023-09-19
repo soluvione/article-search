@@ -372,6 +372,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                                 author.all_speciality = affiliations[int(author_name[-1]) - 1]
                             except ValueError:
                                 author.all_speciality = affiliations[0]
+                            author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
                             author_list.append(author)
 
                         # Abstracts

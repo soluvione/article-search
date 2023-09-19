@@ -76,6 +76,7 @@ def get_recently_downloaded_file_name(download_path, journal_name, article_url):
                                        f"article_url: {article_url}. Error: {e}"))
         return False
 
+
 def update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail):
     """
 
@@ -184,7 +185,7 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     if not final_article_data["articleDOI"]:
-        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)
     return final_article_data
 
 
@@ -206,7 +207,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
     i = 0  # Will be used to distinguish article numbers
 
     try:
-        with webdriver.Chrome(service=service, options=options) as driver:
+        with (webdriver.Chrome(service=service, options=options) as driver):
             driver.get(check_url(start_page_url))
             time.sleep(3)
             try:
@@ -231,7 +232,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                     recent_volume, recent_issue = numbers[:2]
                 else:
                     time.sleep(5)
-                    vol_issue = driver.find_element(By.CSS_SELECTOR, 'span[class="badge badge-danger"]').text\
+                    vol_issue = driver.find_element(By.CSS_SELECTOR, 'span[class="badge badge-danger"]').text \
                         .strip().split('/')
                     recent_volume = int(vol_issue[0])
                     recent_issue = int(vol_issue[1])
@@ -239,8 +240,9 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 article_list = driver.find_element(By.CSS_SELECTOR, "table[cellpadding='4']")
                 # rows = article_list.find_elements(By.CSS_SELECTOR, ".td_pubtype")
             except Exception as e:
-                raise GeneralError(f"Volume, issue, year data or articles of - Cellpadding4 - journal {journal_name} is absent! "
-                                   f"Error encountered: {e}")
+                raise GeneralError(
+                    f"Volume, issue, year data or articles of - Cellpadding4 - journal {journal_name} is absent! "
+                    f"Error encountered: {e}")
 
             is_issue_scanned = check_scan_status(logs_path=get_logs_path(parent_type, file_reference),
                                                  vol=recent_volume, issue=recent_issue, pdf_scrape_type=pdf_scrape_type)
@@ -279,7 +281,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                                                               '@border="0" and @cellpadding="0" and @cellspacing="0"]')
                         else:
                             article_data_body = driver.find_element(By.CSS_SELECTOR,
-                                                                '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
+                                                                    '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
                         tools_bar_element = driver.find_element(By.CSS_SELECTOR, ".list-group.siteArticleShare")
                         try:
                             download_link = tools_bar_element.find_element(By.CSS_SELECTOR,
@@ -312,7 +314,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         # Abbreviation and DOI
                         try:
                             abbv_doi_element = article_data_body.find_element(By.CSS_SELECTOR,
-                                                                          ".journalArticleinTitleDOI").text.strip()
+                                                                              ".journalArticleinTitleDOI").text.strip()
                             article_doi = abbv_doi_element.split(":")[-1].strip()
                             abbreviation = abbv_doi_element[:abbv_doi_element.index(".")].strip()
                             if len(abbreviation) < 5:
@@ -329,7 +331,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 driver.find_element(By.XPATH, '//meta[@name="citation_firstpage"]').get_attribute(
                                     'content'))
                             last_page = int(
-                                driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]').get_attribute('content'))
+                                driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]').get_attribute(
+                                    'content'))
 
                             article_page_range = [first_page, last_page]
                         except Exception as e:
@@ -386,6 +389,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 author.all_speciality = affiliations[int(author_name[-1]) - 1]
                             except ValueError:
                                 author.all_speciality = affiliations[0]
+                            author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
                             author_list.append(author)
 
                         # Abstracts
@@ -467,9 +471,9 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
 
                         # Article Type
                         article_type = "OLGU SUNUMU" if (
-                                    "case" in journal_name.lower() or "case" in article_title_eng.lower()
-                                    or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower()
-                                    or "bulgu" in article_title_tr.lower()) else "ORİJİNAL ARAŞTIRMA"
+                                "case" in journal_name.lower() or "case" in article_title_eng.lower()
+                                or "olgu" in article_title_tr.lower() or "sunum" in article_title_tr.lower()
+                                or "bulgu" in article_title_tr.lower()) else "ORİJİNAL ARAŞTIRMA"
 
                         final_article_data = {
                             "journalName": f"{journal_name}",
@@ -532,7 +536,8 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping cellpadding4 journal "
-                                       f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        send_notification(
+            GeneralError(f"An error encountered and caught by outer catch while scraping cellpadding4 journal "
+                         f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time

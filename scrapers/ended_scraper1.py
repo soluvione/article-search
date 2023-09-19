@@ -402,7 +402,8 @@ def ended_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             # Author Objects
                             for author_name in authors_names:
                                 try:
-                                    new_author = Author(name=author_name[:-1], all_speciality=specialities[int(author_name.strip()[-1])])
+                                    new_author = Author(name=re.sub(r"[^a-zA-z\s]", "", author_name[:-1]),
+                                                        all_speciality=specialities[int(author_name.strip()[-1])])
                                     authors.append(new_author)
                                 except Exception:
                                     pass

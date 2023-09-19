@@ -29,6 +29,7 @@ from fuzzywuzzy import fuzz
 json_two_articles = False
 is_test = False
 
+
 def check_url(url):
     if not url.startswith(('http://', 'https://')):
         url = 'https://' + url
@@ -70,6 +71,7 @@ def get_recently_downloaded_file_name(download_path, journal_name, article_url):
         send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
                                        f"article_url: {article_url}. Error: {e}"))
         return False
+
 
 def update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail):
     """
@@ -179,7 +181,7 @@ def populate_with_azure_data(final_article_data, azure_article_data):
     if not final_article_data["articleAuthors"]:
         final_article_data["articleAuthors"] = azure_article_data.get("article_authors", [])
     if not final_article_data["articleDOI"]:
-        final_article_data["articleDOI"] = azure_article_data.get("doi", None)    
+        final_article_data["articleDOI"] = azure_article_data.get("doi", None)
     return final_article_data
 
 
@@ -210,7 +212,6 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                 driver.find_element(By.CSS_SELECTOR, 'button[id="onetrust-reject-all-handler"]').click()
             except:
                 pass
-
 
             try:
                 current_issue_element = driver.find_element(By.CSS_SELECTOR, 'h3[id^="ctl00"]')
@@ -261,18 +262,22 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             pass
 
                         # Article Type
-                        article_type = driver.find_element(By.CSS_SELECTOR, 'div[class="ejp-r-article-subsection__text"]').text.strip()
+                        article_type = driver.find_element(By.CSS_SELECTOR,
+                                                           'div[class="ejp-r-article-subsection__text"]').text.strip()
                         if "editor" in article_type.lower() or "ediror" in article_type.lower():
                             continue
                         article_type = identify_article_type(article_type, 0)
 
                         # Article Title
-                        article_title_eng = driver.find_element(By.CSS_SELECTOR, 'h1[class="ejp-article-title"]').text.replace("\n", "").replace("\t", "").strip()
+                        article_title_eng = driver.find_element(By.CSS_SELECTOR,
+                                                                'h1[class="ejp-article-title"]').text.replace("\n",
+                                                                                                              "").replace(
+                            "\t", "").strip()
 
                         # Abstract
                         try:
                             abstract_eng = driver.find_element(By.CSS_SELECTOR,
-                                                           'div[class="ejp-article-text-abstract"]').text.strip()
+                                                               'div[class="ejp-article-text-abstract"]').text.strip()
                         except Exception as e:
                             raise e
 
@@ -281,13 +286,14 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             bulk_text = driver.find_element(By.CSS_SELECTOR,
                                                             'span[id="ej-journal-date-volume-issue-pg"]').text
                             article_page_range = [int(number.strip()) for number in
-                                          bulk_text[bulk_text.index(":p") + 2:bulk_text.index(",")].split('-')]
+                                                  bulk_text[bulk_text.index(":p") + 2:bulk_text.index(",")].split('-')]
                         except Exception:
                             article_page_range = None
 
                         # DOI
                         try:
-                            article_doi = driver.find_element(By.CSS_SELECTOR, 'div[class="ej-journal-info"]').text.strip().split()[
+                            article_doi = \
+                            driver.find_element(By.CSS_SELECTOR, 'div[class="ej-journal-info"]').text.strip().split()[
                                 -1]
                         except Exception:
                             article_doi = None
@@ -299,7 +305,8 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             authors_element = driver.find_element(By.CSS_SELECTOR, 'section[id="ejp-article-authors"]')
                             author_names = authors_element.find_element(By.CSS_SELECTOR, 'p[id="P7"]').text.split(';')
                             formatted_author_names = [
-                                (name_section.split(',')[1].strip() + ' ' + name_section.split(',')[0].strip()).strip() for
+                                (name_section.split(',')[1].strip() + ' ' + name_section.split(',')[0].strip()).strip()
+                                for
                                 name_section in author_names]
 
                             driver.find_element(By.CSS_SELECTOR, 'a[id="ejp-article-authors-link"]').click()
@@ -312,7 +319,8 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                                 if affiliation.startswith("Address for"):
                                     try:
                                         correspondence_name = affiliation[
-                                                              affiliation.index(":") + 1: affiliation.index(",")].strip()
+                                                              affiliation.index(":") + 1: affiliation.index(
+                                                                  ",")].strip()
                                     except:
                                         pass
                                     try:
@@ -331,9 +339,9 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                                 author_to_add.is_correspondence = True if fuzz.ratio(author_to_add.name.lower(),
                                                                                      correspondence_name.lower()) > 80 else False
                                 if len(affiliations) == 1:
-                                    author_to_add.all_speciality = affiliations[0][1:] if affiliations[0][0].isdigit() else \
-                                    affiliations[0]
-                                    author_to_add.name = re.sub(r'\d', '', author_to_add.name)
+                                    author_to_add.all_speciality = affiliations[0][1:] if affiliations[0][
+                                        0].isdigit() else \
+                                        affiliations[0]
                                 else:
                                     try:
                                         try:
@@ -350,6 +358,8 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                                         author_to_add.all_speciality = random.choice(affiliations)
                                 if author_to_add.is_correspondence:
                                     author_to_add.mail = correspondence_email
+                                author_to_add.name = re.sub(r"[^a-zA-z\s]", ""
+                                                            , author_to_add.name)
                                 author_objects.append(author_to_add)
                         except Exception as e:
                             pass
@@ -364,16 +374,19 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
 
                         references = list()
                         try:
-                            references_element = driver.find_element(By.CSS_SELECTOR, 'section[id="article-references"]')
+                            references_element = driver.find_element(By.CSS_SELECTOR,
+                                                                     'section[id="article-references"]')
                             reference_elements = references_element.find_elements(By.CSS_SELECTOR,
-                                                                       'div[class="article-references__item js-article-reference"]')
+                                                                                  'div[class="article-references__item js-article-reference"]')
                             for reference in reference_elements:
                                 references.append(reference.get_attribute('innerHTML')[
-                                      :reference.get_attribute('innerHTML').index('<d')].replace("&nbsp;", "").strip())
+                                                  :reference.get_attribute('innerHTML').index('<d')].replace("&nbsp;",
+                                                                                                             "").strip())
 
                             keywords_eng = [keyword.get_attribute('data-value').strip() for keyword in
-                                        driver.find_element(By.XPATH, '//*[@id="ej-article-view"]/div/div').find_elements(
-                                            By.CSS_SELECTOR, 'span[class="ej-keyword"]')]
+                                            driver.find_element(By.XPATH,
+                                                                '//*[@id="ej-article-view"]/div/div').find_elements(
+                                                By.CSS_SELECTOR, 'span[class="ej-keyword"]')]
                         except Exception as e:
                             raise e
 
@@ -434,7 +447,8 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                 log_already_scanned(get_logs_path(parent_type, file_reference))
                 return 590 if is_test else 530  # If test, move onto next journal, else wait 30 secs before moving on
     except Exception as e:
-        send_notification(GeneralError(f"An error encountered and caught by outer catch while scraping wolters_kluwer journal "
-                                       f"{journal_name} with article number {i}. Error encountered was: {e}."))
+        send_notification(
+            GeneralError(f"An error encountered and caught by outer catch while scraping wolters_kluwer journal "
+                         f"{journal_name} with article number {i}. Error encountered was: {e}."))
         clear_directory(download_path)
         return 590 if is_test else timeit.default_timer() - start_time

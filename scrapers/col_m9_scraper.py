@@ -1,3 +1,4 @@
+import re
 import time
 import os
 import traceback
@@ -6,9 +7,8 @@ import glob
 import json
 import pprint
 import timeit
-
-from classes.author import Author
 # Local imports
+from classes.author import Author
 from common.errors import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
@@ -304,7 +304,8 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         for author_element in author_elements.find_elements(By.TAG_NAME, "li"):
                             author = Author()
                             try:
-                                author.name = author_element.find_element(By.TAG_NAME, "span").text.strip()
+                                author.name = re.sub(r"[^a-zA-Z\s]", "",
+                                                     author_element.find_element(By.TAG_NAME, "span").text.strip())
                                 # Author specialities are not available all the time
                                 author.all_speciality = author_element.find_element(By.TAG_NAME, "span").get_attribute(
                                     "data-department").strip()

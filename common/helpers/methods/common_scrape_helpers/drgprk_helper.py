@@ -41,6 +41,7 @@ def author_converter(author_text: str, author_html: str) -> Author:
         # Author last name is always written in capital letters. Same goes for the second last names as well
         author.name = re.sub(r"  Bu kişi benim|&gt;|>", '', split_text[0])
         author.name = re.sub(r" \(Sorumlu Yazar\)", '', author.name)
+        author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
 
         if is_foreign_author:
             author.country = "YABANCI"
@@ -49,7 +50,8 @@ def author_converter(author_text: str, author_html: str) -> Author:
             author.all_speciality = split_text[1]
         return author
     except Exception as e:
-        print(e)
+        send_notification(GeneralError(f"An error encountered during the operations of Dergipark Author converter "
+                                       f"(author_converter, drgprk_helper). Error encountered: {e}"))
 
 
 def get_correspondance_name(authors_list):
