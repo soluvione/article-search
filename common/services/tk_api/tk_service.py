@@ -29,7 +29,10 @@ class TKServiceWorker:
         :param article_data: The formatted article data that has its final form
         :return: Returns 1 if successful else returns an error object
         """
-        article_url = "Default Dummy Data for the Article URL"
+        try:
+            article_url = article_data["articleURL"]
+        except Exception as e:
+            article_url = "ERROR IN ARTICLE URL!"
         try:
             url_endpoint = self.__url_endpoint
             headers = self.__headers
@@ -39,7 +42,7 @@ class TKServiceWorker:
             response = requests.post(url_endpoint, headers=headers, data=body)
             status: bool = response.json()["success"]
             if not status:
-                self.log_errors(response.json())
+                self.log_errors(response.json(), article_url)
             return 1  # TODO can return the response value of the real response
         except Exception as e:
             self.log_errors(e, article_url)
