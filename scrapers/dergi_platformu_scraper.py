@@ -325,7 +325,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                         author_list = list()
                         for author_name in authors_names:
                             author = Author()
-                            author.name = re.sub(r"[^a-zA-z\s]", "", author_name)
+                            author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author_name)
                             author.is_correspondence = False
                             author_list.append(author)
 

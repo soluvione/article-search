@@ -250,7 +250,7 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
 
                         author_objects = list()
                         for author_name in author_names:
-                            author_objects.append(Author(name=re.sub(r"[^a-zA-z\s]", "", author_name)))
+                            author_objects.append(Author(name=re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author_name)))
 
                         abstract_eng = driver.find_element(By.ID, 'abstract').text.strip()
 

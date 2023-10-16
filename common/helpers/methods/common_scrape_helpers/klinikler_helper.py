@@ -32,7 +32,7 @@ def pair_authors(author_names_list, author_specialities):
                     break
             author.is_correspondence = False
             author.mail = None
-            author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
+            author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
             paired_authors.append(author)
         return paired_authors
     except Exception as e:

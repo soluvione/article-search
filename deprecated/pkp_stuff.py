@@ -189,7 +189,7 @@ with webdriver.Chrome(service=service, options=options) as driver:
             elements = soup.select('a[href]:has(span.glyphicon.glyphicon-circle-arrow-right)')
             types = []
             for element in elements:
-                element_text = re.sub(r"[^A-Za-z\s]", "", element.get_text(strip=True))
+                element_text = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", element.get_text(strip=True))
                 number_of_times = re.findall(r"\d+", element.get_text(strip=True))[0]
                 for i in range(int(number_of_times)):
                     types.append(element_text.strip())

@@ -287,10 +287,10 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                     author.all_speciality = author_affiliations[6]
                                 else:
                                     author.all_speciality = author_affiliations[0]
-                                author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
                                 author_objects.append(author)
                             except Exception:
-                                author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
                                 author_objects.append(author)
 
                         # DOI

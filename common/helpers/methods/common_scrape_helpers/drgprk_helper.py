@@ -41,7 +41,7 @@ def author_converter(author_text: str, author_html: str) -> Author:
         # Author last name is always written in capital letters. Same goes for the second last names as well
         author.name = re.sub(r"  Bu kişi benim|&gt;|>", '', split_text[0])
         author.name = re.sub(r" \(Sorumlu Yazar\)", '', author.name)
-        author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
+        author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
 
         if is_foreign_author:
             author.country = "YABANCI"

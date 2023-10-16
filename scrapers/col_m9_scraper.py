@@ -304,7 +304,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         for author_element in author_elements.find_elements(By.TAG_NAME, "li"):
                             author = Author()
                             try:
-                                author.name = re.sub(r"[^a-zA-Z\s]", "",
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "",
                                                      author_element.find_element(By.TAG_NAME, "span").text.strip())
                                 # Author specialities are not available all the time
                                 author.all_speciality = author_element.find_element(By.TAG_NAME, "span").get_attribute(

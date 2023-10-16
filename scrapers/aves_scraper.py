@@ -320,7 +320,7 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                 author.name = author_name[:-1].strip()
                                 author.all_speciality = specilities[int(author_name[-1]) - 1]
                                 author.is_correspondence = True if authors_list.index(author_name) == 0 else False
-                                author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
                                 authors.append(author)
                             except Exception as e:
                                 pass

@@ -322,7 +322,7 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                                                                         "affiliation").text.strip()
                                 except Exception:
                                     author.all_speciality = "Format dışı ya da hatalı yazar bilgisi."
-                                author.name = re.sub(r"[^a-zA-z\s]", "", author.name)
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
                                 authors.append(author)
                         except Exception as e:
                             raise e
