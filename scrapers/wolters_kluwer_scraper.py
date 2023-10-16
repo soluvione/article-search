@@ -409,7 +409,7 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                             "articleAuthors": Author.author_to_dict(author_objects) if author_objects else [],
                             "articleReferences": references if references else [],
                             "articleURL": article_url,
-                            "base64PDF": None}
+                            "temporaryPDF": None}
 
                         if is_test:
                             pprint.pprint(final_article_data)

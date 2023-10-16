@@ -402,7 +402,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                             "articleAuthors": Author.author_to_dict(author_list) if author_list else None,
                             "articleReferences": references if references else None,
                             "articleURL": article_url,
-                            "base64PDF": ""}
+                            "temporaryPDF": ""}
 
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
@@ -411,7 +411,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
-                        final_article_data["base64PDF"] = tk_worker.encode_base64(file_name)
+                        final_article_data["temporaryPDF"] = tk_worker.encode_base64(file_name)
                         if is_test:
                             response = tk_worker.test_send_data(final_article_data)
                             if isinstance(response, Exception):

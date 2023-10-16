@@ -516,7 +516,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             "articleAuthors": Author.author_to_dict(authors) if authors else None,
                             "articleReferences": None,
                             "articleURL": article_url,
-                            "base64PDF": ""}
+                            "temporaryPDF": ""}
 
                         if dergipark_references:
                             final_article_data["articleReferences"] = dergipark_references
@@ -542,7 +542,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
-                        final_article_data["base64PDF"] = tk_worker.encode_base64(formatted_name)
+                        final_article_data["temporaryPDF"] = tk_worker.encode_base64(formatted_name)
                         if is_test:
                             response = tk_worker.test_send_data(final_article_data)
                             if isinstance(response, Exception):
