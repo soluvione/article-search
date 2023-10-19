@@ -251,7 +251,8 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         # Article Type
                         article_type = main_element.find_element(By.CSS_SELECTOR,
                                                                  'div[class="bold-medium blue-light-back"]').text \
-                            if not "journalofoncology" in start_page_url else driver.find_element(
+                            if not ("journalofoncology" in start_page_url or "jcog" in start_page_url) \
+                            else driver.find_element(
                             By.CSS_SELECTOR, 'div[class="category-panel-name"]').text.strip()
                         article_type = identify_article_type(article_type, 0)
 
