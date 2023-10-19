@@ -330,7 +330,7 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         if int(article_page_range[0]) > int(article_page_range[1]):
                             article_page_range[1] = str(int(article_page_range[0][:-1]) + int(article_page_range[1]))
 
-                        if not "journalofoncology" in start_page_url:
+                        if not ("journalofoncology" in start_page_url or "jcog" in start_page_url):
                             # ÇİFT DİLLİLER
                             article_title_tr = main_element.find_element(By.CSS_SELECTOR,
                                                                          'div[class="article-title"]').text.strip()
