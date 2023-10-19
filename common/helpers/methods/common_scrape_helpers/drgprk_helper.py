@@ -4,6 +4,20 @@ from classes.author import Author
 from common.errors import GeneralError
 from common.services.send_notification import send_notification
 
+def clean_url_n_doi(text):
+    pattern = r'http[s]?://[\w\s\.\/:\?\&\=\(\)\-]+'
+    urls = re.findall(pattern, text)
+
+    for url in urls:
+        cleaned_url = re.sub(r'\s*([\.:\/\?\&\=\(\)\-])\s*', r'\1', url)  # replace spaces around special characters with the respective symbol
+        text = text.replace(url, cleaned_url)
+    text = re.sub(r'http[s]?://[\w\.\/:\?\&\=\(\)\-]+', '', text).strip()
+
+    # Remove DOIs
+    pattern_doi = r'\b[DOIdoi]{3}\s*:\s*\d+\.\w+'
+    text = re.sub(pattern_doi, '', text).strip()
+
+    return text
 
 def capitalize_first_occurrence(s):
     # iterate over each character
@@ -248,6 +262,7 @@ def abstract_formatter(abstract, language) -> str:
                 abstract_tail = abstract_tail[: abstract_tail.index("\nKeywords:")].strip()
             except:
                 pass
+            abstract_tail = clean_url_n_doi(abstract_tail)
         return (abstract_head + abstract_tail).strip()
     except Exception as e:
         send_notification(

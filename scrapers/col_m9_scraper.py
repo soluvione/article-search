@@ -254,7 +254,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             if check_download_finish(download_path):
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
-                                with_adobe, with_azure = False, False
+                                with_adobe, with_azure = True, True
                             # Send PDF to Azure and format response
                             if with_azure:
                                 first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
@@ -317,86 +317,207 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                                 send_notification(GeneralError(
                                     f"Error while getting col_m9 article authors' data of journal: {journal_name}. "
                                     f"Error encountered was: {e}"))
+                        try:
+                            language_selection_element = driver.find_element(By.ID, "ctl08_langArea2")
+                        except Exception:
+                            language_selection_element = None
 
-                        navigation_bar = article_data_element.find_element(By.CSS_SELECTOR, ".nav.nav-tabs")
-                        navigation_bar.find_elements(By.TAG_NAME, "li")[0].click()
-                        # Note!
-                        # The col_m9 type journals have the abstract in either Turkish or English but not both
-                        # If there are two abstracts, the second ones should be gotten from Azure services
-                        # Page language
-                        if "Abstract" in navigation_bar.text:
-                            page_language = "en"
+                        if not language_selection_element:
+                            navigation_bar = article_data_element.find_element(By.CSS_SELECTOR, ".nav.nav-tabs")
+                            navigation_bar.find_elements(By.TAG_NAME, "li")[0].click()
+                            # Note!
+                            # The col_m9 type journals have the abstract in either Turkish or English but not both
+                            # If there are two abstracts, the second ones should be gotten from Azure services
+                            # Page language
+                            if "Abstract" in navigation_bar.text:
+                                page_language = "en"
+                            else:
+                                page_language = "tr"
+
+                            nav_bar_elements = navigation_bar.find_elements(By.TAG_NAME, "li")
+                            references = None
+                            for item in nav_bar_elements:
+                                if item.get_attribute('id') == "ctl09_liRef":
+                                    item.click()
+                                    time.sleep(0.75)
+                                    references = article_data_element.find_element(By.CSS_SELECTOR,
+                                                                                   ".detail-text.font-12").text
+                                    references = references.split(
+                                        '\n')  # Split the references string into a list of reference strings
+                                    references = [reference_formatter(reference, False, count) for count, reference in
+                                                  enumerate(references, start=1)]
+
+                                elif item.get_attribute('id') == "ctl09_liAbstract":
+                                    item.click()
+                                    time.sleep(0.75)
+                                    abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
+
+                            if not references and download_link and file_name:
+                                # Send PDF to Adobe and format response
+                                if with_adobe:
+                                    adobe_cropped = split_in_half(file_name)
+                                    adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
+                                    adobe_references = AdobeHelper.get_analysis_results(adobe_response)
+                                    references = adobe_references
+
+                            # Get Azure Data
+                            if download_link and location_header and with_azure:
+                                azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                                azure_data = azure_response_dictionary["Data"]
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                if len(azure_article_data["emails"]) == 1:
+                                    for author in authors:
+                                        author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+
+                            # Abstract
+                            abstract = abstract_full[: abstract_full.index(
+                                "Anahtar Kelimeler")].strip() if page_language == "tr" else abstract_full[
+                                                                                            : abstract_full.index(
+                                                                                                "Keywords")].strip()
+                            # Keywords
+                            keywords = abstract_full[abstract_full.index(
+                                "Anahtar Kelimeler:") + 18:].strip() if page_language == "tr" else abstract_full[
+                                                                                                   abstract_full.index(
+                                                                                                       "Keywords:") + 10:].strip()
+                            keywords = [keyword.strip() for keyword in keywords.split(',')]
+
+                            final_article_data = {
+                                "journalName": f"{journal_name}",
+                                "articleType": article_type,
+                                "articleDOI": article_doi,
+                                "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                              f"{article_page_range[0]}-{article_page_range[1]}",
+                                "articleYear": datetime.now().year,
+                                "articleVolume": recent_volume,
+                                "articleIssue": recent_issue,
+                                "articlePageRange": article_page_range,
+                                "articleTitle": {"TR": article_title if page_language == "tr" else None,
+                                                 "ENG": article_title if page_language == "en" else None},
+                                "articleAbstracts": {"TR": abstract if page_language == "tr" else None,
+                                                     "ENG": abstract if page_language == "en" else None},
+                                "articleKeywords": {"TR": keywords if page_language == "tr" else None,
+                                                    "ENG": keywords if page_language == "en" else None},
+                                "articleAuthors": Author.author_to_dict(authors) if authors else None,
+                                "articleReferences": references if references else None,
+                                "articleURL": article_url,
+                                "temporaryPDF": ""}
                         else:
-                            page_language = "tr"
+                            lang_button = driver.find_element(By.ID, "ctl08_lnkTr2")
+                            driver.execute_script("arguments[0].click();", lang_button)
+                            time.sleep(7)
+                            article_data_element = driver.find_element(By.CSS_SELECTOR,
+                                                                   ".document-detail.about.search-detail")
 
-                        nav_bar_elements = navigation_bar.find_elements(By.TAG_NAME, "li")
-                        references = None
-                        for item in nav_bar_elements:
-                            if item.get_attribute('id') == "ctl09_liRef":
-                                item.click()
-                                time.sleep(0.75)
-                                references = article_data_element.find_element(By.CSS_SELECTOR,
-                                                                               ".detail-text.font-12").text
-                                references = references.split(
-                                    '\n')  # Split the references string into a list of reference strings
-                                references = [reference_formatter(reference, False, count) for count, reference in
-                                              enumerate(references, start=1)]
+                            navigation_bar = article_data_element.find_element(By.CSS_SELECTOR, ".nav.nav-tabs")
+                            navigation_bar.find_elements(By.TAG_NAME, "li")[0].click()
 
-                            elif item.get_attribute('id') == "ctl09_liAbstract":
-                                item.click()
-                                time.sleep(0.75)
-                                abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
+                            # Title
+                            article_title_tr = article_data_element.find_element(By.CSS_SELECTOR,
+                                                                              ".doc-title.doc-title-txt.text-decoration-none").text.strip()
 
-                        if not references and download_link and file_name:
-                            # Send PDF to Adobe and format response
-                            if with_adobe:
-                                adobe_cropped = split_in_half(file_name)
-                                adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
-                                adobe_references = AdobeHelper.get_analysis_results(adobe_response)
-                                references = adobe_references
+                            nav_bar_elements = navigation_bar.find_elements(By.TAG_NAME, "li")
+                            references = None
+                            for item in nav_bar_elements:
+                                if item.get_attribute('id') == "ctl09_liRef":
+                                    item.click()
+                                    time.sleep(0.75)
+                                    references = article_data_element.find_element(By.CSS_SELECTOR,
+                                                                                   ".detail-text.font-12").text
+                                    references = references.split(
+                                        '\n')  # Split the references string into a list of reference strings
+                                    references = [reference_formatter(reference, False, count) for count, reference in
+                                                  enumerate(references, start=1)]
 
-                        # Get Azure Data
-                        if download_link and location_header and with_azure:
-                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                            azure_data = azure_response_dictionary["Data"]
-                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                            if len(azure_article_data["emails"]) == 1:
-                                for author in authors:
-                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                                elif item.get_attribute('id') == "ctl09_liAbstract":
+                                    item.click()
+                                    time.sleep(1.5)
+                                    abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
 
-                        # Abstract
-                        abstract = abstract_full[: abstract_full.index(
-                            "Anahtar Kelimeler")].strip() if page_language == "tr" else abstract_full[
-                                                                                        : abstract_full.index(
-                                                                                            "Keywords")].strip()
-                        # Keywords
-                        keywords = abstract_full[abstract_full.index(
-                            "Anahtar Kelimeler:") + 18:].strip() if page_language == "tr" else abstract_full[
-                                                                                               abstract_full.index(
-                                                                                                   "Keywords:") + 10:].strip()
-                        keywords = [keyword.strip() for keyword in keywords.split(',')]
+                            if not references and download_link and file_name:
+                                # Send PDF to Adobe and format response
+                                if with_adobe:
+                                    adobe_cropped = split_in_half(file_name)
+                                    adobe_response = AdobeHelper.analyse_pdf(adobe_cropped, download_path)
+                                    adobe_references = AdobeHelper.get_analysis_results(adobe_response)
+                                    references = adobe_references
 
-                        final_article_data = {
-                            "journalName": f"{journal_name}",
-                            "articleType": article_type,
-                            "articleDOI": article_doi,
-                            "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
-                                                          f"{article_page_range[0]}-{article_page_range[1]}",
-                            "articleYear": datetime.now().year,
-                            "articleVolume": recent_volume,
-                            "articleIssue": recent_issue,
-                            "articlePageRange": article_page_range,
-                            "articleTitle": {"TR": article_title if page_language == "tr" else None,
-                                             "ENG": article_title if page_language == "en" else None},
-                            "articleAbstracts": {"TR": abstract if page_language == "tr" else None,
-                                                 "ENG": abstract if page_language == "en" else None},
-                            "articleKeywords": {"TR": keywords if page_language == "tr" else None,
-                                                "ENG": keywords if page_language == "en" else None},
-                            "articleAuthors": Author.author_to_dict(authors) if authors else None,
-                            "articleReferences": references if references else None,
-                            "articleURL": article_url,
-                            "temporaryPDF": ""}
+                            # Get Azure Data
+                            if download_link and location_header and with_azure:
+                                azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
+                                azure_data = azure_response_dictionary["Data"]
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                if len(azure_article_data["emails"]) == 1:
+                                    for author in authors:
+                                        author.mail = azure_article_data["emails"][
+                                            0] if author.is_correspondence else None
 
+                            # Abstract
+                            try:
+                                abstract_tr = abstract_full[: abstract_full.index(
+                                    "Anahtar Kelimeler")].strip()
+                            except:
+                                abstract_tr = abstract_full.strip()
+
+                            # Keywords
+                            try:
+                                keywords_tr = abstract_full[abstract_full.index(
+                                    "Anahtar Kelimeler:") + 18:].strip()
+                                keywords_tr = [keyword.strip() for keyword in keywords_tr.split(',')]
+                            except:
+                                keywords_tr = []
+
+                            # ENG
+
+                            lang_button = driver.find_element(By.ID, "ctl08_lnkEng2")
+                            driver.execute_script("arguments[0].click();", lang_button)
+                            time.sleep(5)
+                            article_data_element = driver.find_element(By.CSS_SELECTOR,
+                                                                   ".document-detail.about.search-detail")
+
+                            # Title
+                            article_title_eng = article_data_element.find_element(By.CSS_SELECTOR,
+                                                                              ".doc-title.doc-title-txt.text-decoration-none").text.strip()
+
+
+                            navigation_bar = article_data_element.find_element(By.CSS_SELECTOR, ".nav.nav-tabs")
+                            navigation_bar.find_elements(By.TAG_NAME, "li")[0].click()
+
+                            nav_bar_elements = navigation_bar.find_elements(By.TAG_NAME, "li")
+                            for item in nav_bar_elements:
+                                if item.get_attribute('id') == "ctl09_liAbstract":
+                                    item.click()
+                                    time.sleep(0.75)
+                                    abstract_full = article_data_element.find_element(By.ID, "tabAbstract").text.strip()
+
+                            # Abstract
+                            abstract_eng = abstract_full[: abstract_full.index(
+                                "Keywords")].strip()
+                            # Keywords
+                            keywords_eng = abstract_full[abstract_full.index(
+                                "Keywords:") + 10:].strip()
+
+                            keywords_eng = [keyword.strip() for keyword in keywords_eng.split(',')]
+
+                            final_article_data = {
+                                "journalName": f"{journal_name}",
+                                "articleType": article_type,
+                                "articleDOI": article_doi,
+                                "articleCode": abbreviation + f"; {recent_volume}({recent_issue}): "
+                                                              f"{article_page_range[0]}-{article_page_range[1]}",
+                                "articleYear": datetime.now().year,
+                                "articleVolume": recent_volume,
+                                "articleIssue": recent_issue,
+                                "articlePageRange": article_page_range,
+                                "articleTitle": {"TR": article_title_tr if article_title_tr else None,
+                                                 "ENG": article_title_eng if article_title_eng else None},
+                                "articleAbstracts": {"TR": abstract_tr if abstract_tr else None,
+                                                     "ENG": abstract_eng if abstract_eng else None},
+                                "articleKeywords": {"TR": keywords_tr if keywords_tr else None,
+                                                    "ENG": keywords_eng if keywords_eng else None},
+                                "articleAuthors": Author.author_to_dict(authors) if authors else None,
+                                "articleReferences": references if references else None,
+                                "articleURL": article_url,
+                                "temporaryPDF": ""}
                         if with_azure:
                             final_article_data = populate_with_azure_data(final_article_data, azure_article_data)
                         if is_test:
@@ -406,7 +527,7 @@ def col_m9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         tk_worker = TKServiceWorker()
                         final_article_data["temporaryPDF"] = tk_worker.encode_base64(file_name)
                         if is_test:
-                            response = tk_worker.test_send_data(final_article_data)
+                            response = tk_worker.send_data(final_article_data)
                             if isinstance(response, Exception):
                                 raise response
                         else:
