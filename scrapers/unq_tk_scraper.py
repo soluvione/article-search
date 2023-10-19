@@ -259,8 +259,15 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                         # Authors
                         author_names = main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[
                             0].text.split(',')
-                        author_affiliations_data = \
-                            main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[1].text
+                        try:
+                            author_affiliations_data = \
+                                main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[1].text
+                        except:
+                            author_names = main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[
+                                0].text
+                            author_names = author_names[:author_names.index("\n")]
+                            author_affiliations_data = author_names[author_names.index("\n"):]
+
                         author_affiliations = list()
                         array = [author_affiliations_data.index(found) for found in
                                  re.findall('[a-z][A-Z]', author_affiliations_data)]
