@@ -239,9 +239,11 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                     time.sleep(2)
                     try:
                         main_element = driver.find_element(By.CSS_SELECTOR,
-                                                           'div[class="col-md-12 category-panel"]') if "journalofoncology" in start_page_url else driver.find_element(
+                                                           'div[class="col-md-12 category-panel"]') \
+                            if "journalofoncology" in start_page_url or "jcog" in start_page_url \
+                            else driver.find_element(
                             By.CSS_SELECTOR, 'div[class="col-md-10"]')
-                    except Exception:
+                    except Exception as e:
                         raise GeneralError(
                             f"No main body element of the article of unq_tk journal found! Error encountered was: {e}")
 
