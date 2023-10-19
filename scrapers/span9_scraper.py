@@ -280,7 +280,7 @@ def span9_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                                     author.all_speciality = author_affiliations[author_code - 1][1:]
                                 except Exception:
                                     pass
-                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author.name)
                                 author_objects.append(author)
 
                         try:

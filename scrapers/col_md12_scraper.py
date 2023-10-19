@@ -325,7 +325,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                     # Types array hold the type of the article
                     article_types = []
                     for element in elements:
-                        element_text = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", element.get_text(strip=True))
+                        element_text = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", element.get_text(strip=True))
                         number_of_times = re.findall(r"\d+", element.get_text(strip=True))[0]
                         for x in range(int(number_of_times)):
                             article_types.append(element_text.strip())
@@ -401,7 +401,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             # Author Objects
                             for author_name in authors_names:
                                 try:
-                                    new_author = Author(name=re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author_name[:-1]),
+                                    new_author = Author(name=re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author_name[:-1]),
                                                         all_speciality=specialities[int(author_name.strip()[-1])])
                                     authors.append(new_author)
                                 except Exception:

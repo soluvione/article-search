@@ -389,7 +389,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                                 author.all_speciality = affiliations[int(author_name[-1]) - 1]
                             except ValueError:
                                 author.all_speciality = affiliations[0]
-                            author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", "", author.name)
+                            author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author.name)
                             author_list.append(author)
 
                         # Abstracts

@@ -358,7 +358,7 @@ def wolters_kluwer_scraper(journal_name, start_page_url, pdf_scrape_type, pages_
                                         author_to_add.all_speciality = random.choice(affiliations)
                                 if author_to_add.is_correspondence:
                                     author_to_add.mail = correspondence_email
-                                author_to_add.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIÖÇ\s]", ""
+                                author_to_add.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", ""
                                                             , author_to_add.name)
                                 author_objects.append(author_to_add)
                         except Exception as e:
