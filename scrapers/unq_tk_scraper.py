@@ -379,6 +379,8 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             abbreviation = "TJRMS."
                         elif "jpmrs" in start_page_url:
                             abbreviation = "J PMR Sci."
+                        elif "jcog" in start_page_url:
+                            abbreviation = "JCOG."
                         else:
                             abbreviation = "J Oncol Sci."
 
