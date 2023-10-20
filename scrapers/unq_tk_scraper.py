@@ -265,13 +265,14 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
                             main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[1].text
                         except:
                             author_names = main_element.find_elements(By.CSS_SELECTOR, 'div[class="article-author"]')[
-                                0].text
+                                0].text.replace("\n", " ")
 
                             # Find the index of the pattern
                             match = re.search(r'[a-z][A-ZİÖÇ]', author_names)
                             if match:
                                 split_index = match.start()
                                 author_affiliations_data = author_names[split_index:]
+                                author_names = author_names[:split_index].split(",")
                             else:
                                 author_affiliations_data = ""
 
@@ -286,7 +287,7 @@ def unq_tk_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send,
 
                         author_objects = list()
                         for name in author_names:
-                            author = Author(name=name[:-1])
+                            author = Author(name=name.strip()[:-1])
                             try:
                                 if author.name[-1] == "a":
                                     author.all_speciality = author_affiliations[0]
