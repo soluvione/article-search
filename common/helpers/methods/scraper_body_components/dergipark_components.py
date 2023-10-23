@@ -116,8 +116,8 @@ def define_article_type(driver):
 def get_page_range(driver):
     article_page_range = []
     try:
-        article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_firstpage"]')))
-        article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]')))
+        article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_firstpage"]').get_attribute('content')))
+        article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]').get_attribute('content')))
         return article_page_range
     except:
         try:
