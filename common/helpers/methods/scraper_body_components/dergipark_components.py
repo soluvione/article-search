@@ -114,21 +114,22 @@ def define_article_type(driver):
 
 
 def get_page_range(driver):
+    article_page_range = []
     try:
-        article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
-        for element in article_subtitle_elements.reverse():
-            article_page_range = []
-            if element.text:
-                try:
-                    article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_firstpage"]')))
-                    article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]')))
-                    return article_page_range
-                except:
+        article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_firstpage"]')))
+        article_page_range.append(int(driver.find_element(By.XPATH, '//meta[@name="citation_lastpage"]')))
+        return article_page_range
+    except:
+        try:
+            article_subtitle_elements = driver.find_elements(By.CSS_SELECTOR, 'span.article-subtitle')
+            for element in article_subtitle_elements.reverse():
+                if element.text:
                     article_page_range = element.text.split(',')[-2].strip().split('-')
                     article_page_range = [int(page_num.strip()) for page_num in article_page_range]
                     return article_page_range
-    except Exception as e:
-        raise e
+
+        except Exception as e:
+            raise e
 
 
 def get_language_tabs(driver):

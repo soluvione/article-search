@@ -14,7 +14,7 @@ from common.errors import DownloadError, ParseError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import author_converter
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, format_file_name, \
+from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter, \
     abstract_formatter, get_correspondance_name
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.adobe.adobe_helper import AdobeHelper
@@ -70,6 +70,7 @@ def log_already_scanned(path_: str):
         send_notification(GeneralError(
             f"Already scanned issue log creation error for Dergipark journal with path = {path_}. Error: {e}"))
 
+
 def get_recently_downloaded_file_name(download_path, journal_name, article_url):
     """
     Give the full PATH of the most recently downloaded file
@@ -87,6 +88,7 @@ def get_recently_downloaded_file_name(download_path, journal_name, article_url):
         send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
                                        f"article_url: {article_url}. Error: {e}"))
         return False
+
 
 def check_scan_status(**kwargs):
     try:
@@ -300,6 +302,16 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         article_issue = recent_issue
                         article_year = issue_year
 
+                        try:
+                            article_page_range = dergipark_components.get_page_range(driver)
+                            print(article_page_range)
+                            return 599
+                        except Exception as e:
+                            article_page_range = [0, 1]
+                            send_notification(GeneralError(f"No page range found for Dergipark Journal '{journal_name}'"
+                                                           f" and article number {i}. Article URL: {article_url}."
+                                                           f" Error encountered: {e}"))
+
                         # DOWNLOAD ARTICLE PDF
                         try:
                             # PDF LINK THAT WHEN DRIVER GETS THERE THE DOWNLOAD STARTS
@@ -324,13 +336,6 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         except Exception:
                             article_type = "ORİJİNAL ARAŞTIRMA"
 
-                        try:
-                            article_page_range = dergipark_components.get_page_range(driver)
-                        except Exception as e:
-                            article_page_range = [0, 1]
-                            send_notification(GeneralError(f"No page range found for Dergipark Journal '{journal_name}'"
-                                                           f" and article number {i}. Article URL: {article_url}."
-                                                           f" Error encountered: {e}"))
                         language_tabs = dergipark_components.get_language_tabs(driver)
                         article_lang_num = len(language_tabs)
 
@@ -345,16 +350,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             #                                   + str(i))
 
                             file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
-                            print(file_name)
-                            return 599
                             if with_azure:
-                                first_pages_cropped_pdf = crop_pages(formatted_name, 2)
+                                first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
                                 location_header = AzureHelper.analyse_pdf(
-                                    first_pages_cropped_pdf)  # Location header is the response address of Azure API
+                                    first_pages_cropped_pdf, is_tk=False)  # Location header is the response address of Azure API
                                 if not location_header:
                                     with_azure = False
                             if with_adobe and pdf_scrape_type.strip() != "A_DRG & R":
-                                adobe_pdf_path = split_in_half(formatted_name)
+                                adobe_pdf_path = split_in_half(file_name)
                                 adobe_zip_path = AdobeHelper.analyse_pdf(adobe_pdf_path, download_path)
                                 adobe_references = AdobeHelper.get_analysis_results(adobe_zip_path)
                         else:
@@ -390,7 +393,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                         ref_count += 1
 
                             if article_lang == "TR":
-                                article_title_eng, abstract_eng, keywords_eng = "", "", ""
+                                article_title_eng, abstract_eng, keywords_eng = "", "", []
                                 for element in article_title_elements:
                                     if element.text:
                                         article_title_tr = element.text.strip()
@@ -404,7 +407,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                             if keyword.strip() and keyword.strip() not in keywords_tr:
                                                 keywords_tr.append(keyword.strip())
                             else:
-                                article_title_tr, abstract_tr, keywords_tr = "", "", ""
+                                article_title_tr, abstract_tr, keywords_tr = "", "", []
                                 for element in article_title_elements:
                                     if element.text:
                                         article_title_eng = element.text.strip()
@@ -564,7 +567,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                         # Send data to Client API
                         tk_worker = TKServiceWorker()
-                        final_article_data["temporaryPDF"] = tk_worker.encode_base64(formatted_name)
+                        final_article_data["temporaryPDF"] = tk_worker.encode_base64(file_name)
                         if is_test:
                             response = tk_worker.test_send_data(final_article_data)
                             if isinstance(response, Exception):
