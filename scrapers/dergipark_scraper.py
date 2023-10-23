@@ -1,4 +1,5 @@
 # Python libraries
+import glob
 import pprint
 import time
 import timeit
@@ -69,6 +70,23 @@ def log_already_scanned(path_: str):
         send_notification(GeneralError(
             f"Already scanned issue log creation error for Dergipark journal with path = {path_}. Error: {e}"))
 
+def get_recently_downloaded_file_name(download_path, journal_name, article_url):
+    """
+    Give the full PATH of the most recently downloaded file
+    :param journal_name: Name of the journal
+    :param article_url: URL of the article page
+    :param download_path: PATH of the download folder
+    :return: Returns the name of the most recently downloaded file
+    """
+    time.sleep(2)
+    try:
+        list_of_files = glob.glob(download_path + '/*')
+        latest_file = max(list_of_files, key=os.path.getctime)
+        return latest_file
+    except Exception as e:
+        send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
+                                       f"article_url: {article_url}. Error: {e}"))
+        return False
 
 def check_scan_status(**kwargs):
     try:
@@ -319,12 +337,16 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         adobe_references, location_header = None, None
                         if check_download_finish(download_path):
                             # Formatted name will be saved to the variable and the PDF name is already formatted
-                            formatted_name = format_file_name(download_path,
-                                                              journal_name
-                                                              + ' '
-                                                              + str(recent_volume)
-                                                              + str(recent_issue)
-                                                              + str(i))
+                            # formatted_name = format_file_name(download_path,
+                            #                                   journal_name
+                            #                                   + ' '
+                            #                                   + str(recent_volume)
+                            #                                   + str(recent_issue)
+                            #                                   + str(i))
+
+                            file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
+                            print(file_name)
+                            return 599
                             if with_azure:
                                 first_pages_cropped_pdf = crop_pages(formatted_name, 2)
                                 location_header = AzureHelper.analyse_pdf(

@@ -52,7 +52,7 @@ class AzureHelper:
             try:
                 return send_pdf_response.headers['Operation-Location']
             except Exception as e:
-                if send_pdf_response:
+                if isinstance(send_pdf_response, requests.Response):
                     send_notification(GeneralError(f"Did not receive operation header in the first azure query ("
                                                    f"analyse_pdf, azure_helper.py). Error encountered: {e}. The body of "
                                                    f"response: {send_pdf_response.json()}"))
