@@ -302,16 +302,6 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         article_issue = recent_issue
                         article_year = issue_year
 
-                        try:
-                            article_page_range = dergipark_components.get_page_range(driver)
-                            print(article_page_range)
-                            return 599
-                        except Exception as e:
-                            article_page_range = [0, 1]
-                            send_notification(GeneralError(f"No page range found for Dergipark Journal '{journal_name}'"
-                                                           f" and article number {i}. Article URL: {article_url}."
-                                                           f" Error encountered: {e}"))
-
                         # DOWNLOAD ARTICLE PDF
                         try:
                             # PDF LINK THAT WHEN DRIVER GETS THERE THE DOWNLOAD STARTS
@@ -335,6 +325,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 continue
                         except Exception:
                             article_type = "ORİJİNAL ARAŞTIRMA"
+
+                        try:
+                            article_page_range = dergipark_components.get_page_range(driver)
+                        except Exception as e:
+                            article_page_range = [0, 1]
+                            send_notification(GeneralError(f"No page range found for Dergipark Journal '{journal_name}'"
+                                                           f" and article number {i}. Article URL: {article_url}."
+                                                           f" Error encountered: {e}"))
 
                         language_tabs = dergipark_components.get_language_tabs(driver)
                         article_lang_num = len(language_tabs)
