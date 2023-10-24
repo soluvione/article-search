@@ -25,6 +25,7 @@ from common.services.send_notification import send_notification
 from common.services.azure.azure_helper import AzureHelper
 # 3rd Party libraries
 from selenium import webdriver
+from docx2pdf import convert
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
@@ -77,16 +78,25 @@ def get_recently_downloaded_file_name(download_path, journal_name, article_url):
     :param journal_name: Name of the journal
     :param article_url: URL of the article page
     :param download_path: PATH of the download folder
-    :return: Returns the name of the most recently downloaded file
+    :return: Returns the name of the most recently downloaded file or the converted PDF file
     """
     time.sleep(2)
     try:
         list_of_files = glob.glob(download_path + '/*')
         latest_file = max(list_of_files, key=os.path.getctime)
+
+        # Check file extension
+        file_extension = latest_file.split(".")[-1].strip()
+        if file_extension in ['doc', 'docx', 'DOC', 'DOCX']:
+            pdf_file_name = os.path.splitext(latest_file)[0] + '.pdf'
+            convert(latest_file, pdf_file_name)
+            return pdf_file_name
+
         return latest_file
+
     except Exception as e:
         send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
-                                       f"article_url: {article_url}. Error: {e}"))
+                                       f"Article URL: {article_url}. Error: {e}"))
         return False
 
 

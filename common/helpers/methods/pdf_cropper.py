@@ -3,6 +3,7 @@ This module includes the functions related to splitting PDFs
 """
 from pathlib import Path
 import os
+from common.errors import GeneralError
 from common.services.send_notification import send_notification
 from pypdf import PdfWriter, PdfReader
 
@@ -33,7 +34,7 @@ def crop_pages(pdf_path: str, num_pages=1) -> str:
         return cropped_pdf_path
 
     except Exception as e:
-        send_notification(e)
+        send_notification(GeneralError("Pdf Stream error! (crop_pages, pdf_cropper.py)"))
 
 
 def split_in_half(pdf_path: str) -> str:
