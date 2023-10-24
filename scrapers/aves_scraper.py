@@ -341,9 +341,12 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                 # Send PDF to Azure and format response
                                 if with_azure:
                                     first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
-                                    location_header = AzureHelper.analyse_pdf(
-                                        first_pages_cropped_pdf,
-                                        is_tk=False)  # Location header is the response address of Azure API
+                                    if first_pages_cropped_pdf:
+                                        location_header = AzureHelper.analyse_pdf(
+                                            first_pages_cropped_pdf,
+                                            is_tk=False)  # Location header is the response address of Azure API
+                                    else:
+                                        with_azure, with_adobe = False, False
                             else:
                                 with_azure, with_adobe = False, False
 

@@ -85,12 +85,16 @@ def get_recently_downloaded_file_name(download_path, journal_name, article_url):
         list_of_files = glob.glob(download_path + '/*')
         latest_file = max(list_of_files, key=os.path.getctime)
 
-        # Check file extension
-        file_extension = latest_file.split(".")[-1].strip()
-        if file_extension in ['doc', 'docx', 'DOC', 'DOCX']:
-            pdf_file_name = os.path.splitext(latest_file)[0] + '.pdf'
-            convert(latest_file, pdf_file_name)
-            return pdf_file_name
+        try:
+            # Check file extension
+            file_extension = latest_file.split(".")[-1].strip()
+            if file_extension in ['doc', 'docx', 'DOC', 'DOCX']:
+                pdf_file_name = os.path.splitext(latest_file)[0] + '.pdf'
+                convert(latest_file, pdf_file_name)
+                return pdf_file_name
+        except Exception as e:
+            send_notification(GeneralError(f"GENERAL ERROR - Error encountered while turning docx file to pdf format. "
+                                           f"Error encountered was: {e}"))
 
         return latest_file
 
