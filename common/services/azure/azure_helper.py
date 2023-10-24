@@ -21,7 +21,7 @@ class AzureHelper:
     def analyse_pdf(cls, pdf_path: str, is_tk=False) -> str:
         """
 
-        :param is_tk: Whether if the analyse function will send a TK journal, if so will use different model
+        :param is_tk: Whether if the analysis function will send a TK journal, if so will use different model
         :param pdf_path: Important! This must be an absolute path otherwise will cause errors!
         :return: Returns the operation-header that will be used for fetching the results later
         """
@@ -182,7 +182,7 @@ class AzureHelper:
         :param tk_data: Raw API data
         :return: Will return formatted article data dictionary
         """
-        tk_extraction_data= None
+        tk_extraction_data = None
         try:
             data_extractor = ApiResponseExtractor(tk_data["Data"])
             abbreviation = data_extractor.extract_journal_abbreviation(is_tk=True)

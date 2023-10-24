@@ -322,8 +322,8 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                     is_tk=True)  # Location header is the response address of Azure API
                                 time.sleep(10)
                                 azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                                azure_data = azure_response_dictionary
-                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                azure_data = azure_response_dictionary  # Variable named here on purpose
+                                azure_article_data = AzureHelper.format_tk_data(azure_data)
 
                             # Send PDF to Adobe and format response
                             if with_adobe:
