@@ -197,7 +197,19 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
         reference_combined = capitalize_first_occurrence(reference_combined)
         if reference_combined.endswith("["):
             return reference_combined[:-2]
-        reference_combined = reference_combined.replace("[Crossref]", "").replace("[PubMed]", "").replace("[PMC]", "").strip()
+        reference_combined = reference_combined.replace("[Crossref]", "").replace("[PubMed]", "").replace("[PMC]", "").replace("[Link]").strip()
+
+        # Removing alphabetic characters from the citation year-vol-issue data such as '2009;11:R160'
+        pattern = "\d+;\d+:[A-Za-z]*\d+[-]?[A-Za-z]*\d*"
+
+        # Find all matches (with case-insensitive matching)
+        matches = re.findall(pattern, reference_combined, re.IGNORECASE)
+
+        # For each match, replace alphanumeric segments with just the numeric part (with case-insensitive matching)
+        for match in matches:
+            alphanumeric_pattern = "[A-Za-z]+(\d+)"
+            only_numbers = re.sub(alphanumeric_pattern, r'\1', match, flags=re.IGNORECASE)
+            reference_combined = reference_combined.replace(match, only_numbers)
 
         return reference_combined
     except Exception as e:
