@@ -374,7 +374,12 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             if not isinstance(button, int):
                                 button.click()
                             time.sleep(0.5)
-                            reference_list_elements = dergipark_components.get_reference_elements(driver)
+                            try:
+                                reference_list_elements = dergipark_components.get_reference_elements(driver)
+                            except:
+                                i += 1
+                                clear_directory(download_path)
+                                continue
 
                             for reference_element in reference_list_elements:
                                 if reference_element.find_elements(By.TAG_NAME, 'li')[0].text:
@@ -469,8 +474,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             except:
                                 pass
                             time.sleep(0.5)
-                            reference_list_elements = dergipark_components.get_multiple_lang_article_refs(
-                                eng_article_element)
+                            try:
+                                reference_list_elements = dergipark_components.get_multiple_lang_article_refs(
+                                    eng_article_element)
+                            except:
+                                i += 1
+                                clear_directory(download_path)
+                                continue
+
                             ref_count = 1
                             for reference_element in reference_list_elements:
                                 try:
