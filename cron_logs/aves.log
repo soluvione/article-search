@@ -1,0 +1,219 @@
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/a1cc0a8a719611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ee5b83fd-c425-48d5-b8c5-a2db5f394267
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/a1cc0a8a719611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/8_florencenightingalehemirelikdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b3d3418a719611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a0e5372b-e1e0-44d7-be3f-8e6a48e2beb5
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b3d3418a719611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/8_florencenightingalehemirelikdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c6e2bb8e719611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 418499a1-2afb-4521-91f2-0be6c9510cb7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c6e2bb8e719611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/8_florencenightingalehemirelikdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d742a37c719611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cac977c0-9bb6-4bd3-82d0-0d035ad7b59b
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d742a37c719611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/8_florencenightingalehemirelikdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e963d18e719611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 19e53a62-5bec-4911-a018-f46a43ae2708
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e963d18e719611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/8_florencenightingalehemirelikdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/06c94290719711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a1b816bc-6487-45ed-a4ec-b198d3527421
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/06c94290719711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/8_florencenightingalehemirelikdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/107ec836719811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: bad683de-7af1-4254-b0ae-2f014fcfa2c7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/107ec836719811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/9_neuropsychiatricinvestigation/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8046dbd0719911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e6b52eee-b662-49a9-81f5-295784727230
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8046dbd0719911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/99cee714719911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cad4938c-d500-43c8-81ca-3bf73f762036
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/99cee714719911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c904f4a6719911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7eaf66cf-7f0e-4daa-8807-92043fb4c563
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c904f4a6719911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/dcbc02f0719911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7c90e196-bec1-4f10-ae94-7159230852fd
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/dcbc02f0719911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f079769c719911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 3303a4cb-4a13-4aad-ac0b-fd8c55d3d672
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f079769c719911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/01a42430719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 73bc0690-e176-4f54-b797-9ea31eeb55d3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/01a42430719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/122638de719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1e00ae9f-7a60-4ad5-b801-cf51cf5dd6ac
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/122638de719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/286644b8719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c1e62630-f088-4ec7-aefe-53d07ba4701d
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/286644b8719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3f2bfa9e719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cb43458b-a6fc-4160-9b4e-d68af2b9e148
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3f2bfa9e719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/53bf40b0719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: bf660b21-a8ab-47fb-a125-263ab9562a10
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/53bf40b0719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/68249d5c719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c571232b-e567-4831-b585-1ac0cecb3c83
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/68249d5c719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/11_thejournalofinternationaladvancedotology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ac4889a8719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7f62337f-d891-4d13-9d74-216a95372ecb
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ac4889a8719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/13_turkishjournalofendocrinologyandmetabolism/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/be2756b8719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 37e8f564-2ff3-4514-952a-bc70ca92a769
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/be2756b8719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/13_turkishjournalofendocrinologyandmetabolism/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d071f92c719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1acfe324-5a66-4d6a-97d5-96c0db40627a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d071f92c719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/13_turkishjournalofendocrinologyandmetabolism/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e2636f3a719a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 3cc86eec-1051-4b99-85d8-5f64aad187c2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e2636f3a719a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/13_turkishjournalofendocrinologyandmetabolism/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/15a857ec719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 4398b9f0-4c96-4d10-8ed4-15fa940bf537
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/15a857ec719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/27a37da0719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ab5f0597-a821-4424-b8a4-780d6c79ad32
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/27a37da0719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/384f46c0719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d931337a-44a1-468f-ae6b-e3f7edebf5b6
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/384f46c0719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4e733ede719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 04a605f5-587b-40af-8107-5b27975805fe
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4e733ede719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/629f14c8719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c6877108-2684-4c41-9ee6-fb50f83d451a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/629f14c8719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7529f7d4719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d6173bee-7acb-4904-8eb2-c578e3696be0
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7529f7d4719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/85b294f8719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 51e45d5e-89b6-4955-a5e6-a0446e0449e0
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/85b294f8719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/99459b64719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 06a6b440-2c6d-4794-9cd3-a3d573f414bd
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/99459b64719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/acdbbd66719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 93f642b4-34c5-46f4-890a-1443295d9abf
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/acdbbd66719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c4010154719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: dec38cec-8fc7-4281-90cf-2d44248aa2c5
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c4010154719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/14_turkishjournalofgastroenterology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ee304d36719c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: eb4a2239-2832-45bd-999a-752d64f8e494
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ee304d36719c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+WARNING:pypdf._reader:EOF marker not found
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/087fcbbc719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d6744195-17ed-4a7c-b4a3-93a007964413
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/087fcbbc719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2237a5de719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f6caa9d6-83c3-44f5-86b4-0e8b4e40e6d7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2237a5de719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/32a65636719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 769734dc-8f8c-4e18-a165-66aab98f3124
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/32a65636719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4411f600719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: aa2aa089-f334-4705-97e2-e59b9acda7c1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4411f600719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/55bc11e2719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0b45576d-0581-4f1f-98a2-dc82c987d137
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/55bc11e2719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/66fed020719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e2192922-6566-4891-940b-c049ef4e5974
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/66fed020719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7ac9ee28719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 78cb7d7b-d64b-491d-9f57-55a725ffeaea
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7ac9ee28719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8c75467c719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cb26bd62-de51-43c6-9838-9854d1606a04
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8c75467c719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9dcce4b6719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a86b6756-a605-4615-865d-84037f2388c1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9dcce4b6719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c27f5fa0719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cab9587e-1851-49c0-ab83-6f112080caf0
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c27f5fa0719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/15_turkishjournalofnephrology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/eb0f0b82719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b2dfd1a3-348b-4af4-9fae-5499e27b9733
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/eb0f0b82719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/fe375fa2719d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 14381bc8-bd2b-44d1-87ff-a2b177b33bbc
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/fe375fa2719d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/0f86fc68719e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d5a6fb76-43d7-4092-9d03-b435c2fb0ef3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/0f86fc68719e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/270f0858719e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 13fcbdb0-24b8-4ca8-af19-8a052b44f88a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/270f0858719e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3ad1cf56719e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: bb84d50d-1751-45cd-9a2d-845126fe4461
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3ad1cf56719e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4d84750e719e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 504374b4-9683-4696-9041-1d14ac67793f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4d84750e719e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5d161d60719e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a3b32855-b85a-4968-a293-75f1f709f925
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5d161d60719e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
