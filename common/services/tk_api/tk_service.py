@@ -1,6 +1,8 @@
 import datetime
 import json
 import os.path
+import time
+
 import requests
 import base64
 import sys
@@ -29,6 +31,7 @@ class TKServiceWorker:
         :param article_data: The formatted article data that has its final form
         :return: Returns 1 if successful else returns an error object
         """
+        time.sleep(60)
         try:
             article_url = article_data["articleURL"]
         except Exception as e:
@@ -39,8 +42,14 @@ class TKServiceWorker:
             body = json.dumps(article_data)
 
             article_url = article_data["articleURL"]
-            response = requests.post(url_endpoint, headers=headers, data=body)
-            status: bool = response.json()["success"]
+            try:
+                response = requests.post(url_endpoint, headers=headers, data=body)
+                status: bool = response.json()["success"]
+            except Exception:
+                time.sleep(90)
+                response = requests.post(url_endpoint, headers=headers, data=body)
+                status: bool = response.json()["success"]
+
             if not status:
                 self.log_errors(response.json(), article_url)
             return 1  # TODO can return the response value of the real response
@@ -120,6 +129,7 @@ class TKServiceWorker:
             send_notification(GeneralError(
                 f"An error occurred while reading and appending TK API logs (log_errors, tk_service.py). "
                 f"Error encountered was: {e}"))
+
 
 # Integration Test
 if __name__ == "__main__":
