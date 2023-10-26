@@ -197,7 +197,7 @@ def reference_formatter(reference: str, is_first: bool, count: int) -> str:
         reference_combined = capitalize_first_occurrence(reference_combined)
         if reference_combined.endswith("["):
             return reference_combined[:-2]
-        reference_combined = reference_combined.replace("[Crossref]", "").replace("[PubMed]", "").replace("[PMC]", "").replace("[Link]").strip()
+        reference_combined = reference_combined.replace("[Crossref]", "").replace("[PubMed]", "").replace("[PMC]", "").replace("[Link]", "").strip()
 
         # Removing alphabetic characters from the citation year-vol-issue data such as '2009;11:R160'
         pattern = "\d+;\d+:[A-Za-z]*\d+[-]?[A-Za-z]*\d*"
