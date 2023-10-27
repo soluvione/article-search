@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/article-search/dispatchers/dergipark/dergipark_no_ref_27/no_ref_27_drg.py", line 14, in <module>
+    from scrapers.dergipark_scraper import dergipark_scraper
+  File "/home/ubuntu/article-search/scrapers/dergipark_scraper.py", line 19, in <module>
+    from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
+  File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
+    import fitz  # PyMuPDF
+ModuleNotFoundError: No module named 'fitz'

@@ -10,5 +10,9 @@
     {
         "timeOfTrial": "2023-10-20T12:04:44",
         "attemptStatus": true
+    },
+    {
+        "timeOfTrial": "2023-10-26T19:00:24",
+        "attemptStatus": "Already Scanned - No Action Needed"
     }
 ]

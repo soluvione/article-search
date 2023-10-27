@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/home/ubuntu/article-search/dispatchers/firat/firat_1-5/firat_dispatcher.py", line 14, in <module>
+    from scrapers.firat_scraper import firat_scraper
+  File "/home/ubuntu/article-search/scrapers/firat_scraper.py", line 18, in <module>
+    from common.helpers.methods.pdf_cropper import crop_pages
+  File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
+    import fitz  # PyMuPDF
+ModuleNotFoundError: No module named 'fitz'

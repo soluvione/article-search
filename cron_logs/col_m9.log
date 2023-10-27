@@ -1,0 +1,201 @@
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7736237a726611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7c21fdd3-ce95-432e-a59c-8a4c6cc32d09
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7736237a726611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bc7e54ca726611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7bed5115-7d3e-4f11-9c81-49fa47f7e695
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bc7e54ca726611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ff338c86726611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8475e5e2-5acf-45f7-b7d5-9e44503ddb74
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ff338c86726611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/42ee12e8726711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 32d3aa19-a10a-4ed2-be97-ea944f8033b5
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/42ee12e8726711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/863049f4726711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0cee31f3-a6fc-4333-815e-d00e22df3777
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/863049f4726711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/cab45e4e726711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0603fef8-b27e-4005-b3e5-8e579d0a77b3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/cab45e4e726711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/1098659a726811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 69c33e90-5c5b-4ca7-954d-8e513e48f0fd
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/1098659a726811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/58599cf0726811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c8db13b9-8ffa-4514-82de-fe09f94a023c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/58599cf0726811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9ee1850c726811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 3cdbd420-4b1a-41ad-b545-a30db2705f15
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9ee1850c726811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e296a480726811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7e8c885a-a939-4171-a417-459528b4f665
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e296a480726811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/26fc0002726911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cb7d7c5e-36d7-4ca9-8825-77ed11c284ac
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/26fc0002726911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/6cb5f300726911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 2a7ab509-08cd-4851-9c48-a0231accd39b
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/6cb5f300726911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b0938a24726911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b38eba70-a8ca-4713-8d56-44977c2cfbc3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b0938a24726911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f85ff360726911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 6845cd82-18b5-4698-8728-eb8399af320e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f85ff360726911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3bab68ac726a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e32f8bd2-4231-403b-b502-5902a6952d44
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3bab68ac726a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/82371af0726a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cb01ab1e-66ea-4930-b08e-3d97c879a527
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/82371af0726a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ca0db79e726a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 73eb81df-ba9d-408e-849e-eced5b3b099c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ca0db79e726a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/0ddef334726b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 04e5352f-85a6-400d-bdeb-9c3517090db4
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/0ddef334726b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/4_bagcilartipblteni/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/6b88f750726b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0ce24e2d-6eab-4ecd-b716-4035b712b67e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/6b88f750726b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/833da152726b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 4c0b162e-ab93-42e3-84dc-f3f42b58f1d9
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/833da152726b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9b71931e726b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cc912356-5911-4327-9690-5cb61eddadb3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9b71931e726b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/da064624726b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1d415a0b-ebea-485c-a30e-ad405dddde24
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/da064624726b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f6650d14726b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1b6895b2-3870-436e-9571-100adf1cc25b
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f6650d14726b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/0fcd2912726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b3693326-10b2-4217-b2c4-180bee65e1cc
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/0fcd2912726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4b579e2c726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 44385d5b-72c9-40b6-bc7a-bf4861a5000c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4b579e2c726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/62d2cde2726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0fed92e2-e04a-4085-b8eb-ece7cfdd76b4
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/62d2cde2726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/79ed01a0726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1422f5b9-1dc9-4cf2-ae5c-ae3193b2d6a0
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/79ed01a0726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/920f93ce726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e07f158d-3bed-4b1d-8ff9-ce425ccaaa45
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/920f93ce726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/aa9fc238726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b57cc8b4-b144-44f8-a23d-cc866c487bee
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/aa9fc238726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c1eaff3e726c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8645af72-6ec9-4cdf-ab8a-f12b7ba50349
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c1eaff3e726c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/7_cocukacilveyogunbakimdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/647a7fc2729011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e42761bd-694e-4130-83cc-bdd27a64299a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/647a7fc2729011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/a6a11a1e729011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5434f6af-01d5-4700-b516-377daacb7489
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/a6a11a1e729011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/eb1a0fac729011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5983f69e-3b13-407f-9339-925763272c57
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/eb1a0fac729011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2ce54212729111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cd2e183a-c147-45aa-a352-342485af0010
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2ce54212729111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e026a406729111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 56c1637f-63a9-4a0d-ae34-02109db4938d
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e026a406729111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/1daf7906729211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b20838c3-815b-463f-aeeb-b50ff388e802
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/1daf7906729211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5bdb57b8729211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c0214b48-f0af-4e2d-8777-e4b2617e76b7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5bdb57b8729211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/98e3ccb2729211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 6966d59c-2210-4356-82d7-bfa8eee8ba79
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/98e3ccb2729211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d53a87e6729211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7cb9d070-1c60-4f49-b5bd-b197a48a2a29
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d53a87e6729211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/34_turkyounbakmdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/55ea3eae729311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 432dff73-7dd8-4cfd-837e-72808f3f5eb7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/55ea3eae729311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/94e40eaa729311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 00608b91-e501-4c0c-8a1e-84b622d6ebd7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/94e40eaa729311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d7369804729311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d335886e-27eb-45e3-ad59-2a6ec1110146
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d7369804729311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4c0c40a2729411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: bbbeb31a-ce0f-4d75-9acd-82b5e28ca9f6
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4c0c40a2729411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c67b6642729411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f150e897-3f79-4bc9-85b5-692b6ec068a6
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c67b6642729411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3da08554729511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 640f3cb2-932a-4d4c-85fe-d717e9c7bc4c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3da08554729511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7dd1b544729511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5a81e39e-b711-47a0-9a97-eac4987066af
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7dd1b544729511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c414122c729511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a254df8e-9fb3-40f6-9bc5-8c23fb31e5b3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c414122c729511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/col_m9_manual/thursday_1-42_col_m9/35_turkiyeparazitolojidergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
