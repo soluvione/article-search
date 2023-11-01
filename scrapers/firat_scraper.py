@@ -296,7 +296,7 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                     try:
                         main_body_element = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody')
                         main_text = main_body_element.text
-                    except Exception:
+                    except Exception as e:
                         raise GeneralError(
                             f"No main body element of the article of Fırat journal {journal_name} with number {i}"
                             f"found! Error encountered was: {e}")
