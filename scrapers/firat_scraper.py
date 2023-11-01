@@ -319,9 +319,15 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                             article_type = "ORİJİNAL ARAŞTIRMA"
 
                         # Abstract - Only Turkish Available for firat Journals
-                        abstract_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[9]/td[1]').text.strip() \
-                        if not "tmc.dergisi" in start_page_url \
-                            else driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[8]/td[1]/font').text.strip()
+                        # If no abstract is found then it must be a non-article entry
+                        try:
+                            abstract_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[9]/td[1]').text.strip() \
+                            if not "tmc.dergisi" in start_page_url \
+                                else driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[8]/td[1]/font').text.strip()
+                        except Exception:
+                            i += 1
+                            clear_directory(download_path)
+                            continue
 
                         # Keywords - Only Turkish Available for firat Journals
                         keywords_tr = driver.find_element(By.XPATH, '/html/body/center/table[2]/tbody/tr[7]').text \
@@ -359,17 +365,17 @@ def firat_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, 
                         author_objects = list()
                         for author_name in author_names:
                             if len(author_affiliations) == 1:
-                                author_objects.append(Author(name=author_name, all_speciality=author_affiliations[0]))
+                                author_objects.append(Author(name=re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author_name),
+                                                             all_speciality=author_affiliations[0]))
                             else:
                                 author = Author()
-                                author.name = author_name[:-1]
+                                author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author_name[:-1])
                                 try:
                                     author_code = int(author_name[-1])
                                     author.all_speciality = author_affiliations[author_code - 1][1:]
                                 except Exception:
                                     pass
-                            author.name = re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author.name)
-                            author_objects.append(author)
+                                author_objects.append(author)
 
                         # DOI
                         article_doi = None  # No DOI can be scraped directly from the article pages
