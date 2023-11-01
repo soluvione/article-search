@@ -270,19 +270,25 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                             title_tr, abstract_tr, keywords_tr = None, None, None
                         else:
                             language_bar_element = driver.find_element(By.CSS_SELECTOR, 'div[class="tab_container "]')
-                            language_bar_element.find_element(By.CSS_SELECTOR, 'label[for="tab1"]').click()
-                            time.sleep(3)
-                            title_tr = driver.find_element(By.CSS_SELECTOR, 'h3[id="baslik"]').text.strip()
-                            abstract_tr = driver.find_element(By.CSS_SELECTOR, 'section[id="content1"]').text.strip()
-                            abstract_tr = abstract_tr[abstract_tr.index("\n"):abstract_tr.index("Keywords")].strip()
-                            keywords_tr = [keyword.text.strip() for keyword in driver.find_element(By.CSS_SELECTOR, 'p[id="tr_kelime"]').find_elements(By.TAG_NAME, 'span')]
+                            try:
+                                language_bar_element.find_element(By.CSS_SELECTOR, 'label[for="tab1"]').click()
+                                time.sleep(3)
+                                title_tr = driver.find_element(By.CSS_SELECTOR, 'h3[id="baslik"]').text.strip()
+                                abstract_tr = driver.find_element(By.CSS_SELECTOR, 'section[id="content1"]').text.strip()
+                                abstract_tr = abstract_tr[abstract_tr.index("\n"):abstract_tr.index("Keywords")].strip()
+                                keywords_tr = [keyword.text.strip() for keyword in driver.find_element(By.CSS_SELECTOR, 'p[id="tr_kelime"]').find_elements(By.TAG_NAME, 'span')]
+                            except:
+                                title_tr, abstract_tr, keywords_tr = None, None, None
 
-                            language_bar_element.find_element(By.CSS_SELECTOR, 'label[for="tab2"]').click()
-                            time.sleep(3)
-                            title_eng = driver.find_element(By.CSS_SELECTOR, 'h3[id="baslik"]').text.strip()
-                            abstract_eng = driver.find_element(By.CSS_SELECTOR, 'section[id="content2"]').text.strip()
-                            abstract_eng = abstract_eng[abstract_eng.index("\n"):abstract_eng.index("Keywords")].strip()
-                            keywords_eng = [keyword.text.strip() for keyword in driver.find_element(By.CSS_SELECTOR, 'p[id="ing_kelime"]').find_elements(By.TAG_NAME, 'span')]
+                            try:
+                                language_bar_element.find_element(By.CSS_SELECTOR, 'label[for="tab2"]').click()
+                                time.sleep(3)
+                                title_eng = driver.find_element(By.CSS_SELECTOR, 'h3[id="baslik"]').text.strip()
+                                abstract_eng = driver.find_element(By.CSS_SELECTOR, 'section[id="content2"]').text.strip()
+                                abstract_eng = abstract_eng[abstract_eng.index("\n"):abstract_eng.index("Keywords")].strip()
+                                keywords_eng = [keyword.text.strip() for keyword in driver.find_element(By.CSS_SELECTOR, 'p[id="ing_kelime"]').find_elements(By.TAG_NAME, 'span')]
+                            except:
+                                title_eng, abstract_eng, keywords_eng = None, None, None
 
                         # References and Download link
                         references = None  # No references available on the pages
