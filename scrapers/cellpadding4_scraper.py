@@ -232,7 +232,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                     recent_volume, recent_issue = numbers[:2]
                 else:
                     time.sleep(5)
-                    vol_issue = driver.find_element(By.CSS_SELECTOR, 'span[class="badge badge-danger"]').text \
+                    vol_issue = driver.find_element(By.CSS_SELECTOR, 'span[class="badge badge-danger"]').get_attribute("innerHTML") \
                         .strip().split('/')
                     recent_volume = int(vol_issue[0])
                     recent_issue = int(vol_issue[1])
