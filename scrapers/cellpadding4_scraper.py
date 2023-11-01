@@ -226,7 +226,7 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         try:
                             vol_issue_text = driver.find_element(By.CLASS_NAME, "kapakYazi").text
                         except:
-                            vol_issue_text = driver.find_element(By.CLASS_NAME, "ListArticleIssue").text
+                            vol_issue_text = driver.find_element(By.CLASS_NAME, "ListArticleIssue").get_attribute("innerHTML")
                     numbers = re.findall(r'\d+', vol_issue_text)
                     numbers = [int(n) for n in numbers]
                     recent_volume, recent_issue = numbers[:2]
@@ -274,14 +274,14 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                 for article_url in article_urls:
                     with_adobe, with_azure = True, True
                     driver.get(article_url)
-                    time.sleep(3)
+                    time.sleep(5)
                     try:
                         if "Ağrı" in journal_name or "tjh.com" in start_page_url:
                             article_data_body = driver.find_element(By.XPATH, '//table[@width="100%" and '
                                                                               '@border="0" and @cellpadding="0" and @cellspacing="0"]')
                         else:
                             article_data_body = driver.find_element(By.CSS_SELECTOR,
-                                                                    '.col-xs-12.col-sm-9.col-md-9.col-lg-9')
+                                                                    'div[class="col-xs-12 col-sm-9 col-md-9 col-lg-9"')
                         tools_bar_element = driver.find_element(By.CSS_SELECTOR, ".list-group.siteArticleShare")
                         try:
                             download_link = tools_bar_element.find_element(By.CSS_SELECTOR,
@@ -358,6 +358,11 @@ def cellpadding4_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to
                         # Authors
                         try:
                             authors_element = article_data_body.find_element(By.CLASS_NAME, "JAgAuthors")
+                        except Exception:
+                            i += 1  # Loop continues with the next article
+                            clear_directory(download_path)
+                            continue
+                        try:
                             authors_bulk_text = authors_element.text
                             correspondence_name = authors_element.find_element(By.TAG_NAME, "u").text
                             authors_list = [author_name.strip() for author_name in authors_bulk_text.split(",")]
