@@ -6,3 +6,85 @@ Traceback (most recent call last):
   File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
     import fitz  # PyMuPDF
 ModuleNotFoundError: No module named 'fitz'
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ef0a24dc78b511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 93c6d110-b41e-4a3f-9644-ce47a4e960c1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ef0a24dc78b511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/1e3423d478b611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 3da59c91-74ea-40e3-87c4-14424c58c0d2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/1e3423d478b611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4d77c4de78b611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9c7f0afd-319a-44a5-8d68-63b0418f310d
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4d77c4de78b611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7c13341878b611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 89821c5a-f35b-407b-ba35-cede60f86322
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7c13341878b611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b935484a78b611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0f95ec40-7452-4bf0-8be1-f6a79b751106
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b935484a78b611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e788eb2a78b611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 32b46630-99a3-4c16-91ee-c972c20016f5
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e788eb2a78b611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/15e5938878b711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e8807c39-bf2b-475e-8567-5534af543cf8
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/15e5938878b711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/45011dd678b711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e2ac8d60-28e2-4d22-96e6-4a7a8c127693
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/45011dd678b711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/76b9775678b711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a727b16a-ff70-4258-93f4-f36d995511c5
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/76b9775678b711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/a679f42a78b711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1f3331de-386b-4424-bf05-be322a3ba989
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/a679f42a78b711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d65facc078b711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 2baef066-373f-4828-a0e2-d72ed8a5c9e7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d65facc078b711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/04b3068a78b811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 68049690-e410-4a88-b3c1-488596efe70d
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/04b3068a78b811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/33166f8078b811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 67cd364b-4b25-46ba-a128-94cd1640eeb7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/33166f8078b811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/4_experimentalbiomedicalresearch/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bd73845878bb11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: fc0c3c8f-71de-4505-81dd-91000e180522
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bd73845878bb11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f104b68478bb11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: adc7b755-9359-4ef2-a7dd-df1ecaaf97cf
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f104b68478bb11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/23afac2478bc11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 4a26041f-a251-4cc3-81c6-c660ef5dbecd
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/23afac2478bc11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/55aea8e278bc11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a8d2d689-73f3-4503-b1e6-c10b2630d02a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/55aea8e278bc11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8435616a78bc11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c6bf9100-4892-401d-870f-0db1a9a4e48c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8435616a78bc11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b3714e3a78bc11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 25fa4ef4-913a-425c-96b6-792ea677febe
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b3714e3a78bc11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e366920878bc11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ce92e331-76c6-4910-af54-cca9a7be87c2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e366920878bc11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/pkp_manual/thursday_1-20_pkp/20_internationaldentalresearch/downloads/adobe_results.zip

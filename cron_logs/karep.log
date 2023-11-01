@@ -6,3 +6,78 @@ Traceback (most recent call last):
   File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
     import fitz  # PyMuPDF
 ModuleNotFoundError: No module named 'fitz'
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/20713df6789511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e0c0ea6b-e9a0-49b9-afcf-6e5d0e6bb9f4
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/20713df6789511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/61e08dbe789511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e6576d32-6de6-49c0-a191-a44d34e11897
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/61e08dbe789511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/939e2bc2789511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c4ca117c-d94c-476f-86ea-da7a71e933ec
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/939e2bc2789511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c5402e0a789511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f30c0228-60cc-44f4-9568-3367c1a0074c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c5402e0a789511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f763a402789511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f8a2c5bb-a528-4982-8c3c-bd57c9095d21
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f763a402789511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2968f452789611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9cdca024-4964-4174-963e-59a60dc95f3a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2968f452789611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5a693e04789611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 10318591-41f7-439b-ba4f-13b4e2748c06
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5a693e04789611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/89da0e5c789611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 05228447-bc8b-4deb-a501-364a67caee63
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/89da0e5c789611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/1_dusunenadampsikiyatrivenrolojikbilimlerdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ce1dcb08789611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 55070807-e8ef-413c-855e-155ab1470bb3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ce1dcb08789611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/fe60a9f2789611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cbbefd8d-e724-402a-aadf-9ddeefc35ed4
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/fe60a9f2789611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2dcf017a789711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 85e5ba8e-67fd-4c44-aa13-6cc232f946db
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2dcf017a789711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5e7a4622789711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8d3229d3-2ea4-4526-9714-4ea7ee8417fa
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5e7a4622789711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8ef2feca789711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: fdfe3fa5-8ff5-4fd2-bf3d-b2611e76693d
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8ef2feca789711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c037b62e789711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e001aaca-adee-4e8d-b7ff-207aba681c7e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c037b62e789711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/efb22420789711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 428315e0-9453-476b-b960-04636b6743b0
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/efb22420789711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2125546e789811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 877565c5-8cd7-4a0c-9710-8c9182abafc2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2125546e789811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/50151908789811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 4fa85937-3bfd-4d73-af0d-61d2e29c3c00
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/50151908789811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7f95d6e0789811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7ce09705-2991-412b-9394-b601a4e43fe4
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7f95d6e0789811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/karep_manual/sunday_1-3_karep/3_hepatologyforum/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0

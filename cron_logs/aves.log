@@ -217,3 +217,143 @@ INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations su
 INFO:root:Downloading file to /tmp/sdk_result/5d161d60719e11eea734cf9ee3e83307.zip
 INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a3b32855-b85a-4968-a293-75f1f709f925
 INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5d161d60719e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/16_turkishjournalofurology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9cbfaa6a771311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 669c29f8-d29a-42a0-8737-fa0a41462664
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9cbfaa6a771311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d1b8ccba771311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0c9c4107-b239-4a84-8bf2-d555ee9c9030
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d1b8ccba771311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/40e17eb6771411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ce5da78d-8c97-4d4e-a58e-8db1a0cedfbe
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/40e17eb6771411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/77293626771411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cf645ea9-2758-4756-991d-0c92c0664151
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/77293626771411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e5ae9c3a771411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 943a608c-cf3d-4c9a-b9d8-fa4deb9b17b2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e5ae9c3a771411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/52132ab2771511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 73002770-21eb-4343-9caa-2887ef7fa834
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/52132ab2771511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/88794abe771511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d121b3bc-dd2b-43c3-9127-7a2c3059b868
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/88794abe771511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bd7f9cb8771511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 00565e8a-8727-488b-9f68-22e07b3dbf3c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bd7f9cb8771511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f754a5f0771511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 44d46ad1-7378-4ce2-b999-6db882c666ec
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f754a5f0771511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/32183e4a771611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b7f8de4e-3ab8-483c-ac6d-1fb865675ef3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/32183e4a771611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/6747adf8771611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 0790b9f9-c085-4a13-ab51-3b0501a71cb7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/6747adf8771611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9dadadac771611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5cc92796-74a3-4401-af70-206f3b59c752
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9dadadac771611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d3336f34771611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ee7e72c7-bf78-43f0-9cb8-cda4617c2e73
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d3336f34771611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/0ce68e46771711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8d3349fa-a19a-4fe9-9aab-dcc65851cf83
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/0ce68e46771711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/1_actaorthopaedicaettraumatologicaturcica/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/6aa77b1c771711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f111c7f2-d220-4b51-ae8c-f5d6e8e95a21
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/6aa77b1c771711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/3_alphapsychiatry/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9e5273e0771711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e4ba9d74-d072-43ee-81c6-1d329ce409b9
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9e5273e0771711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/3_alphapsychiatry/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d350128c771711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 6b22ed4c-6430-46cd-8dc9-8bb6175dc181
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d350128c771711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/3_alphapsychiatry/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/092d514e771811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 3ba185fb-6e4b-4e9d-8924-ba3c45ba5cfc
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/092d514e771811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/3_alphapsychiatry/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7978bde4771811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b5d42cc3-024b-40df-9245-745fecb0ad40
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7978bde4771811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/6_europeanjournalofrheumatology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ae60aaa8771811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 19a6b141-1896-43ae-9bcb-7113450cccd2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ae60aaa8771811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/6_europeanjournalofrheumatology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e0f22e92771811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ccdf3394-02f3-490e-9907-5e2a4de13daf
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e0f22e92771811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/6_europeanjournalofrheumatology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/15aeddc4771911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 89c226b4-31eb-4f1d-9705-4a1ba1a84433
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/15aeddc4771911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/aves_manual/wednesday_1-16_aves/6_europeanjournalofrheumatology/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0

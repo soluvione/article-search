@@ -6,3 +6,305 @@ Traceback (most recent call last):
   File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
     import fitz  # PyMuPDF
 ModuleNotFoundError: No module named 'fitz'
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7bc74ef4785211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ec109a84-d8da-4f41-9260-1fc9b1f6d911
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7bc74ef4785211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/176_bozoktpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/de3f1120785211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 31f7559c-a9d6-40b4-9954-7f44992a5317
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/de3f1120785211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/176_bozoktpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/111e2d56785311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b6017774-0712-4209-a966-3826a5131838
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/111e2d56785311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/176_bozoktpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/736f977e785311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 76bd4ced-41fa-4c28-ab06-1a56060426b3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/736f977e785311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/176_bozoktpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/a669f1a6785311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 4734a381-0dc8-4c81-b340-3511b8180cae
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/a669f1a6785311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/176_bozoktpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d815aa88785311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9fad1934-eb4e-4f57-b232-ac349aa3e2f9
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d815aa88785311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/176_bozoktpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/177576fe785411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 70deff3b-c54c-417a-9191-31106ae5a81c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/177576fe785411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/49d0cb3a785411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ee0666c5-1266-4c7d-b339-064fb0286cf6
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/49d0cb3a785411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7dba9930785411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d55ad4b6-0fa3-4a20-8aa0-0cd6eef28d48
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7dba9930785411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b0bc6908785411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8310061c-0997-4db0-9fec-5cbfa3d1541c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b0bc6908785411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e5ef43ac785411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b15c2f84-56f3-4617-89b2-e157d557f69c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e5ef43ac785411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/189b5714785511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 48e93274-55c9-47ba-a04c-a531f38339cb
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/189b5714785511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4c18c950785511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 27399d0d-a47b-4239-9944-c62c966fda5a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4c18c950785511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/88d912d2785511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7df5e94e-c5fa-4b25-838e-e328bc4ee110
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/88d912d2785511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bb467a48785511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 6abe47f5-85e6-4ec9-af40-bd3a3540dbc1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bb467a48785511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ed755494785511eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: dd70c0e5-0259-4606-b5b9-58ff96a0ba92
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ed755494785511eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/212b4f82785611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8b77db7e-aa6b-48b7-af29-4d6e8714e481
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/212b4f82785611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/54049724785611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5df8e76a-0936-43a2-bddd-fd586c07388a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/54049724785611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/872b9aee785611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 24dae698-97a0-4694-abc7-654576ab594a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/872b9aee785611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bac8bc38785611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: fe0d05a0-ba02-40ce-94eb-cc3e37af239f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bac8bc38785611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f5df9cb0785611eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: acd972a1-17c3-430a-a632-fa8f09b78f38
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f5df9cb0785611eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/27f42e78785711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9d0b0c2b-4c98-490b-8475-7efe15db961f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/27f42e78785711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5a265bdc785711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9649313c-cec6-4859-b6a0-5afb17cd4b61
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5a265bdc785711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8da2cb1c785711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 82ba4180-7c77-4092-bc39-eceba6641873
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8da2cb1c785711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c198cf5c785711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5d64c41d-5930-4c83-a668-63f22bcda8b9
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c198cf5c785711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f3dcd666785711eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 59bb454f-c693-42a7-bded-190af4f23a00
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f3dcd666785711eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/177_cumhuriyetdentaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4d67dfa0785811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: bdfe75e3-8f3d-45c2-81a6-21f596224d38
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4d67dfa0785811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/82ae63b4785811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b0fdb206-df31-4366-b3ec-4d367b222f68
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/82ae63b4785811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b8109a18785811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 659f190c-4839-4874-92dd-bf2769562209
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b8109a18785811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ec469eb8785811eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1f4c8f3a-63cc-4383-a2b9-4050c589b38f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ec469eb8785811eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2395a4f4785911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f3d93b91-8231-4463-b521-885ea409734e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2395a4f4785911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5811ec10785911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e868e0e5-3711-458e-95eb-17aea7b25a2a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5811ec10785911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8ac0364e785911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9ed1b3d9-a4ec-4fda-a6ed-572e37b17b9b
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8ac0364e785911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/be44a36a785911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9ec4ebf9-b192-4fa1-9a75-8f4c3f24f951
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/be44a36a785911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f2b7449a785911eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d53e957f-bdc4-4d7e-9864-9b6e2d823234
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f2b7449a785911eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/272d715e785a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 9f4935e4-3432-43f2-b296-60016bbae8f2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/272d715e785a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5d273cae785a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 2454293d-ba27-405e-9749-c6efc702ff7a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5d273cae785a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/911b82c2785a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 632de295-a8d8-4839-947d-fabd3c5a7db1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/911b82c2785a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c59d8680785a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: dbb2e4b7-ebb4-4eb2-9f07-7ac82c3fb729
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c59d8680785a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/fc7be516785a11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b3223d11-89d5-4f3b-ab4f-bf47db5fd5c7
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/fc7be516785a11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2f4d36e8785b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cefee9c9-8723-460c-b788-4b1b98d6946e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2f4d36e8785b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3c6f0a7c785b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 54c4b83d-61d9-408d-93cc-9c5985c787ef
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3c6f0a7c785b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/6f1d4d4e785b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5487b206-4669-4401-8d5a-e14ebf696a49
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/6f1d4d4e785b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/a1767d60785b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8f539908-0a94-4c0a-84f2-afff5c847135
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/a1767d60785b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d421821e785b11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7daa8a08-f830-4434-ae9b-fa6483c5875f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d421821e785b11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/07c307e6785c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 902033ce-0a47-4074-b093-d23fa80b672c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/07c307e6785c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3f310d0e785c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 53ee67e2-9a51-4867-a695-6343663354b2
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3f310d0e785c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/183_eskiehirtpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/85d9bff8785c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 2ee403cf-a7db-4e3d-9840-6ea489de4405
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/85d9bff8785c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/b9cddcc2785c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c949d325-9d9b-46b8-8f5b-bee6ae323544
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/b9cddcc2785c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ed03d90c785c11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 7fd7ea7e-d986-428e-9d55-2e6f89813816
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ed03d90c785c11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/228598f4785d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: ad9dd490-9f7b-481f-9c01-2223f7854cb3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/228598f4785d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/55fa70ec785d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b01a9c5d-c30d-4897-9a8f-9fd065b3be0f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/55fa70ec785d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/89f876d2785d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a5b1949d-5b26-4ac0-84f3-6f6894909be9
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/89f876d2785d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bffba042785d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 73e60d52-440f-455a-9756-2294b925930e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bffba042785d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/ea218f94785d11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e7b6d569-dbf0-48a8-8f03-8afc6c7ca6fa
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/ea218f94785d11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/13084dbc785e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a43dd140-1c24-4142-a8ae-0c14a21d2873
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/13084dbc785e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3db7aa44785e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8b5e7ace-7dc9-4e87-bcdf-fe5f7a8e1d4e
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3db7aa44785e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/67909362785e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: fb6d2232-d7a6-4f1a-b527-ea5f1b0f4935
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/67909362785e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/af18c8c6785e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e92d2fb2-b888-4531-b673-b21f21dab7c4
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/af18c8c6785e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e3742386785e11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 889f1783-9a29-444e-afc9-b49df4e9a5dc
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e3742386785e11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/214143e2785f11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1ec0fffe-f1a2-42c9-90a8-f2c1ac17c023
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/214143e2785f11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5624fba8785f11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d9283f9b-c9b8-4c82-92a3-47e773a9ce11
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5624fba8785f11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/8b152c5c785f11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: da4def9f-ea0e-407d-9a3b-381ee4a4688a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/8b152c5c785f11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/bf10f7ca785f11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c664a94a-1b87-4420-9674-4ce5698de529
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/bf10f7ca785f11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f484df5c785f11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 49bfe2d3-9b31-465e-bb03-b1a807fb036a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f484df5c785f11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/27126b42786011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 5121f5fa-b8cf-4263-b764-79455fcd8de5
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/27126b42786011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5b2c681a786011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 32496744-11c3-46a4-a588-7a72bdd2ae0a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5b2c681a786011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9151caac786011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: dd83b968-30b7-438e-aca8-67aca230f216
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9151caac786011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/dergipark_manual/wednesday_no_ref27_drg/185_geneltpdergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0

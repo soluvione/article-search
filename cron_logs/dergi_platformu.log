@@ -6,3 +6,46 @@ Traceback (most recent call last):
   File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
     import fitz  # PyMuPDF
 ModuleNotFoundError: No module named 'fitz'
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
