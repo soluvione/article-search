@@ -6,3 +6,108 @@ Traceback (most recent call last):
   File "/home/ubuntu/article-search/common/helpers/methods/pdf_cropper.py", line 9, in <module>
     import fitz  # PyMuPDF
 ModuleNotFoundError: No module named 'fitz'
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c91b457078cf11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e6785676-78ad-46d1-9a3b-8fd80f512246
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c91b457078cf11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/2_medicaljournalofislamicworldacademyofsciences/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f58c9b5478cf11eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e118fed6-390d-4134-bab7-c504f2dd4b65
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f58c9b5478cf11eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/2_medicaljournalofislamicworldacademyofsciences/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2735707c78d011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: f2287b5a-eea4-496e-8185-d80e1710134f
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2735707c78d011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/2_medicaljournalofislamicworldacademyofsciences/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7ed6055878d011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: b7063cc0-161c-45b4-a93d-9a507d4181aa
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7ed6055878d011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/2_medicaljournalofislamicworldacademyofsciences/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/aa63081a78d011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 72edc7b5-bd09-4adc-a1c4-1822deb53d2a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/aa63081a78d011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/2_medicaljournalofislamicworldacademyofsciences/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/e318f49478d011eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8ab43585-3685-45b1-8dd8-5c58d94404b8
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/e318f49478d011eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/1074f79e78d111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: c415eb84-b71a-4d19-873b-a6c11205cd5c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/1074f79e78d111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/41f7e45c78d111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: fad0c140-0694-414c-b939-167c10001e10
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/41f7e45c78d111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/6e77969e78d111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 71a48abe-749b-4057-a611-534e7a5ba883
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/6e77969e78d111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:googleapiclient.discovery_cache:file_cache is only supported with oauth2client<4.0.0
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/7835515878d111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 84116aae-25a6-41e9-bc6d-b18986e01dd3
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/7835515878d111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/a5ec867078d111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: fdbe3fca-f0c9-4608-b1ae-176b508986f1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/a5ec867078d111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d270b05478d111eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e17be0aa-d0c4-46a6-8f62-0f256a99c974
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d270b05478d111eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/0261f46278d211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 40354bcb-e3c7-47d2-9a9e-d8cd1d2b2d3a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/0261f46278d211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/2ecd28dc78d211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 201a9e0f-d105-4354-bfff-223308a41cb0
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/2ecd28dc78d211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/5a8789d678d211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: d9dc6a7b-50e5-46c7-9022-968c3c843c74
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/5a8789d678d211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/4_turknorolojidergisi/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/9862b60478d211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1697cef3-6d0d-488e-9361-143f292f78db
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/9862b60478d211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/c543a04878d211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: e82d0d18-f01b-43e1-9526-7b144c286682
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/c543a04878d211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/f2fa77aa78d211eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 1a0f45d4-48fc-48a0-806e-6c982bee22cb
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/f2fa77aa78d211eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/1fa7b80878d311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 8d6d7f83-3fe0-40eb-9dc6-a0e9a6ad8378
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/1fa7b80878d311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/4d56000278d311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: cb5f7f19-332f-4a05-9053-2909dec392f1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/4d56000278d311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/79e8bf9c78d311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 51e7749e-8b9e-4172-9258-5bb23168cf06
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/79e8bf9c78d311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/aa2f598678d311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: dd5a1b04-dd30-4142-89cc-91f089d11361
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/aa2f598678d311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/d79734a278d311eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: a0948730-d580-42aa-9dec-930c12e566d1
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/d79734a278d311eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/050c0bce78d411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 415088fc-e6ea-43a2-8267-eee3a15e956a
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/050c0bce78d411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:All validations successfully done. Beginning ExtractPDF operation execution
+INFO:root:Downloading file to /tmp/sdk_result/3554dab878d411eea734cf9ee3e83307.zip
+INFO:adobe.pdfservices.operation.pdfops.extract_pdf_operation:Extract Operation Successful - Transaction ID: 4f1916b9-f44d-47ae-bf9b-f8e97fe3c24c
+INFO:adobe.pdfservices.operation.internal.io.file_ref_impl:Moving file at /tmp/sdk_result/3554dab878d411eea734cf9ee3e83307.zip to target /home/ubuntu/article-search/downloads_n_logs/sayi_sayfalar_manual/sunday_1-8_sayi_sayfalar/7_medeniyetmedicaljournal/downloads/adobe_results.zip
