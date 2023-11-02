@@ -225,7 +225,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                 for article_url in article_urls:
                     if pdf_scrape_type =="A_KLNK":
-                        with_adobe, with_azure = True, True
+                        with_adobe, with_azure = False, True
                     else:
                         with_adobe, with_azure = False, True
                     driver.get(article_url)

@@ -301,7 +301,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                 # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
                 for article_url in article_urls:
-                    with_adobe, with_azure = True, True
+                    with_adobe, with_azure = False, True
                     if article_url.endswith("/"):
                         article_url = article_url[:-1]
                     driver.get(article_url)
