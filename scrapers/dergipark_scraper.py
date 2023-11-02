@@ -260,7 +260,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
         with (webdriver.Chrome(service=service, options=options) as driver):
             try:
                 dergipark_components.get_to_the_page(driver, start_page_url, journal_name)
-
+                time.sleep(5)
                 latest_publication_element = dergipark_components.get_latest_data(driver, journal_name)
 
                 temp_txt = latest_publication_element.text

@@ -74,8 +74,6 @@ def get_recently_downloaded_file_name(download_path, journal_name, article_url):
         latest_file = max(list_of_files, key=os.path.getctime)
         return latest_file
     except Exception as e:
-        send_notification(GeneralError(f"Could not get name of recently downloaded file. Journal name: {journal_name}, "
-                                       f"article_url: {article_url}. Error: {e}"))
         return False
 
 def update_authors_with_correspondence(paired_authors, correspondence_name, correspondence_mail):
@@ -403,7 +401,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                             for author_name in authors_names:
                                 try:
                                     new_author = Author(name=re.sub(r"[^a-zA-ZşüğıöçŞÜĞIİÖÇ\s]", "", author_name[:-1]),
-                                                        all_speciality=specialities[int(author_name.strip()[-1])])
+                                                        all_speciality=specialities[int(author_name.strip()[-1]) - 1])
                                     authors.append(new_author)
                                 except Exception:
                                     pass
