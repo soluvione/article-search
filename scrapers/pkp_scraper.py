@@ -10,6 +10,7 @@ import timeit
 import re
 # Local imports
 from common.errors import GeneralError
+from common.enums import AzureResponse
 from classes.author import Author
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
@@ -477,28 +478,32 @@ def pkp_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, pa
                                 references = adobe_references
 
                         # Get Azure Data
+                        azure_article_data = None
                         if with_azure:
-                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                            azure_data = azure_response_dictionary["Data"]
-                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                            success = False
-                            mail = ""
-                            if len(azure_article_data["emails"]) == 1:
-                                try:
-                                    mail = azure_article_data["emails"][0][:azure_article_data["emails"][0].index("@")]
-                                except Exception as e:
-                                    pass
-                                if mail:
-                                    for author in authors:
-                                        if fuzz.ratio(author.name.lower(), mail) > 70:
-                                            author.mail = azure_article_data["emails"][0]
-                                            author.is_correspondence = True
-                                            success = True
-                                            break
-                            if not success and mail:
-                                selected_author = random.choice(authors)
-                                selected_author.mail = azure_article_data["emails"][0]
-                                selected_author.is_correspondence = True
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 60)
+                            if azure_response_dictionary["Result"] != AzureResponse.FAILURE.value:
+                                azure_data = azure_response_dictionary["Data"]
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                success = False
+                                mail = ""
+                                if len(azure_article_data["emails"]) == 1:
+                                    try:
+                                        mail = azure_article_data["emails"][0][:azure_article_data["emails"][0].index("@")]
+                                    except Exception as e:
+                                        pass
+                                    if mail:
+                                        for author in authors:
+                                            if fuzz.ratio(author.name.lower(), mail) > 70:
+                                                author.mail = azure_article_data["emails"][0]
+                                                author.is_correspondence = True
+                                                success = True
+                                                break
+                                if not success and mail:
+                                    selected_author = random.choice(authors)
+                                    selected_author.mail = azure_article_data["emails"][0]
+                                    selected_author.is_correspondence = True
+                            else:
+                                with_azure = False
 
                         final_article_data = {
                             "journalName": f"{journal_name}",

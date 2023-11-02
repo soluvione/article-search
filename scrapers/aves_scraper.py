@@ -10,6 +10,7 @@ import timeit
 
 # Local imports
 from common.errors import GeneralError
+from common.enums import AzureResponse
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type
@@ -361,13 +362,17 @@ def aves_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send, p
                                 references = adobe_references
 
                         # Get Azure Data
+                        azure_article_data = None
                         if download_link and file_name and location_header:
-                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                            azure_data = azure_response_dictionary["Data"]
-                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                            if len(azure_article_data["emails"]) == 1:
-                                for author in authors:
-                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 60)
+                            if azure_response_dictionary["Result"] != AzureResponse.FAILURE.value:
+                                azure_data = azure_response_dictionary["Data"]
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                if len(azure_article_data["emails"]) == 1:
+                                    for author in authors:
+                                        author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                            else:
+                                with_azure = False
 
                         final_article_data = {
                             "journalName": f"{journal_name}",

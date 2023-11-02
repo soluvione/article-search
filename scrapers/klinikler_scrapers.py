@@ -9,6 +9,7 @@ import pprint
 import timeit
 # Local imports
 from common.errors import GeneralError
+from common.enums import AzureResponse
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.common_scrape_helpers.drgprk_helper import reference_formatter
@@ -306,7 +307,7 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             if pdf_scrape_type == "A_KLNK":
                                 raise e
 
-                        file_name = None
+                        azure_article_data, file_name = None, None
                         # Download PDF and send to Azure
                         if download_link:
                             driver.get(download_link)
@@ -321,9 +322,12 @@ def klinikler_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                     first_pages_cropped_pdf,
                                     is_tk=True)  # Location header is the response address of Azure API
                                 time.sleep(10)
-                                azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                                azure_data = azure_response_dictionary  # Variable named here on purpose
-                                azure_article_data = AzureHelper.format_tk_data(azure_data)
+                                azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 60)
+                                if azure_response_dictionary["Result"] != AzureResponse.FAILURE.value:
+                                    azure_data = azure_response_dictionary  # Variable named here on purpose
+                                    azure_article_data = AzureHelper.format_tk_data(azure_data)
+                                else:
+                                    with_azure = False
 
                             # Send PDF to Adobe and format response
                             if with_adobe:

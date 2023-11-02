@@ -74,6 +74,7 @@ class AzureHelper:
         :param timeout: The timeout limit of the operation. How many seconds does the method wait for the analysis to finish.
         :return: Returns response dictionary, Result key for result status and Data key for response body
         """
+        time.sleep(10)
         time_past = 0
         is_finished = False
         response_dictionary = {"Result": AzureResponse.RUNNING.value}
@@ -88,7 +89,7 @@ class AzureHelper:
             if get_results_response.json()["status"] == "succeeded":
                 is_finished = True
             while time_past < timeout and not is_finished:
-                time.sleep(14)
+                time.sleep(10)
                 get_results_response = requests.get(operation_location, headers=get_results_header)
                 if get_results_response.json()["status"] == "succeeded":
                     is_finished = True

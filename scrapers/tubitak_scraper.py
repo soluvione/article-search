@@ -7,10 +7,9 @@ import glob
 import json
 import pprint
 import timeit
-
-from classes.author import Author
 # Local imports
 from common.errors import GeneralError
+from classes.author import Author
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
@@ -274,7 +273,6 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                                 file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
                             if not file_name:
                                 with_adobe, with_azure = False, False
-                                # Send PDF to Azure and format response
                             if download_link and file_name:
                                 # Send PDF to Adobe and format response
                                 if with_adobe:

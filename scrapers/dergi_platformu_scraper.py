@@ -9,6 +9,7 @@ import timeit
 import re
 # Local imports
 from classes.author import Author
+from common.enums import AzureResponse
 from common.errors import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
@@ -363,13 +364,17 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
                                 references = adobe_references
 
                         # Get Azure Data
+                        azure_article_data = None
                         if with_azure and file_name:
-                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                            azure_data = azure_response_dictionary["Data"]
-                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                            if len(azure_article_data["emails"]) == 1:
-                                for author in author_list:
-                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 60)
+                            if azure_response_dictionary["Result"] != AzureResponse.FAILURE.value:
+                                azure_data = azure_response_dictionary["Data"]
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                if len(azure_article_data["emails"]) == 1:
+                                    for author in author_list:
+                                        author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                            else:
+                                with_azure = False
 
                         # Article Type
                         try:

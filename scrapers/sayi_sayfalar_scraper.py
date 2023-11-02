@@ -9,10 +9,10 @@ import timeit
 import re
 # Local imports
 from classes.author import Author
+from common.enums import AzureResponse
 from common.errors import GeneralError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
-from common.helpers.methods.common_scrape_helpers.drgprk_helper import identify_article_type, reference_formatter
 from common.helpers.methods.scan_check_append.issue_scan_checker import is_issue_scanned
 from common.helpers.methods.pdf_cropper import crop_pages, split_in_half
 from common.services.azure.azure_helper import AzureHelper
@@ -26,7 +26,6 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service as ChromeService
-from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from fuzzywuzzy import fuzz
 
@@ -388,13 +387,17 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
 
 
                         # Get Azure Data
+                        azure_article_data = None
                         if with_azure:
-                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                            azure_data = azure_response_dictionary["Data"]
-                            azure_article_data = AzureHelper.format_general_azure_data(azure_data)
-                            if len(azure_article_data["emails"]) == 1:
-                                for author in author_list:
-                                    author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 60)
+                            if azure_response_dictionary["Result"] != AzureResponse.FAILURE.value:
+                                azure_data = azure_response_dictionary["Data"]
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data)
+                                if len(azure_article_data["emails"]) == 1:
+                                    for author in author_list:
+                                        author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
+                            else:
+                                with_azure = None
 
                         # Keywords
                         # There are 2 kinds of keywords for sayi_sayfalar journals. The one acquired from the meta tagged

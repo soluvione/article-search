@@ -10,6 +10,7 @@ from datetime import datetime
 import json
 # Local imports
 from classes.author import Author
+from common.enums import AzureResponse
 from common.errors import DownloadError, ParseError
 from common.helpers.methods.common_scrape_helpers.check_download_finish import check_download_finish
 from common.helpers.methods.common_scrape_helpers.clear_directory import clear_directory
@@ -532,11 +533,14 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         # GET RESPONSE BODY OF THE AZURE RESPONSE
                         azure_article_data = None
                         if with_azure and location_header:
-                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 30)
-                            azure_data = azure_response_dictionary["Data"]
-                            # Format Azure Response and get a dict
-                            azure_article_data = AzureHelper.format_general_azure_data(azure_data,
-                                                                                       correspondance_name)
+                            azure_response_dictionary = AzureHelper.get_analysis_results(location_header, 60)
+                            if azure_response_dictionary["Result"] != AzureResponse.FAILURE.value:
+                                azure_data = azure_response_dictionary["Data"]
+                                # Format Azure Response and get a dict
+                                azure_article_data = AzureHelper.format_general_azure_data(azure_data,
+                                                                                           correspondance_name)
+                            else:
+                                with_azure = False
                         # So far both the Azure data and the data scraped from Dergipark are constructed
                         # Additionally, if needed, the references data is fetched from Adobe
                         # At this point the data that will be sent to the API will be finalized
