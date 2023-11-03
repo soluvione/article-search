@@ -7,4 +7,4 @@ source /home/ubuntu/article-search/venv/bin/activate
 cd /home/ubuntu/article-search/dispatchers/turkiye_klinikleri/tk_ref_98-118
 
 # Run the Python script
-python tk_ref_19-118.py
+python tk_ref_98-118.py
