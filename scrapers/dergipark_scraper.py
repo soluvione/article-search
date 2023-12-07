@@ -301,7 +301,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
 
                 # GET TO THE ARTICLE PAGE AND TRY TO DOWNLOAD AND PARSE THE ARTICLE PDFs
                 for article_url in article_urls:
-                    with_adobe, with_azure = False, True
+                    with_adobe, with_azure = True, True
                     if article_url.endswith("/"):
                         article_url = article_url[:-1]
                     driver.get(article_url)
@@ -344,7 +344,7 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                         try:
                             article_page_range = dergipark_components.get_page_range(driver)
                         except Exception as e:
-                            article_page_range = [0, 1]
+                            article_page_range = [0, 0]
                             send_notification(GeneralError(f"No page range found for Dergipark Journal '{journal_name}'"
                                                            f" and article number {i}. Article URL: {article_url}."
                                                            f" Error encountered: {e}"))
@@ -539,6 +539,9 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 # Format Azure Response and get a dict
                                 azure_article_data = AzureHelper.format_general_azure_data(azure_data,
                                                                                            correspondance_name)
+                                if len(azure_article_data["emails"]) == 1:
+                                    for author in authors:
+                                        author.mail = azure_article_data["emails"][0] if author.is_correspondence else None
                             else:
                                 with_azure = False
                         # So far both the Azure data and the data scraped from Dergipark are constructed
@@ -583,8 +586,6 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                                 if azure_article_data["article_keywords"].get("eng", None) and not final_article_data["articleKeywords"]["ENG"]:
                                     final_article_data["articleKeywords"]["ENG"] = \
                                         azure_article_data["article_keywords"]["eng"]
-                            if azure_article_data.get("article_authors", None):
-                                final_article_data["articleAuthors"] = azure_article_data["article_authors"]
                             if not final_article_data["articleDOI"] and with_azure:
                                 if azure_article_data.get("doi", None):
                                     final_article_data["articleDOI"] = azure_article_data["doi"].strip()
