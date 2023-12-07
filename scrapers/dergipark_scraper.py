@@ -363,6 +363,8 @@ def dergipark_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_se
                             #                                   + str(i))
 
                             file_name = get_recently_downloaded_file_name(download_path, journal_name, article_url)
+                            if not file_name:
+                                with_azure, with_adobe = False, False
                             if with_azure:
                                 first_pages_cropped_pdf = crop_pages(file_name, pages_to_send)
                                 location_header = AzureHelper.analyse_pdf(
