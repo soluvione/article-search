@@ -256,7 +256,7 @@ def dergi_platformu_scraper(journal_name, start_page_url, pdf_scrape_type, pages
 
                 # Start scraping from individual article pages
                 for article_url in article_urls:
-                    with_adobe, with_azure = False, True
+                    with_adobe, with_azure = True, True
                     try:
                         driver.get(article_url)
                         index_of_journal = article_urls.index(article_url)

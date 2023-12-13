@@ -228,7 +228,7 @@ def tubitak_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_send
                         GeneralError(f'No URLs scraped from tubitak journal with name: {journal_name}'))
 
                 for article_url in article_urls:
-                    with_adobe, with_azure = False, False
+                    with_adobe, with_azure = True, False
                     driver.get(article_url)
                     time.sleep(2)
 

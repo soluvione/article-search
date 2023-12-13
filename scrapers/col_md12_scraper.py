@@ -336,7 +336,7 @@ def col_md12_scraper(journal_name, start_page_url, pdf_scrape_type, pages_to_sen
                         GeneralError(f'No URLs scraped from col_md12 journal with name: {journal_name}'))
 
                 for article_url in article_urls:
-                    with_adobe, with_azure = False, True
+                    with_adobe, with_azure = True, True
                     try:
                         driver.get(urljoin(start_page_url, article_url))
                         time.sleep(3)

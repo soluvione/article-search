@@ -246,7 +246,7 @@ def sayi_sayfalar_scraper(journal_name, start_page_url, pdf_scrape_type, pages_t
                     raise GeneralError(f'No URLs scraped from sayi_sayfalar journal with name: {journal_name}')
 
                 for article_url in hrefs:
-                    with_adobe, with_azure = False, True
+                    with_adobe, with_azure = True, True
                     if "showabs" in article_url:
                         continue
                     driver.get(article_url)
