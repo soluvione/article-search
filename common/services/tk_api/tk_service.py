@@ -18,7 +18,7 @@ class TKServiceWorker:
             with open("./tk_api_config.json", "r") as config_file:
                 config_content = json.load(config_file)
         except:
-            with open("/home/ubuntu/article-search/common/services/tk_api/tk_api_config.json", "r") as config_file:
+            with open(r"C:\Users\BT-EMIN\PycharmProjects\article-search\common\services\tk_api\tk_api_config.json", "r") as config_file:
                 config_content = json.load(config_file)
 
         self.__url_endpoint = config_content["URL"]
