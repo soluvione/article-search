@@ -6,7 +6,7 @@ Webdriver Konumu: "/home/ubuntu/driver/chromedriver-linux64/chromedriver"
 Proje konumu: "/home/ubuntu/article-search"
 Ardından .gitignore dosyasında bulunan config ve credential dosyaları elle ilgili yerlerde oluşturulmalıdır
 
-@Callers Paketi ve Modülleri
+@Dispatchers Paketi ve Modülleri
 Scriptleri çalıştıracak olan ve sistem üzerinden çalıştırılması otomasyona bağlanacak olan modüllerdir.
 Yalnızca bu modüller scraperları çağıracak olup, takribi 30 scraper için 1 adet caller oranı uygun gözükmektedir.
 
